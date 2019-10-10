@@ -1,18 +1,18 @@
 package com.spring.vo;
 
 public class PaginationVo {
-	int listSize = 10;      // ÇÑ ÆäÀÌÁö´ç º¸¿©Áú ¸®½ºÆ®ÀÇ °³¼ö          
-	int rangeSize = 5;      // ÇÑ ÆäÀÌÁö ¹üÀ§¿¡ º¸¿©Áú ÆäÀÌÁöÀÇ °³¼ö      
-	int page;				// ÇöÀç ¸ñ·ÏÀÇ ÆäÀÌÁö ¹øÈ£
-	int range;				// °¢ ÆäÀÌÁö ¹üÀ§ ½ÃÀÛ ¹øÈ£
-	int listCnt;			// ÀüÃ¼ °Ô½Ã¹°ÀÇ °³¼ö
-	int pageCnt;			// ÀüÃ¼ ÆäÀÌÁö ¹üÀ§ÀÇ °³¼ö
-	int startPage;			// °¢ ÆäÀÌÁö ¹üÀ§ ½ÃÀÛ ¹øÈ£
-	int startList;			// ÇöÀç ÆäÀÌÁöÀÇ °Ô½Ã¹° ½ÃÀÛ ¹øÈ£
-	int endPage;			// °¢ ÆäÀÌÁö ¹üÀ§ ³¡ ¹øÈ£
+	int listSize = 10;      // í•œ í˜ì´ì§€ë‹¹ ë³´ì—¬ì§ˆ ë¦¬ìŠ¤íŠ¸ì˜ ê°œìˆ˜          
+	int rangeSize = 5;      // í•œ í˜ì´ì§€ ë²”ìœ„ì— ë³´ì—¬ì§ˆ í˜ì´ì§€ì˜ ê°œìˆ˜      
+	int page;				// í˜„ì¬ ëª©ë¡ì˜ í˜ì´ì§€ ë²ˆí˜¸
+	int range;				// ê° í˜ì´ì§€ ë²”ìœ„ ì‹œì‘ ë²ˆí˜¸
+	int listCnt;			// ì „ì²´ ê²Œì‹œë¬¼ì˜ ê°œìˆ˜
+	int pageCnt;			// ì „ì²´ í˜ì´ì§€ ë²”ìœ„ì˜ ê°œìˆ˜
+	int startPage;			// ê° í˜ì´ì§€ ë²”ìœ„ ì‹œì‘ ë²ˆí˜¸
+	int startList;			// í˜„ì¬ í˜ì´ì§€ì˜ ê²Œì‹œë¬¼ ì‹œì‘ ë²ˆí˜¸
+	int endPage;			// ê° í˜ì´ì§€ ë²”ìœ„ ë ë²ˆí˜¸
 	int user_no;
-	boolean prev;			// ÀÌÀü ÆäÀÌÁö ¿©ºÎ
-	boolean next;			// ´ÙÀ½ ÆäÀÌÁö ¿©ºÎ
+	boolean prev;			// ì´ì „ í˜ì´ì§€ ì—¬ë¶€
+	boolean next;			// ë‹¤ìŒ í˜ì´ì§€ ì—¬ë¶€
 	
 	public int getListSize() {
 		return listSize;

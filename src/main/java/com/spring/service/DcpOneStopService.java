@@ -51,7 +51,7 @@ public class DcpOneStopService {
 		logger.info("Start convertToDcp / " + new Date());
 		convertToDcp(oneStopVo, workDir+path);
 		logger.info("End convertToDcp / " + new Date());
-		historyVo.setHistory_msg("ONESTOP º¯È¯");
+		historyVo.setHistory_msg("ONESTOP ë³€í™˜");
 		dcpHistoryDao.writeHistory(historyVo);
 	}
 	

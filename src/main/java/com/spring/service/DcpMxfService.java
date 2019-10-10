@@ -37,7 +37,7 @@ public class DcpMxfService {
 			};
 			dcpCommon.runCli(cmd,workDir);
 			
-			historyVo.setHistory_msg("MXF º¯È¯ - PICTURE");
+			historyVo.setHistory_msg("MXF ë³€í™˜ - PICTURE");
 			dcpHistoryDao.writeHistory(historyVo);
 			break;
 		case "sound":
@@ -52,7 +52,7 @@ public class DcpMxfService {
 			};
 			dcpCommon.runCli(cmd2,workDir);
 			
-			historyVo.setHistory_msg("MXF º¯È¯ - SOUND");
+			historyVo.setHistory_msg("MXF ë³€í™˜ - SOUND");
 			dcpHistoryDao.writeHistory(historyVo);
 			break;
 		case "subtitle":
@@ -98,7 +98,7 @@ public class DcpMxfService {
 			RemoveDir removeDir = new RemoveDir(workDir + path + "/SUBTITLE");
 			removeDir.start();
 			
-			historyVo.setHistory_msg("MXF º¯È¯ - SUBTITLE");
+			historyVo.setHistory_msg("MXF ë³€í™˜ - SUBTITLE");
 			dcpHistoryDao.writeHistory(historyVo);
 			break;
 		}

@@ -30,7 +30,7 @@ public class DcpLoginService {
 		userVo.setUser_storageCapa(common.getDefaultStorage());
 		userVo.setUser_usingGpu(common.getDefaultGpu());
 		userVo.setUser_approve(common.getDefaultApprove());
-		userVo.setUser_status("¹Ì½ÂÀÎ");
+		userVo.setUser_status("ë¯¸ìŠ¹ì¸");
 		userVo.setUser_grade("default");
 		userVo.setUser_joined(new Date());
 		userVo.setUser_connect(new Date());

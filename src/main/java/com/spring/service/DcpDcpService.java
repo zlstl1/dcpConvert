@@ -39,7 +39,7 @@ public class DcpDcpService {
 		
 		dcpCommon.runCli(cli.split(" "), workDir+path);
 		
-		historyVo.setHistory_msg("DCP º¯È¯");
+		historyVo.setHistory_msg("DCP ë³€í™˜");
 		dcpHistoryDao.writeHistory(historyVo);
 		
 //		dcpCommon.zipDir(workDir);
