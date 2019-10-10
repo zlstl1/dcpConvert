@@ -15,16 +15,6 @@ public class DcpAdminController {
 
    @RequestMapping(value = "/dcp/{email}/adminpage", method = RequestMethod.GET)
    public String adminpage(Model model, HttpSession session, @PathVariable("email") String email) {
-	   
-	      UserVo testUser = new UserVo();
-	      testUser.setUser_admin(true);
-	      testUser.setUser_id("vlfl1889922");
-	      testUser.setUser_name("±è°æ¼·");
-	      testUser.setUser_no(1);
-	      testUser.setUser_storageCapa(25);
-	      testUser.setUser_usingGpu(3);
-	      session.setAttribute("user", testUser);
-	      
       UserVo userVo = (UserVo)session.getAttribute("user");
       model.addAttribute("user", userVo);
       return "adminpage";
