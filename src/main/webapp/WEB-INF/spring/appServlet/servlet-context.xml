@@ -18,7 +18,7 @@
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
-	
+<!-- 	
 	<interceptors>
 	 	<interceptor>
 	  		<mapping path="/dcp/**"/>
@@ -31,7 +31,7 @@
 	  		<beans:bean class="com.spring.interceptor.DcpLoginInterceptor"></beans:bean>
 	 	</interceptor>
 	</interceptors>
-
+ -->
 	<beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
       <beans:property name="order" value="0"/>
     </beans:bean>
