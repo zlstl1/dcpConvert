@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="user_history">
+
+	<select id="getHistoryList" parameterType="int" resultType="com.spring.vo.HistoryVo">
+		<![CDATA[
+			select *
+			from user_history
+			where user_no = #{user_no}
+			order by history_date desc
+			Limit #{startList}, #{listSize}
+		]]>
+	</select>
+		
+	<insert id="writeHistory" parameterType="com.spring.vo.HistoryVo">
+		<![CDATA[
+			INSERT INTO user_history 
+				(user_no,history_msg,history_date) 
+			VALUES (
+				#{user_no},
+				#{history_msg},
+				now()
+			);
+		]]>
+	</insert>
+	
+	<select id="getHistoryListCnt" parameterType="com.spring.vo.HistoryVo" resultType="int">
+		SELECT
+			count(*) as listCnt
+		FROM
+			user_history
+		WHERE
+			user_no = #{user_no}
+	</select>
+	
+</mapper>

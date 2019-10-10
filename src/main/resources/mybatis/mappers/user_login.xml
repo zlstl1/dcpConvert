@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="user_login">
+
+	<select id="checkRegist" parameterType="String" resultType="com.spring.vo.UserVo">
+		<![CDATA[
+			select *
+			from user
+			where user_id = #{email}
+		]]>
+	</select>
+	
+	<insert id="registId" useGeneratedKeys="true" keyProperty="user_no" parameterType="com.spring.vo.UserVo">
+		<![CDATA[
+			INSERT INTO user 
+				(user_id,user_name,user_usingGpu,user_storageCapa,user_approve,user_joined,user_connect,user_status,user_email,user_grade) 
+			VALUES (
+				#{user_id},
+				#{user_name},
+				#{user_usingGpu},
+				#{user_storageCapa},
+				#{user_approve},
+				#{user_joined},
+				#{user_connect},
+				#{user_status},
+				#{user_email},
+				#{user_grade}
+			);
+		]]>
+	</insert>
+	
+	<select id="isAdmin" parameterType="com.spring.vo.UserVo" resultType="com.spring.vo.UserVo">
+		<![CDATA[
+			select *
+			from admin
+			where user_no = #{user_no}
+		]]>
+	</select>
+	
+	<select id="getUserInfo" parameterType="com.spring.vo.UserVo" resultType="com.spring.vo.UserVo">
+		<![CDATA[
+			select *
+			from user
+			where user_id = #{user_id}
+		]]>
+	</select>
+	
+</mapper>

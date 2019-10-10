@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<context:component-scan base-package="com.spring" />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+	
+	<interceptors>
+	 	<interceptor>
+	  		<mapping path="/dcp/**"/>
+	  		<exclude-mapping path="/dcp"/>
+	  		<exclude-mapping path="/dcp/login"/>
+	  		<exclude-mapping path="/dcp/logout"/>
+	  		<exclude-mapping path="/dcp/oauth2callback"/>
+	  		<exclude-mapping path="/dcp/error"/>
+	  		<exclude-mapping path="/rest/*"/>
+	  		<beans:bean class="com.spring.interceptor.DcpLoginInterceptor"></beans:bean>
+	 	</interceptor>
+	</interceptors>
+
+	<beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+      <beans:property name="order" value="0"/>
+    </beans:bean>
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+		<beans:property name="order" value="1"/>
+	</beans:bean>
+	
+	<context:component-scan base-package="com.spring.controller" />
+	
+	<!-- file Upload -->
+    <beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- max upload size in bytes -->
+        <beans:property name="maxUploadSize" value="-1" /> 
+        <!-- max size of file in memory (in bytes) -->
+        <beans:property name="maxInMemorySize" value="-1" /> 
+        <beans:property name="defaultEncoding" value="utf-8" />
+    </beans:bean>
+    
+	<beans:bean id="fileDownloadView" class="com.spring.util.FileDownloadView"/>
+	<beans:bean id="fileViewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver">
+	    <beans:property name="order" value="3"/>
+	</beans:bean>
+	
+	<!-- google Class Bean설정 추가 -->
+	<!-- 클라이언트ID와 보안비밀 세팅-->
+	<beans:bean id="googleConnectionFactory" class="org.springframework.social.google.connect.GoogleConnectionFactory">
+		<beans:constructor-arg value="977673025903-a2bh3v90100cktp60f4h9sih3t2kqmdk.apps.googleusercontent.com" />
+		<beans:constructor-arg value="9kgdt5idiwWtbByw_7XifQ5M" />
+	</beans:bean>
+	
+	<!-- 승인된 자바스크립트 원본과 승인된 리디렉션 URI -->
+	<beans:bean id="googleOAuth2Parameters" class="org.springframework.social.oauth2.OAuth2Parameters">
+		<beans:property name="scope" value="profile email" />
+		<beans:property name="redirectUri" value="http://disolution.iptime.org:9000/opendcp/dcp/oauth2callback" />
+	</beans:bean>
+	
+</beans:beans>
