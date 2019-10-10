@@ -74,7 +74,7 @@
 				
 					<div id="myFileList" class="border border-success rounded-sm d-flex flex-row flex-wrap mr-1 ml-1 pt-2 pb-2">
 						<div class="mr-1 ml-1 mb-1">
-							<div class="upper_folder card" style="width: 10rem;">
+							<div class="upper_folder card d-block" style="width: 10rem;">
 					  			<img src="${pageContext.request.contextPath}/resources/img/upper_folder.png" class="card-img-top" alt="...">
 					  			<div class="card-body">
 					    			<p class="card-text text-truncate">..</p>
@@ -82,7 +82,7 @@
 							</div>
 						</div>
 						<div class="mr-1 ml-1 mb-1">
-							<div class="make_folder card" style="width: 10rem;">
+							<div class="make_folder card d-block" style="width: 10rem;">
 					  			<img src="${pageContext.request.contextPath}/resources/img/make_folder.png" class="card-img-top" alt="...">
 					  			<div class="card-body">
 					    			<p class="card-text text-truncate">폴더 생성</p>
@@ -93,7 +93,7 @@
 						<c:forEach var="fileList" items="${fileList}">
 							<c:if test="${fileList.fileType eq 'folder'}">
 								<div class="mr-1 ml-1 mb-1">
-									<div class="${fileList.fileType} card selectCard" style="width: 10rem;">
+									<div class="${fileList.fileType} card selectCard d-block" style="width: 10rem;">
 										<input type="checkbox" class="chk" name="chk" value="${fileList.fileName}" hidden="hidden">
 							  			<img src="${pageContext.request.contextPath}/resources/img/${fileList.fileType}.png" class="card-img-top" alt="...">
 							  			<div class="card-body">
@@ -104,7 +104,7 @@
 							</c:if>
 							<c:if test="${fileList.fileType eq 'file'}">
 								<div class="mr-1 ml-1 mb-1">
-									<div class="${fileList.fileType} card selectCard" style="width: 10rem;">
+									<div class="${fileList.fileType} card selectCard d-block" style="width: 10rem;">
 										<input type="checkbox" class="chk" name="chk" value="${fileList.fileName}" hidden="hidden">
 							  			<img src="${pageContext.request.contextPath}/resources/img/${fileList.fileType}.png" class="card-img-top" alt="...">
 							  			<div class="card-body">

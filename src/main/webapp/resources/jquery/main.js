@@ -315,7 +315,7 @@ function render(fileList) {
 	var str = "";
 	
 	str += '<div class="mr-1 ml-1 mb-1">';
-	str += '	<div class="upper_folder card" style="width: 10rem;">';
+	str += '	<div class="upper_folder card d-block" style="width: 10rem;">';
   	str += '		<img src="' + getContextPath() + '/resources/img/upper_folder.png" class="card-img-top" alt="...">';
   	str += '		<div class="card-body">';
     str += '			<p class="card-text text-truncate">..</p>';
@@ -323,7 +323,7 @@ function render(fileList) {
 	str += '	</div>';
 	str += '</div>';
 	str += '<div class="mr-1 ml-1 mb-1">';
-	str += '	<div class="make_folder card" style="width: 10rem;">';
+	str += '	<div class="make_folder card d-block" style="width: 10rem;">';
   	str += '		<img src="' + getContextPath() + '/resources/img/make_folder.png" class="card-img-top" alt="...">';
   	str += '		<div class="card-body">';
     str += '			<p class="card-text text-truncate">폴더 생성</p>';
@@ -333,7 +333,7 @@ function render(fileList) {
 
 	for(var i=0; i<fileList.length; i++){
 		str += '<div class="mr-1 ml-1 mb-1">';
-		str += '<div class="' + fileList[i].fileType +' card selectCard" style="width: 10rem;">';
+		str += '<div class="' + fileList[i].fileType +' card selectCard d-block" style="width: 10rem;">';
 		str += '<input type="checkbox" class="chk" name="chk" value="' + fileList[i].fileName + '" hidden="hidden">';
 		str += '<img src="' + getContextPath() + '/resources/img/' + fileList[i].fileType + '.png" class="card-img-top" alt="...">';
 	  	str += '		<div class="card-body">';

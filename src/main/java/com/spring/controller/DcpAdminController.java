@@ -19,7 +19,7 @@ public class DcpAdminController {
 	      UserVo testUser = new UserVo();
 	      testUser.setUser_admin(true);
 	      testUser.setUser_id("vlfl1889922");
-	      testUser.setUser_name("김경섭");
+	      testUser.setUser_name("��漷");
 	      testUser.setUser_no(1);
 	      testUser.setUser_storageCapa(25);
 	      testUser.setUser_usingGpu(3);
