@@ -29,36 +29,6 @@ public class DcpAdminController {
       model.addAttribute("user", userVo);
       return "adminpage";
    }
-   
-   @RequestMapping(value = "/dcp/dashboard", method = RequestMethod.GET)
-   public String dashboard() {
-
-      return "/admin/dashboard";
-   }
-
-   @RequestMapping(value = "/dcp/admin/cpumonitoring", method = RequestMethod.GET)
-   public String admin_cpumonitoring() {
-
-      return "/admin/cpumonitoring";
-   }
-
-   @RequestMapping(value = "/dcp/admin/gpumonitoring", method = RequestMethod.GET)
-   public String admin_gpumonitoring() {
-
-      return "/admin/gpumonitoring";
-   }
-
-   @RequestMapping(value = "/dcp/admin/rammonitoring", method = RequestMethod.GET)
-   public String admin_rammonitoring() {
-
-      return "/admin/rammonitoring";
-   }
-
-   @RequestMapping(value = "/dcp/userlist", method = RequestMethod.GET)
-   public String userlist() {
-
-      return "/admin/userlist";
-   }
 
    @RequestMapping(value = "/dcp/waiting", method = RequestMethod.GET)
    public String waiting() {
@@ -68,31 +38,51 @@ public class DcpAdminController {
    @RequestMapping(value = "/dcp/grade", method = RequestMethod.GET)
    public String grade() {
 	   
-      return "/admin/dashboard";
+      return "/admin/grade";
    }
    
    
-   @RequestMapping(value = "/dcp/cpumonitoring", method = RequestMethod.GET)
+   @RequestMapping(value = "/dcp/{email}/cpumonitoring", method = RequestMethod.GET)
    public String cpumonitoring() {
 
       return "/cpumonitoring";
    }
+   
+   @RequestMapping(value = "/dcp/{email}/gpumonitoring", method = RequestMethod.GET)
+   public String gpumonitoring() {
 
-   @RequestMapping(value = "/dcp/gpumonitoring1", method = RequestMethod.GET)
+      return "/gpumonitoring";
+   }
+   
+   
+   @RequestMapping(value = "/dcp/{email}/gpumonitoring1", method = RequestMethod.GET)
    public String gpumonitoring1() {
 
       return "/gpumonitoring1";
    }
 
-   @RequestMapping(value = "/dcp/gpumonitoring2", method = RequestMethod.GET)
+   @RequestMapping(value = "/dcp/{email}/gpumonitoring2", method = RequestMethod.GET)
    public String gpumonitoring2() {
 
       return "/gpumonitoring2";
    }
    
-   @RequestMapping(value = "/dcp/rammonitoring", method = RequestMethod.GET)
+   @RequestMapping(value = "/dcp/{email}/rammonitoring", method = RequestMethod.GET)
    public String rammonitoring() {
 
       return "/rammonitoring";
+   }
+   
+   @RequestMapping(value = "/dcp/{email}/storage", method = RequestMethod.GET)
+   public String storage() {
+
+	   
+      return "/storage";
+   }
+   
+   @RequestMapping(value = "/dcp/{email}/userlist", method = RequestMethod.GET)
+   public String userlist() {
+
+      return "/userlist";
    }
 }
