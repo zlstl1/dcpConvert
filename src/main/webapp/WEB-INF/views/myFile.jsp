@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
@@ -10,7 +11,7 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/assets/css/main.css">
 	<link href="${pageContext.request.contextPath }/resources/css/skin-lion/ui.fancytree.css" rel="stylesheet">
 	<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/bootstrap.css">
-	<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/sweetalert.css">
+	<link rel="stylesheet" href="../webjars/sweetalert2/8.18.1/dist/sweetalert2.min.css">
 </head>
 <body class="subpage">
 	
@@ -45,6 +46,7 @@
 				  			<form id="fileForm">
 				  				<input type="file" id="uploadFile" name="uploadFile" multiple="multiple" hidden="hidden">
 				  				<input type="text" id="path" name="path" value="" hidden="hidden">
+				  				<input type="text" id="email" name="email" value="${user.user_id}" hidden="hidden">
 				  			</form>
 						  	<button type="button" class="button small" id="downloadBtn"><i class="icon fa-download"></i>&nbsp;다운로드</button>
 						  	<button type="button" class="button small" id="explorerBtn" data-toggle="modal" data-target="#explorerModal">
@@ -63,7 +65,7 @@
 						
 						<c:if test="${not empty dirSize}">
 							<div class="float-right d-flex pt-2">
-								<p>${user.user_name} : &nbsp</p><p id="userStorage">${dirSize}/${user.user_storageCapa}GB</p>
+								<p>${user.user_name} : &nbsp;</p><p id="userStorage">${dirSize}/${user.user_storageCapa}GB</p>
 							</div>
 						</c:if>
 					</div>
@@ -151,11 +153,12 @@
 	<%-- <jsp:include page="${pageContext.request.contextPath}/WEB-INF/views/modal/explorerModal.jsp" /> --%>
 	<%@include file="modal/explorerModal.jsp" %>
 	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/jquery/jQuery3.4.1.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/js/bootstrap.bundle.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/js/jquery.fancytree.ui-deps.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/js/jquery.fancytree.js"></script>
-	<script src="${pageContext.request.contextPath}/resources/js/sweetalert.min.js"></script>
+	<script src="../webjars/sweetalert2/8.18.1/dist/sweetalert2.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/assets/js/jquery.scrollex.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/assets/js/skel.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/assets/js/util.js"></script>

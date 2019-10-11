@@ -53,7 +53,7 @@
 						</select>
 					</div>
 
-					<!-- <div class="mt-2 mb-2">
+					<div class="mt-2 mb-2">
 						<input type="checkbox" id="encryption" name="encryption">
 						<label for="encryption">Enable Encryption</label>
 					</div>
@@ -70,7 +70,7 @@
 					    	<span class="input-group-text"><label for="keyid">Key ID(32 char) : </label></span>
 						</div>
 						<input type="text" id="keyID" name="keyID" aria-describedby="Key ID" disabled="disabled" value="00000000-0000-0000-0000-000000000000">
-					</div> -->
+					</div>
 					
 					<div class="form-group">
 						<label for="quality_t">파일 경로 : </label>

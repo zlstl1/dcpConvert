@@ -4453,6 +4453,6 @@ body.subpage {
 	
 }
 
-.btn-lg {	
-	line-height: 1.2 !important;
+button.swal2-styled{
+	line-height: 0.9 !important;
 }
