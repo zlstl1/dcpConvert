@@ -4,16 +4,7 @@ function getContextPath() {
 };
 
 function getID(){
-	var id
-	$.ajax({
-	    type:"GET",
-	    url: getContextPath() + "/rest/getemail",
-	    async:false,
-	    success: function(data) {
-	    	id= data;
-	    }
-	});
-	return id;
+	return $("#email").val();
 }
 
 //페이지 로딩시 파일 이동 모달창에 트리 그리기
@@ -36,7 +27,7 @@ $("#convertModalSelect").on("click",function(){
       	$(".path").val(node.key);
       	$('#explorerModal').modal('toggle');
     }else{
-    	swal("경고","경로를 선택해 주세요", "error");
+    	swal.fire("경고","경로를 선택해 주세요", "error");
     }
 });
 
@@ -72,13 +63,13 @@ $('#explorerBtn').on('click', function (e) {
 $("#explorerModalSelect").on("click",function(){
 	var items = getItem();
 	if(items[0] === undefined){
-		swal("경고","파일 또는 폴더를 선택해주세요", "error");
+		swal.fire("경고","파일 또는 폴더를 선택해주세요", "error");
 		$('#explorerModal').modal('toggle');
 	}else{
    		var node = $("#tree").fancytree("getActiveNode");
 		for(var i=0; i<items.length; i++){
 			if( node && items[i] == node.key){
-				swal("경고","선택된 폴더로 폴더를 이동하는것은 불가능합니다", "error");
+				swal.fire("경고","선택된 폴더로 폴더를 이동하는것은 불가능합니다", "error");
 				$('#explorerModal').modal('toggle');
 				return;
 			}
@@ -103,7 +94,7 @@ function moveFile(path, items){
 			showLoding();
 		},
         success : function() {
-        	swal("성공","이동 완료", "success");
+        	swal.fire("성공","이동 완료", "success");
         	hideLoding();
         	var path = $("#path").val();
         	fetchFileList(path);
@@ -120,7 +111,7 @@ function moveFile(path, items){
 //폴더 생성 모달의 생성 버튼  클릭시 폴더 생성
 $('#makeFolderBtn').on('click',function(){
 	if($("#folderName").val() == ""){
-		swal("경고","폴더명을 입력하세요", "error");
+		swal.fire("경고","폴더명을 입력하세요", "error");
 	}else{
 		$.ajax({
 			url: getContextPath() + "/dcp/" + getID() + "/makefolder",
@@ -134,7 +125,7 @@ $('#makeFolderBtn').on('click',function(){
 				showLoding();
 			},
 			success : function() {
-				swal("성공","폴더 생성 완료", "success");
+				swal.fire("성공","폴더 생성 완료", "success");
 				hideLoding();
 				var path = $("#path").val();
 	        	fetchFileList(path);
@@ -183,15 +174,15 @@ $("#downloadBtn").on("click",function(){
 	if(items[0] !== undefined){
 		ext = items[0].split(".");
 	}else{
-		swal("경고","파일을 선택해주세요", "error");
+		swal.fire("경고","파일을 선택해주세요", "error");
 		return;
 	}
 	
 	if(ext.length < 2){
 		if(items.length > 1){
-			swal("경고","폴더는 하나씩 다운 가능합니다", "error");
+			swal.fire("경고","폴더는 하나씩 다운 가능합니다", "error");
 		}else{
-			swal({
+			swal.fire({
 				title: "경고",
 			  	text: "폴더 다운로드는 압축으로 인해 오래 걸릴수 있습니다.",
 			  	type: "warning",
@@ -199,14 +190,13 @@ $("#downloadBtn").on("click",function(){
 			  	confirmButtonClass: "btn-danger",
 			  	confirmButtonText: "계속 진행",
 			  	cancelButtonText: "취소",
-			  	closeOnConfirm: true,
-			  	closeOnCancel: true
-			},
-			function(isConfirm) {
-			  	if (isConfirm) {
-			  		window.location.href=getContextPath() + '/dcp/' + getID() + '/downloadfolder?path=' + items[0].split("/");
-			  	}
-			});
+			}).then(function (result) {
+	            if (result.dismiss === "cancel") { 
+	                return false;
+	            }
+	            //window.location.href=getContextPath() + '/dcp/' + getID() + '/downloadfolder?path=' + items[0].split("/");
+	            window.open(getContextPath() + '/dcp/' + getID() + '/downloadfolder?path=' + items[0].split("/"),'_blank');
+	        });
 		}
 	}else{
 		for(var i=0; i < items.length; i++){
@@ -226,9 +216,9 @@ function sleep (delay) {
 $("#deleteBtn").on("click",function(){
 	var items = getItem();
 	if (items.length == 0 ){
-		swal("경고","삭제하실 파일 또는 폴더를 선택하세요", "error");
+		swal.fire("경고","삭제하실 파일 또는 폴더를 선택하세요", "error");
 	}else{
-		swal({
+		swal.fire({
 			title: "경고",
 		  	text: "파일을 지우시겠습니까?",
 		  	type: "warning",
@@ -236,38 +226,36 @@ $("#deleteBtn").on("click",function(){
 		  	confirmButtonClass: "btn-danger",
 		  	confirmButtonText: "지우기",
 		  	cancelButtonText: "취소",
-		  	closeOnConfirm: false,
-		  	closeOnCancel: false
-		},
-		function(isConfirm) {
-		  	if (isConfirm) {
-		  		jQuery.ajaxSettings.traditional = true;
-				
-				$.ajax({
-					 url: getContextPath() + "/dcp/" + getID() + "/deletefile",
-			        type:'POST',
-			        data:{
-			        	"items" : items
-			        },
-			        beforeSend: function() {
-						showLoding();
-					},
-			        success : function() {
-			        	swal("성공","삭제 완료", "success");
-			        	hideLoding();
-			        	jQuery.ajaxSettings.traditional = false;
-			        	var path = $("#path").val();
-			        	fetchFileList(path);
-			        	renderTree();
-					},
-					error : function(XHR, status, error) {
-						jQuery.ajaxSettings.traditional = false;
-						console.error(status + " : " + error);
-					}
-		
-			    })
-		  	} 
-		});
+		}).then(function (result) {
+            if (result.dismiss === "cancel") { 
+                return false;
+            }
+            jQuery.ajaxSettings.traditional = true;
+			
+			$.ajax({
+				 url: getContextPath() + "/dcp/" + getID() + "/deletefile",
+		        type:'POST',
+		        data:{
+		        	"items" : items
+		        },
+		        beforeSend: function() {
+					showLoding();
+				},
+		        success : function() {
+		        	swal.fire("성공","삭제 완료", "success");
+		        	hideLoding();
+		        	jQuery.ajaxSettings.traditional = false;
+		        	var path = $("#path").val();
+		        	fetchFileList(path);
+		        	renderTree();
+				},
+				error : function(XHR, status, error) {
+					jQuery.ajaxSettings.traditional = false;
+					console.error(status + " : " + error);
+				}
+	
+		    })
+        });
 	}
 });
 
@@ -315,7 +303,7 @@ function render(fileList) {
 	var str = "";
 	
 	str += '<div class="mr-1 ml-1 mb-1">';
-	str += '	<div class="upper_folder card" style="width: 10rem;">';
+	str += '	<div class="upper_folder card d-block" style="width: 10rem;">';
   	str += '		<img src="' + getContextPath() + '/resources/img/upper_folder.png" class="card-img-top" alt="...">';
   	str += '		<div class="card-body">';
     str += '			<p class="card-text text-truncate">..</p>';
@@ -323,7 +311,7 @@ function render(fileList) {
 	str += '	</div>';
 	str += '</div>';
 	str += '<div class="mr-1 ml-1 mb-1">';
-	str += '	<div class="make_folder card" style="width: 10rem;">';
+	str += '	<div class="make_folder card d-block" style="width: 10rem;">';
   	str += '		<img src="' + getContextPath() + '/resources/img/make_folder.png" class="card-img-top" alt="...">';
   	str += '		<div class="card-body">';
     str += '			<p class="card-text text-truncate">폴더 생성</p>';
@@ -333,7 +321,7 @@ function render(fileList) {
 
 	for(var i=0; i<fileList.length; i++){
 		str += '<div class="mr-1 ml-1 mb-1">';
-		str += '<div class="' + fileList[i].fileType +' card selectCard" style="width: 10rem;">';
+		str += '<div class="' + fileList[i].fileType +' card selectCard d-block" style="width: 10rem;">';
 		str += '<input type="checkbox" class="chk" name="chk" value="' + fileList[i].fileName + '" hidden="hidden">';
 		str += '<img src="' + getContextPath() + '/resources/img/' + fileList[i].fileType + '.png" class="card-img-top" alt="...">';
 	  	str += '		<div class="card-body">';
@@ -371,24 +359,24 @@ $('#tiffConvert').on('click',function(){
 			ext.toLowerCase();
 		}
 	}else{
-		swal("경고","파일을 선택해주세요", "error");
+		swal.fire("경고","파일을 선택해주세요", "error");
 		return;
 	}
 	
 	if ( $("#title_t").val() == ""){
-		swal("경고","Title을 입력해주세요", "error");
+		swal.fire("경고","Title을 입력해주세요", "error");
 	}else if( $("#length_t").val() == ""){
-		swal("경고","Length를 입력해주세요", "error");
+		swal.fire("경고","Length를 입력해주세요", "error");
 	}else if( !($.isNumeric($("#length_t").val()))){
-		swal("경고","Length 필드에는 숫자만 입력해주세요", "error");
+		swal.fire("경고","Length 필드에는 숫자만 입력해주세요", "error");
 	}else if( $("#quality_t").val() == ""){
-		swal("경고","Quality를 입력해주세요", "error");
+		swal.fire("경고","Quality를 입력해주세요", "error");
 	}else if( !($.isNumeric($("#quality_t").val()))){
-		swal("경고","Quality 필드에는 숫자만 입력해주세요", "error");
+		swal.fire("경고","Quality 필드에는 숫자만 입력해주세요", "error");
 	}else if(items.length > 1){
-		swal("경고","TIFF 변환은 동영상 파일 하나를 선택하세요", "error");
+		swal.fire("경고","TIFF 변환은 동영상 파일 하나를 선택하세요", "error");
 	}else if(ext != "mp4" && ext != "mkv" && ext != "avi" && ext != "mov" && ext != "wmv" && ext != "mpeg" && ext != "m4v" && ext != "asx" && ext != "mpg"&& ext != "ogm"){
-		swal("경고","TIFF 변환은 동영상 파일을 선택하세요", "error");
+		swal.fire("경고","TIFF 변환은 동영상 파일을 선택하세요", "error");
 	}else {
 		jQuery.ajaxSettings.traditional = true;
 		
@@ -410,7 +398,7 @@ $('#tiffConvert').on('click',function(){
 				showLoding();
 		    },
 			success : function() {
-				swal("성공","TIFF 변환완료", "success");
+				swal.fire("성공","TIFF 변환완료", "success");
 				hideLoding();
 				jQuery.ajaxSettings.traditional = false;
 				var path = $("#path").val();
@@ -436,16 +424,16 @@ $('#jpegConvert').on('click',function(){
 			ext.toLowerCase();
 		}
 	}else{
-		swal("경고","파일을 선택해주세요", "error");
+		swal.fire("경고","파일을 선택해주세요", "error");
 		return;
 	}
 	
 	if( $("#bandWidth_j").val() == ""){
-		swal("경고","BandWidth를 입력해주세요", "error");
+		swal.fire("경고","BandWidth를 입력해주세요", "error");
 	}else if( !($.isNumeric($("#bandWidth_j").val()))){
-		swal("경고","BandWidth 필드에는 숫자만 입력해주세요", "error");
+		swal.fire("경고","BandWidth 필드에는 숫자만 입력해주세요", "error");
 	}else if(ext != "tiff" && ext != "tif" && ext != "bmp"){
-		swal("경고","JPEG 변환은 TIFF 또는 BMP 파일을 선택하세요", "error");
+		swal.fire("경고","JPEG 변환은 TIFF 또는 BMP 파일을 선택하세요", "error");
 	}else{
 		jQuery.ajaxSettings.traditional = true;
 		$.ajax({
@@ -463,7 +451,7 @@ $('#jpegConvert').on('click',function(){
 				showLoding();
 		    },
 			success : function() {
-				swal("성공","JPEG변환완료", "success");
+				swal.fire("성공","JPEG변환완료", "success");
 				hideLoding();
 				jQuery.ajaxSettings.traditional = false;
 				var path = $("#path").val();
@@ -501,29 +489,29 @@ $('#mxfConvert').on('click',function(){
 			ext.toLowerCase();
 		}
 	}else{
-		swal("경고","파일을 선택해주세요", "error");
+		swal.fire("경고","파일을 선택해주세요", "error");
 		return;
 	}
 	
 	if( $("#title_m").val() == ""){
-		swal("경고","Title을 입력해주세요", "error");
+		swal.fire("경고","Title을 입력해주세요", "error");
 	}else if( $("#fileType_m").val() == "picture" ){
 		if(ext === undefined){
 			mxfConvert(items);
 		}else{
-			swal("경고","JPEG2000 포맷의 파일이 있는 폴더를 선택하세요", "error");
+			swal.fire("경고","JPEG2000 포맷의 파일이 있는 폴더를 선택하세요", "error");
 		}
 	}else if( $("#fileType_m").val() == "sound" ){
 		if(ext === undefined){
 			mxfConvert(items);
 		}else{
-			swal("경고","WAV 포맷의 파일이 있는 폴더를 선택하세요", "error");
+			swal.fire("경고","WAV 포맷의 파일이 있는 폴더를 선택하세요", "error");
 		}
 	}else if( $("#fileType_m").val() == "subtitle" ){
 		if(ext === undefined ){
-			swal("경고","srt 포맷의 파일을 선택하세요", "error");
+			swal.fire("경고","srt 포맷의 파일을 선택하세요", "error");
 		}else if( ext != "srt"){
-			swal("경고","srt 포맷의 파일을 선택하세요", "error");
+			swal.fire("경고","srt 포맷의 파일을 선택하세요", "error");
 		}else{
 			mxfConvert(items);
 		}
@@ -556,7 +544,7 @@ function mxfConvert(items){
 				showLoding();
 		},
 		success : function() {
-			swal("성공","MXF 변환완료", "success");
+			swal.fire("성공","MXF 변환완료", "success");
 			hideLoding();
 			jQuery.ajaxSettings.traditional = false;
 			var path = $("#path").val();
@@ -581,20 +569,20 @@ $('#dcpConvert').on('click',function(){
 			ext.toLowerCase();
 		}
 	}else{
-		swal("경고","파일을 선택해주세요", "error");
+		swal.fire("경고","파일을 선택해주세요", "error");
 		return;
 	}
 	
 	if( $("#title_d").val() == ""){
-		swal("경고","Title을 입력해주세요", "error");
+		swal.fire("경고","Title을 입력해주세요", "error");
 	}else if( $("#annotation_d").val() == "" ){
-		swal("경고","Annotation을 입력해주세요", "error");
+		swal.fire("경고","Annotation을 입력해주세요", "error");
 	}else if( $("#issuer_d").val() == "" ){
-		swal("경고","Issuer를 입력해주세요", "error");
+		swal.fire("경고","Issuer를 입력해주세요", "error");
 	}else if(ext === undefined ){
-		swal("경고","mxf 포맷의 파일을 선택하세요", "error");
+		swal.fire("경고","mxf 포맷의 파일을 선택하세요", "error");
 	}else if( ext != "mxf"){
-		swal("경고","mxf 포맷의 파일을 선택하세요", "error");
+		swal.fire("경고","mxf 포맷의 파일을 선택하세요", "error");
 	}else{
 		jQuery.ajaxSettings.traditional = true;
 	
@@ -616,7 +604,7 @@ $('#dcpConvert').on('click',function(){
 				showLoding();
 		    },
 			success : function() {
-				swal("성공","DCP 변환완료", "success");
+				swal.fire("성공","DCP 변환완료", "success");
 				hideLoding();
 				jQuery.ajaxSettings.traditional = false;
 				var path = $("#path").val();
@@ -642,35 +630,35 @@ $('#oneStopConvert').on('click',function(){
 			ext.toLowerCase();
 		}
 	}else{
-		swal("경고","파일을 선택해주세요", "error");
+		swal.fire("경고","파일을 선택해주세요", "error");
 		return;
 	}
 	
 	if ( $("#title_o").val() == ""){
-		swal("경고","Title을 입력해주세요", "error");
+		swal.fire("경고","Title을 입력해주세요", "error");
 	}else if( $("#quality_o").val() == ""){
-		swal("경고","Quality를 입력해주세요", "error");
+		swal.fire("경고","Quality를 입력해주세요", "error");
 	}else if( !($.isNumeric($("#quality_o").val()))){
-		swal("경고","Quality 필드에는 숫자만 입력해주세요", "error");
+		swal.fire("경고","Quality 필드에는 숫자만 입력해주세요", "error");
 	}else if( $("#bandWidth_o").val() == ""){
-		swal("경고","BandWidth를 입력해주세요", "error");
+		swal.fire("경고","BandWidth를 입력해주세요", "error");
 	}else if( !($.isNumeric($("#bandWidth_o").val()))){
-		swal("경고","BandWidth 필드에는 숫자만 입력해주세요", "error");
+		swal.fire("경고","BandWidth 필드에는 숫자만 입력해주세요", "error");
 	}else if( $("#annotation_o").val() == "" ){
-		swal("경고","Annotation을 입력해주세요", "error");
+		swal.fire("경고","Annotation을 입력해주세요", "error");
 	}else if( $("#issuer_o").val() == "" ){
-		swal("경고","Issuer를 입력해주세요", "error");
+		swal.fire("경고","Issuer를 입력해주세요", "error");
 	}else {
 		for(var i=0;i<items.length;i++){
 			var ext = items[i].split(".")[1];
 			if(ext === undefined){
-				swal("경고","폴더는 선택 불가능합니다", "error");
+				swal.fire("경고","폴더는 선택 불가능합니다", "error");
 				return;
 			}else{
 				ext = ext.toLowerCase();
 				if(ext != "mp4" && ext != "mkv" && ext != "avi" && ext != "mov" && ext != "wmv" && ext != "mpeg" && ext != "m4v" && ext != "asx" && ext != "mpg"&& ext != "ogm" 
 						&& ext != "wav" && ext != "srt"){
-					swal("경고","파일 포맷을 확인하세요", "error");
+					swal.fire("경고","파일 포맷을 확인하세요", "error");
 					return;
 				}
 			}
@@ -700,7 +688,7 @@ $('#oneStopConvert').on('click',function(){
 				showLoding();
 			},
 			success : function() {
-				swal("성공","OneStop 변환완료", "success");
+				swal.fire("성공","OneStop 변환완료", "success");
 				hideLoding();
 				jQuery.ajaxSettings.traditional = false;
 				var path = $("#path").val();

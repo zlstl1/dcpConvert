@@ -52,7 +52,7 @@ public class DcpTiffService {
 	    	divTiff.start();
 			divTiff2.start();
 			
-			historyVo.setHistory_msg("TIFF º¯È¯");
+			historyVo.setHistory_msg("TIFF ë³€í™˜");
 			dcpHistoryDao.writeHistory(historyVo);
 			
 			try {

@@ -20,7 +20,7 @@
 	<resources mapping="/resources/**" location="/resources/" />
 	
 	<resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
-<!-- 	
+
 	<interceptors>
 	 	<interceptor>
 	  		<mapping path="/dcp/**"/>
@@ -33,7 +33,7 @@
 	  		<beans:bean class="com.spring.interceptor.DcpLoginInterceptor"></beans:bean>
 	 	</interceptor>
 	</interceptors>
- -->
+
 	<beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
       <beans:property name="order" value="0"/>
     </beans:bean>

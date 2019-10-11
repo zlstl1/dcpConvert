@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.servlet.view.AbstractView;
 
@@ -23,7 +22,6 @@ public class FileDownloadView extends AbstractView{
     protected void renderMergedOutputModel(Map<String, Object> model,
     		HttpServletRequest req, HttpServletResponse res) throws Exception {
         File file = (File) model.get("downloadFile");
-        
         res.setContentType(getContentType());
         res.setContentLength((int) file.length());
 

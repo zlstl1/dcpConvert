@@ -69,7 +69,7 @@ public class DcpJpegService {
 			e.printStackTrace();
 		}
 		
-		historyVo.setHistory_msg("JPEG º¯È¯");
+		historyVo.setHistory_msg("JPEG ë³€í™˜");
 		dcpHistoryDao.writeHistory(historyVo);
 		
 //		dcpCommon.zipDir(workDir + "\\J2C");

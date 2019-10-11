@@ -39,11 +39,4 @@ public class DcpRestController {
 		
 		return "TIFF Convert";
 	}
-	
-	@RequestMapping(value = "/rest/getemail", method = RequestMethod.GET)
-	public String getemail(HttpSession session) {
-		UserVo user = (UserVo)session.getAttribute("user");
-		return user.getUser_id();
-	}
-	
 }

@@ -23,6 +23,7 @@ public class DcpMxfService {
 	
 	public void convertMxf(MxfVo mxfVo,String workDir,List<String> items, String path, HistoryVo historyVo) {
 		String title = "";
+		String cli = "";
 		
 		switch(mxfVo.getFileType()) {
 		case "picture":
@@ -35,9 +36,13 @@ public class DcpMxfService {
 				"-n",mxfVo.getLabel(),
 				"-r",String.valueOf(mxfVo.getFrameRate())
 			};
-			dcpCommon.runCli(cmd,workDir);
+			cli = "opendcp_mxf -i " + workDir + items.get(0) + " -o " + title + " -n " + mxfVo.getLabel() + " -r " + mxfVo.getFrameRate();
+			if(mxfVo.isEncryption()) {
+				cli += " -k " + mxfVo.getKey() + " -u " + mxfVo.getKeyID();
+			}
+			dcpCommon.runCli(cli.split(" "),workDir);
 			
-			historyVo.setHistory_msg("MXF º¯È¯ - PICTURE");
+			historyVo.setHistory_msg("MXF ë³€í™˜ - PICTURE");
 			dcpHistoryDao.writeHistory(historyVo);
 			break;
 		case "sound":
@@ -50,9 +55,13 @@ public class DcpMxfService {
 					"-n",mxfVo.getLabel(),
 					"-r",String.valueOf(mxfVo.getFrameRate())
 			};
-			dcpCommon.runCli(cmd2,workDir);
+			cli = "opendcp_mxf -i " + workDir + items.get(0) + " -o " + title + " -n " + mxfVo.getLabel() + " -r " + mxfVo.getFrameRate();
+			if(mxfVo.isEncryption()) {
+				cli += " -k " + mxfVo.getKey() + " -u " + mxfVo.getKeyID();
+			}
+			dcpCommon.runCli(cli.split(" "),workDir);
 			
-			historyVo.setHistory_msg("MXF º¯È¯ - SOUND");
+			historyVo.setHistory_msg("MXF ë³€í™˜ - SOUND");
 			dcpHistoryDao.writeHistory(historyVo);
 			break;
 		case "subtitle":
@@ -98,7 +107,7 @@ public class DcpMxfService {
 			RemoveDir removeDir = new RemoveDir(workDir + path + "/SUBTITLE");
 			removeDir.start();
 			
-			historyVo.setHistory_msg("MXF º¯È¯ - SUBTITLE");
+			historyVo.setHistory_msg("MXF ë³€í™˜ - SUBTITLE");
 			dcpHistoryDao.writeHistory(historyVo);
 			break;
 		}

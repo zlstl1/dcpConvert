@@ -7,11 +7,17 @@ label{
 }
 
 .lodingDiv{
+	min-height: 100%; 
 	width: 100%;
-	height: 100%;
+	height: auto;
 	background-color: #000000;
 	opacity: 0.3;
-	position: absolute;
+	position: fixed;
+	overflow: auto;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
 	z-index:9998;
 }
 .loader {
@@ -22,8 +28,12 @@ label{
   position: absolute;
   top: 50%;
   left: 50%;
+  -ms-transform : translate(-50%, -50%);
+  -moz-transform : translate(-50%, -50%);
+  -webkit-transform : translate(-50%, -50%);
+  -o-transform : translate(-50%, -50%);
   transform: translate(-50%, -50%);
-  font-family: helvetica, arial, sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
   text-transform: uppercase;
   font-weight: 900;
   color: #444A61;
@@ -37,6 +47,10 @@ label{
   height: 15px;
   background: #444A61;
   position: absolute;
+  -ms-animation: load 0.7s infinite alternate ease-in-out;	
+  -moz-animation: load 0.7s infinite alternate ease-in-out;	
+  -webkit-animation: load 0.7s infinite alternate ease-in-out;	
+  -o-animation: load 0.7s infinite alternate ease-in-out;
   animation: load 0.7s infinite alternate ease-in-out;
 }
 .loader::before {
@@ -67,7 +81,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 	padding: 0;
 	border: 0;
 	font-size: 100%;
-	font: inherit;
+	font-family: 'Noto Sans KR', sans-serif;
 	vertical-align: baseline;
 }
 
@@ -1879,7 +1893,7 @@ hr {
 
 	.box header p {
 		text-transform: uppercase;
-		font-size: .75rem;
+		font-size: .9rem;
 		font-weight: 300;
 		margin: 0 0 .25rem 0;
 		padding: 0 0 .75rem 0;
@@ -1946,9 +1960,9 @@ button,
 	cursor: pointer;
 	display: inline-block;
 	font-weight: 300;
-	height: 2.85rem;
-	line-height: 2.95rem;
-	padding: 0 1.5rem;
+	height: 2.5rem;
+	line-height: 2.6rem;
+	padding: 0 1.3rem;
 	text-align: center;
 	text-decoration: none;
 	text-transform: uppercase;
@@ -1986,7 +2000,7 @@ button,
 	input[type="button"].small,
 	button.small,
 	.button.small {
-		font-size: 0.8rem;
+		font-size: 0.9rem;
 	}
 
 	input[type="submit"].big,
@@ -2187,7 +2201,7 @@ input[type="text"],
 input[type="password"],
 input[type="email"],
 select {
-	height: 2.75rem;
+	height: 2.5rem;
 }
 
 textarea {
@@ -2983,6 +2997,7 @@ table.alt tbody tr td {
 		.wrapper.style2 input[type="button"],
 		.wrapper.style2 button,
 		.wrapper.style2 .button {
+			border-radius: 10px;
 			background-color: #000;
 			color: #f2f2f2 !important;
 		}
@@ -3384,7 +3399,7 @@ table.alt tbody tr td {
 
 		.wrapper.style3 p {
 			text-transform: uppercase;
-			font-size: .75rem;
+			font-size: 1.0rem;
 			font-weight: 300;
 			margin: 0 0 .5rem 0;
 			padding: 0 0 1rem 0;
@@ -4281,7 +4296,7 @@ body.subpage {
 		.banner > article p {
 			color: rgba(255, 255, 255, 0.65);
 			text-transform: uppercase;
-			font-size: 1rem;
+			font-size: 1.25rem;
 			font-weight: 300;
 			margin: 0;
 			padding-bottom: 1.75rem;
@@ -4436,4 +4451,8 @@ body.subpage {
 .modal-dialog{
 	padding-top : 3.25em;
 	
+}
+
+button.swal2-styled{
+	line-height: 0.9 !important;
 }
