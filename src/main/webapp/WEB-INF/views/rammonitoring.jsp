@@ -9,21 +9,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>관리자 페이지</title>
-
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath }/resources/assets/css/main.css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath }/resources/css/bootstrap.css">
+<link rel="stylesheet" href="<%=cp%>/resources/assets/css/main.css">
+<link rel="stylesheet" href="<%=cp%>/resources/css/bootstrap.css">
 
 <!-- 김규아 추가 -->
-<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/circle.css">
+<link rel="stylesheet" href="<%=cp%>/resources/css/circle.css">
 <link rel="stylesheet" href="<%=cp%>/resources/css/cmGauge.css">
-
-
-<link rel="stylesheet" href="<%=cp%>/resources/css/all.css">
-<link rel="stylesheet" href="<%=cp%>/resources/css/fontawesome.css">
-    
-    
 <style type="text/css">
         /* Style the lines by removing the fill and applying a stroke */
         .line {
@@ -56,29 +47,52 @@
 		<div class="inner">
 			<div class="box">
 				<div class="content">
-
-
-				<div class="row ml-2">
-                        <div class="col">
-                            <h5>MEM LOAD</h5>
-                            <div class="row mt-2">
-                                <div class="col ml-3">
-                                    <svg class="ml-3" id="chart"></svg>
-                                </div>
-                                <div class="col-2" style="margin-bottom: auto;margin-top: auto">
-                                    <table class="table text-center table-hover border-bottom">
-                                        <tr>
-                                            <td class="font-weight-bold" scope="col">MAX</td>
-                                            <td scope="col" id="memmax"></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="font-weight-bold">min</td>
-                                            <td id="memmin"></td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+				
+					<div class="row">
+							<div class="col">
+								<p class="font-weight-bold text-secondary mt-3" style="margin-left:40%">LOAD</p>
+								<div class="c100 custom green" style="margin-left:45%" id="rammem">
+									<span id="rammemtext"></span>
+									<div class="slice">
+										<div class="bar"></div>
+										<div class="fill"></div>
+									</div>
+								</div>
+							</div>
+					</div>
+					
+					<div class="row text-right mt-3">
+						<div class="col">
+							<a href="#"style="color: black;" onclick="detail();" id="detailtext">상세보기 <i class="fa fa-caret-down" aria-hidden="true"></i></a>
+						</div>
+	                </div>
+	
+	                <hr>
+				
+				
+					<div id="detail" style="display:none">
+						<div class="row ml-2">
+	                        <div class="col">
+	                            <p style="color:#000;">MEM LOAD</p>
+	                            <div class="row mt-2">
+	                                <div class="col ml-3">
+	                                    <svg class="ml-3" id="chart"></svg>
+	                                </div>
+	                                <div class="col-2" style="margin-bottom: auto;margin-top: auto">
+	                                    <table class="table text-center table-hover border-bottom">
+	                                        <tr>
+	                                            <td class="font-weight-bold" scope="col">MAX</td>
+	                                            <td scope="col" id="memmax"></td>
+	                                        </tr>
+	                                        <tr>
+	                                            <td class="font-weight-bold">min</td>
+	                                            <td id="memmin"></td>
+	                                        </tr>
+	                                    </table>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
                     </div>
                     
 				</div>
@@ -89,28 +103,28 @@
 	<!-- Footer -->
 	<%@include file="import/footer.jsp"%>
 
-	<script
-		src="${pageContext.request.contextPath}/resources/jquery/jQuery3.4.1.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/js/bootstrap.bundle.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/js/jquery.scrollex.min.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/js/skel.min.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/js/util.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/js/main.js"></script>
+	<script src="<%=cp%>/resources/jquery/jQuery3.4.1.js"></script>
+	<script src="<%=cp%>/resources/js/bootstrap.bundle.js"></script>
+	<script src="<%=cp%>/resources/assets/js/jquery.scrollex.min.js"></script>
+	<script src="<%=cp%>/resources/assets/js/skel.min.js"></script>
+	<script src="<%=cp%>/resources/assets/js/util.js"></script>
+	<script src="<%=cp%>/resources/assets/js/main.js"></script>
 	<script src="<%=cp%>/resources/js/cmGauge.js"></script>
-	
-	<script src="<%=cp%>/resources/js/fontawesome.js"></script>
-	
-	
-<script src="<%=cp%>/resources/js/d3.min.js"></script>
-<script src="<%=cp%>/resources/js/moment.js"></script>
+	<script src="<%=cp%>/resources/js/d3.min.js"></script>
+	<script src="<%=cp%>/resources/js/moment.js"></script>
 
 <script type="text/javascript">
    
+function detail(){
+    if($('#detail').css("display")=="none"){
+        $('#detail').css("display","block");
+        $('#detailtext').html("상세보기 <i class=\"fa fa-caret-up\" aria-hidden=\"true\"></i>");
+    }else{
+        $('#detail').css("display","none");
+        $('#detailtext').html("상세보기 <i class=\"fa fa-caret-down\" aria-hidden=\"true\"></i>");
+    }
+}
+
 $(document).ready(function(){
     setInterval(function() {
         tick();
@@ -151,6 +165,38 @@ $.ajax({
     error: function(err){
         console.log(err);
     }
+
+});
+
+
+var ramload = null;
+
+$.ajax({
+	url : "<%=cp%>/get/single/mem",
+	type : "POST",
+	dataType : "json",
+	data : {},
+	success : function(data) {
+		var mem = Math.round(data.data.result[0].value[1]);
+
+		$("#rammem").removeClass(ramload);
+		$("#rammem").addClass("p" + mem);
+
+		ramload = "p" + mem;
+
+		if (mem > 60) {
+			$("#rammem").removeClass("green");
+			$("#rammem").addClass("orange");
+		} else {
+			$("#rammem").removeClass("orange");
+			$("#rammem").addClass("green");
+		}
+
+		$("#rammemtext").text(mem + "%");
+	},
+	error : function(err) {
+		console.log(err);
+	}
 
 });
 

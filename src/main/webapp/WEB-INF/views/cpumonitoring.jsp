@@ -9,19 +9,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>관리자 페이지</title>
-
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath }/resources/assets/css/main.css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath }/resources/css/bootstrap.css">
+<link rel="stylesheet" href="<%=cp%>/resources/assets/css/main.css">
+<link rel="stylesheet" href="<%=cp%>/resources/css/bootstrap.css">
 
 <!-- 김규아 추가 -->
-<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/circle.css">
+<link rel="stylesheet" href="<%=cp%>/resources/css/circle.css">
 <link rel="stylesheet" href="<%=cp%>/resources/css/cmGauge.css">
-
-
-<link rel="stylesheet" href="<%=cp%>/resources/css/all.css">
-<link rel="stylesheet" href="<%=cp%>/resources/css/fontawesome.css">
     
     
 <style type="text/css">
@@ -62,55 +55,91 @@
 			<div class="box">
 				<div class="content">
 
+				
+				
+				<div class="row text-center">
+							<div class="col">
+									<p class="font-weight-bold text-secondary mt-3 text-left">LOAD</p>
+									<div class="c100 custom green" style="margin-left:30%" id="cpumem">
+										<span id="cpumemtext"></span>
+										<div class="slice">
+											<div class="bar"></div>
+											<div class="fill"></div>
+										</div>
+									</div>
+								</div>
 
-				<div class="row ml-2">
-                        <div class="col">
-                            <h5>MEM LOAD</h5>
-                            <div class="row mt-2">
-                                <div class="col ml-3">
-                                    <svg class="ml-3" id="memchart"></svg>
-                                </div>
-                                <div class="col-2" style="margin-bottom: auto;margin-top: auto">
-                                    <table class="table text-center table-hover border-bottom">
-                                        <tr>
-                                            <td class="font-weight-bold" scope="col">MAX</td>
-                                            <td scope="col" id="cpumemmax"></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="font-weight-bold">min</td>
-                                            <td id="cpumemmin"></td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="row ml-2 mt-5">
-                        <div class="col">
-                            <h5>CLOCK SPEED</h5>
-                            <div class="row">
-                                <div class="col ml-3">
-                                    <svg class="ml-3" id="clockchart"></svg>
-                                </div>
-                                <div class="col-2" style="margin-bottom: auto;margin-top: auto">
-                                    <table class="table text-center table-hover border-bottom">
-                                        <tr>
-                                            <td class="font-weight-bold" scope="col">MAX</td>
-                                            <td scope="col" id="cpuclockmax"></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="font-weight-bold">min</td>
-                                            <td id="cpuclockmin"></td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-	               
+								<div class="col">
+									<p class="font-weight-bold text-secondary mt-3 mb-4 text-left">CLOCK
+										SPEED</p>
+									<div id="gaugeDemo3" class="gauge gauge-big ml-3">
+										<div class="gauge-arrow" data-percentage="98"
+											style="transform: rotate(0deg);"></div>
+									</div>
+									<h4 class="mt-3 text-center text-secondary" id="cpuclocktext"></h4>
+								</div>
+					</div>
+					
+					<div class="row text-right mt-3">
+						<div class="col">
+							<a href="#"style="color: black;" onclick="detail();" id="detailtext">상세보기 <i class="fa fa-caret-down" aria-hidden="true"></i></a>
+						</div>
+	                </div>
+	
+	                <hr>
+				
+				
+				
+				
+				<div id="detail" style="display:none">
+					<div class="row ml-2">
+	                        <div class="col">
+	                            <p style="color:#000;">MEM LOAD</p>
+	                            <div class="row mt-2">
+	                                <div class="col ml-3">
+	                                    <svg class="ml-3" id="memchart"></svg>
+	                                </div>
+	                                <div class="col-2" style="margin-bottom: auto;margin-top: auto">
+	                                    <table class="table text-center table-hover border-bottom">
+	                                        <tr>
+	                                            <td class="font-weight-bold" scope="col">MAX</td>
+	                                            <td scope="col" id="cpumemmax"></td>
+	                                        </tr>
+	                                        <tr>
+	                                            <td class="font-weight-bold">min</td>
+	                                            <td id="cpumemmin"></td>
+	                                        </tr>
+	                                    </table>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                    
+	                    
+	                    <div class="row ml-2 mt-5">
+	                        <div class="col">
+	                            <p style="color:#000;">CLOCK SPEED</p>
+	                            <div class="row">
+	                                <div class="col ml-3">
+	                                    <svg class="ml-3" id="clockchart"></svg>
+	                                </div>
+	                                <div class="col-2" style="margin-bottom: auto;margin-top: auto">
+	                                    <table class="table text-center table-hover border-bottom">
+	                                        <tr>
+	                                            <td class="font-weight-bold" scope="col">MAX</td>
+	                                            <td scope="col" id="cpuclockmax"></td>
+	                                        </tr>
+	                                        <tr>
+	                                            <td class="font-weight-bold">min</td>
+	                                            <td id="cpuclockmin"></td>
+	                                        </tr>
+	                                    </table>
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                 </div>
+
 				</div>
 			</div>
 		</div>
@@ -119,27 +148,19 @@
 	<!-- Footer -->
 	<%@include file="import/footer.jsp"%>
 
-	<script
-		src="${pageContext.request.contextPath}/resources/jquery/jQuery3.4.1.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/js/bootstrap.bundle.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/js/jquery.scrollex.min.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/js/skel.min.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/js/util.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/js/main.js"></script>
+	<script src="<%=cp%>/resources/jquery/jQuery3.4.1.js"></script>
+	<script src="<%=cp%>/resources/js/bootstrap.bundle.js"></script>
+	<script src="<%=cp%>/resources/assets/js/jquery.scrollex.min.js"></script>
+	<script src="<%=cp%>/resources/assets/js/skel.min.js"></script>
+	<script src="<%=cp%>/resources/assets/js/util.js"></script>
+	<script src="<%=cp%>/resources/assets/js/main.js"></script>
 	<script src="<%=cp%>/resources/js/cmGauge.js"></script>
-	
-	<script src="<%=cp%>/resources/js/fontawesome.js"></script>
-	
-	
-<script src="<%=cp%>/resources/js/d3.min.js"></script>
-<script src="<%=cp%>/resources/js/moment.js"></script>
+	<script src="<%=cp%>/resources/js/d3.min.js"></script>
+	<script src="<%=cp%>/resources/js/moment.js"></script>
 
 <script type="text/javascript">
+$('#gaugeDemo3 .gauge-arrow').cmGauge();
+
     $(document).ready(function(){
         setInterval(function() {
             tick();
@@ -148,6 +169,16 @@
 
     });
 
+    function detail(){
+        if($('#detail').css("display")=="none"){
+            $('#detail').css("display","block");
+            $('#detailtext').html("상세보기 <i class=\"fa fa-caret-up\" aria-hidden=\"true\"></i>");
+        }else{
+            $('#detail').css("display","none");
+            $('#detailtext').html("상세보기 <i class=\"fa fa-caret-down\" aria-hidden=\"true\"></i>");
+        }
+    }
+    
     var now = Math.round(new Date().getTime() / 1000);
 
     var loadDt = new Date();
@@ -183,6 +214,60 @@
         }
 
     });
+    
+    var cpuload = null;
+    
+    $.ajax({
+		url : "<%=cp%>/get/single/cpu",
+		type : "POST",
+		dataType : "json",
+		data : {},
+		success : function(data) {
+			var mem = Math.round(data.data.result[0].value[1]);
+
+			$("#cpumem").removeClass(cpuload);
+			$("#cpumem").addClass("p" + mem);
+
+			cpuload = "p" + mem;
+
+			if (mem > 60) {
+				$("#cpumem").removeClass("green");
+				$("#cpumem").addClass("orange");
+			} else {
+				$("#cpumem").removeClass("orange");
+				$("#cpumem").addClass("green");
+			}
+
+			$("#cpumemtext").text(mem + "%");
+
+		},
+		error : function(err) {
+			console.log(err);
+		}
+
+	});
+
+	$.ajax({
+		url : "<%=cp%>/get/single/cpuClock",
+		type : "POST",
+		dataType : "json",
+		data : {},
+		success : function(data) {
+			// 2.0 ~ 3.4
+			var clock = (data.data.result[0].value[1] / Math.pow(10, 9))
+					.toFixed(1);
+			var mhz = clock - 2.0;
+			var percent = Math.round(mhz / 3.4 * 100);
+
+			$('#gaugeDemo3 .gauge-arrow').trigger('updateGauge', percent);
+
+			$('#cpuclocktext').text(clock + " Ghz");
+		},
+		error : function(err) {
+			console.log(err);
+		}
+
+	});
 
     var margin = {top: 20, right: 20, bottom: 20, left: 40}
         , width = 960 - margin.left - margin.right// Use the window's width

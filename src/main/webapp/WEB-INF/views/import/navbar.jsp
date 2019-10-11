@@ -20,16 +20,17 @@
 					<ul>
 						<li><a href="#" onclick="monitoring()"> - 자원관리</a></li>
 							<ul id="monitoring" style="display:none;">
-								<li><a href="<%=cp%>/dcp/cpumonitoring">CPU 모니터링</a></li>
-								<li><a href="<%=cp%>/dcp/gpumonitoring">GPU 모니터링</a></li>
-								<li><a href="<%=cp%>/dcp/rammonitoring">RAM 모니터링</a></li>
+								<li><a href="<%=cp%>/dcp/${user.user_id}/cpumonitoring">CPU</a></li>
+								<li><a href="<%=cp%>/dcp/${user.user_id}/gpumonitoring">GPU</a></li>
+								<li><a href="<%=cp%>/dcp/${user.user_id}/rammonitoring">RAM</a></li>
+								<li><a href="<%=cp%>/dcp/${user.user_id}/storage">STORAGE</a></li>
 							</ul>
 					</ul>
 					
 					<ul>
 						<li><a href="#" onclick="user()"> - 회원관리</a></li>
 							<ul id="user" style="display:none">
-								<li><a href="<%=cp%>/dcp/userlist">회원리스트</a></li>
+								<li><a href="<%=cp%>/dcp/${user.user_id}/userlist">회원리스트</a></li>
 		                    	<li><a href="<%=cp%>/dcp/waiting">가입대기회원</a></li>
 		                    	<li><a href="<%=cp%>/dcp/grade">회원등급관리</a></li>
 							</ul>

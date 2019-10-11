@@ -18,8 +18,10 @@
     
     <link rel="stylesheet" href="../webjars/font-awesome/5.8.1/css/fontawesome.css">
     <link rel="stylesheet" href="../webjars/font-awesome/5.8.1/css/all.css">
-       
+      
     <link rel="stylesheet" href="../webjars/sweetalert2/dist/sweetalert2.css">
+    
+
     
     <title>dashboard</title>
 </head>
@@ -232,7 +234,8 @@
 <script src="<%=cp%>/resources/js/cmGauge.js"></script>
 <script src="<%=cp%>/resources/js/d3.min.js"></script>
 <script src="../webjars/font-awesome/5.8.1/js/fontawesome.js"></script>
-<script src="../webjars/sweetalert2/dist/sweetalert2.js"></script>
+
+<script src="../webjars/sweetalert2/dist/sweetalert2.min.js"></script>
 
 </body>
 </html>

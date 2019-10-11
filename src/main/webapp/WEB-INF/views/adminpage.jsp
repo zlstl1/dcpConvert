@@ -46,6 +46,61 @@
 		<div class="inner">
 			<div class="box">
 				<div class="content">
+				
+				<div class="row text-center">
+					<div class="col">
+						<h1 class="font-weight-bold"><a href="<%=cp%>/dcp/${user.user_id}/cpumonitoring" style="color: #000;">CPU</a></h1>
+						<img src="<%=cp%>/resources/img/cpu.png" style="width:150px;">
+					</div>
+					
+					<div class="col">
+						<h1 class="font-weight-bold"><a href="<%=cp%>/dcp/${user.user_id}/gpumonitoring" style="color: #000;">GPU</a></h1>
+						<img src="<%=cp%>/resources/img/graphicscard.png" style="width:150px;">
+					</div>
+					
+					<div class="col">
+						<h1 class="font-weight-bold"><a href="<%=cp%>/dcp/${user.user_id}/rammonitoring" style="color: #000;">RAM</a></h1>
+						<img src="<%=cp%>/resources/img/ram.png" style="width:150px;" class="mt-4">
+					</div>
+					
+					<div class="col">
+						<h1 class="font-weight-bold"><a href="<%=cp%>/dcp/${user.user_id}/storage" style="color: #000;">STORAGE</a></h1>
+						<img src="<%=cp%>/resources/img/cloud.png" style="width:150px;" class="mt-4">
+					</div>
+				</div>
+				
+				<div class="row mt-5">
+					<div class="col border m-2">
+					
+						<table class="table table-bordered mt-2 text-center" id="waitingTable">
+			                <thead>
+			                <tr>
+			                    <th scope="col"><input type="checkbox" id="checkall"></th>
+			                    <th scope="col">아이디</th>
+			                    <th scope="col">이름</th>
+			                    <th scope="col">가입신청일</th>
+			                    <th scope="col"></th>
+			                </tr>
+			                </thead>
+			                <tbody>
+			                <tr>
+			                    <td><input type="checkbox" name="chk"></td>
+			                    <td>user3</td>
+			                    <td>유저3</td>
+			                    <td>2019-09-19</td>
+			                    <td class="p-0 m-0"><button class="btn btn-outline-dark mt-1 mb-1" onclick="accept();">승인</button> <button class="btn btn-outline-dark mt-1 mb-1" onclick="reject();">거절</button></td>
+			                </tr>
+			                </tbody>
+			            </table>
+
+					</div>
+					
+					<div class="col border m-2">
+					
+					</div>
+				</div>
+				
+<%-- 				
 					<div class="row text-left">
 						<div class="col">
 							<h4>
@@ -241,7 +296,7 @@
 
 						</div>
 						
-
+ --%>
 				</div>
 			</div>
 		</div>
@@ -263,7 +318,9 @@
 		src="${pageContext.request.contextPath}/resources/assets/js/util.js"></script>
 	<script
 		src="${pageContext.request.contextPath}/resources/assets/js/main.js"></script>
-	<script src="<%=cp%>/resources/js/adminpage.js"></script>
+	
+	<%-- <script src="<%=cp%>/resources/js/adminpage.js"></script> --%>
+	
 	<script src="<%=cp%>/resources/js/cmGauge.js"></script>
 
 	<script src="<%=cp%>/resources/js/fontawesome.js"></script>
