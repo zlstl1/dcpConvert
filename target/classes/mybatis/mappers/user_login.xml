@@ -3,15 +3,17 @@
 
 <mapper namespace="user_login">
 
-	<select id="checkRegist" parameterType="String" resultType="com.spring.vo.UserVo">
+	<select id="checkRegist" parameterType="String"
+		resultType="com.spring.vo.UserVo">
 		<![CDATA[
 			select *
 			from user
 			where user_id = #{email}
 		]]>
 	</select>
-	
-	<insert id="registId" useGeneratedKeys="true" keyProperty="user_no" parameterType="com.spring.vo.UserVo">
+
+	<insert id="registId" useGeneratedKeys="true"
+		keyProperty="user_no" parameterType="com.spring.vo.UserVo">
 		<![CDATA[
 			INSERT INTO user 
 				(user_id,user_name,user_usingGpu,user_storageCapa,user_approve,user_joined,user_connect,user_status,user_email,user_grade) 
@@ -29,21 +31,58 @@
 			);
 		]]>
 	</insert>
-	
-	<select id="isAdmin" parameterType="com.spring.vo.UserVo" resultType="com.spring.vo.UserVo">
+
+	<select id="isAdmin" parameterType="com.spring.vo.UserVo"
+		resultType="com.spring.vo.UserVo">
 		<![CDATA[
 			select *
 			from admin
 			where user_no = #{user_no}
 		]]>
 	</select>
-	
-	<select id="getUserInfo" parameterType="com.spring.vo.UserVo" resultType="com.spring.vo.UserVo">
+
+	<select id="getUserInfo" parameterType="com.spring.vo.UserVo"
+		resultType="com.spring.vo.UserVo">
 		<![CDATA[
 			select *
 			from user
 			where user_id = #{user_id}
 		]]>
 	</select>
+
+
+	<!-- 김규아 추가 -->
+	<select id="getUserList" parameterType="com.spring.vo.UserVo" resultType="com.spring.vo.UserVo">
+		<![CDATA[
+			select *
+			from user
+		]]>
+	</select>
 	
+	<!-- 김규아 추가 -->
+	<update id="updateconnect" parameterType="com.spring.vo.UserVo">
+		<![CDATA[
+			UPDATE user 
+			SET user_connect = now()
+			WHERE user_id = #{user_id};
+		]]>
+	</update>
+	
+	<!-- 김규아 추가 -->
+	<delete id="deleteuser" parameterType="String">
+		<![CDATA[
+			DELETE FROM user
+			WHERE user_id = #{user_id};
+		]]>
+	</delete>
+
+	<!-- 김규아 추가 -->
+	<select id="getuser"  parameterType="com.spring.vo.UserVo" resultType="com.spring.vo.UserVo">
+		<![CDATA[
+			select *
+			from user
+			where user_id = #{user_id};
+		]]>
+	</select>
+
 </mapper>

@@ -30,9 +30,8 @@ public class DcpLoginService {
 		userVo.setUser_storageCapa(common.getDefaultStorage());
 		userVo.setUser_usingGpu(common.getDefaultGpu());
 		userVo.setUser_status("미승인");
-		userVo.setUser_grade("default");
+		userVo.setUser_grade("회원");
 		userVo.setUser_joined(new Date());
-		userVo.setUser_connect(new Date());
 		
 		return dcpLoginDao.registId(userVo);
 	}
@@ -45,4 +44,5 @@ public class DcpLoginService {
 		}
 		return userVo;
 	}
+	
 }
