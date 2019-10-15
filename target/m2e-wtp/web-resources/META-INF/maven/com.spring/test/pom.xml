@@ -240,12 +240,13 @@
         </dependency>
         
         
-           <!-- https://mvnrepository.com/artifact/org.webjars.bowergithub.sweetalert2/sweetalert2 -->
+        <!-- https://mvnrepository.com/artifact/org.webjars.bowergithub.sweetalert2/sweetalert2 -->
         <dependency>
-            <groupId>org.webjars.bowergithub.sweetalert2</groupId>
-            <artifactId>sweetalert2</artifactId>
-            <version>7.28.10</version>
-        </dependency>
+		   <groupId>org.webjars.npm</groupId>
+		   <artifactId>sweetalert2</artifactId>
+		   <version>8.18.1</version>
+		</dependency>
+        
 	</dependencies>
 	
     <build>

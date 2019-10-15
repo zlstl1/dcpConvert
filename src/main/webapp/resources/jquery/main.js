@@ -7,6 +7,29 @@ function getID(){
 	return $("#email").val();
 }
 
+function getDirPromise(){
+	var promise = $.ajax({  
+	    type:"GET",
+	    url: getContextPath() + "/dcp/" + getID() + "/getdirsize",
+	});
+	return promise;
+}
+
+$("#uploadFile").on("change",function(){
+	var promise = getDirPromise();
+	promise.done(uploadFunction);
+});
+
+$("#downloadBtn").on("click",function(){
+	var promise = getDirPromise();
+	promise.done(downloadCheckFunction);
+});
+
+$(".reset").on("shown.bs.modal",function(){
+	var promise = getDirPromise();
+	promise.done(convertCheckFunction);
+});
+
 //페이지 로딩시 파일 이동 모달창에 트리 그리기
 renderTree();
 
@@ -40,17 +63,13 @@ function renderTree(){
 	});
 }
 
-$('#convertBtn').mouseenter(function(){
-	$('#convertArea').css("display", "flex");
-});
-$('#convertArea').mouseenter(function(){
-	$('#convertArea').css("display", "flex");
-});
-$('#convertBtn').mouseleave(function(){
-	$('#convertArea').css("display", "none");
-});
-$('#convertArea').mouseleave(function(){
-	$('#convertArea').css("display", "none");
+$('#convertBtn').click(function(){
+	var convertArea = $('#convertArea')
+	if (convertArea.css("display") === "none") {
+		convertArea.css("display", "flex");
+	} else {
+		convertArea.css("display", "none");
+	}
 });
 
 //파일 탐색기 모달창에서 선택 버튼을 두개로 만들고 하나는 파일 이동 기능 하나는 변환시 경로 지정 기능
@@ -169,7 +188,7 @@ function getItem(){
 };
 
 //다운로드 버튼 클릭시 다운로드 기능
-$("#downloadBtn").on("click",function(){
+function downloadFunc(){
 	var items = getItem();
 	if(items[0] !== undefined){
 		ext = items[0].split(".");
@@ -205,7 +224,7 @@ $("#downloadBtn").on("click",function(){
 		}
 		
 	}
-});
+};
 
 function sleep (delay) {
    var start = new Date().getTime();
@@ -521,6 +540,13 @@ $('#mxfConvert').on('click',function(){
 });
 
 function mxfConvert(items){
+	var encryption;
+	if ($("#encryption").prop("checked")) {
+		encryption = true;
+	}else{
+		encryption = false;
+	}
+	
 	jQuery.ajaxSettings.traditional = true;
 	
    	$.ajax({
@@ -533,7 +559,7 @@ function mxfConvert(items){
 			"scale" : $("#scale_m").val(),
 			"frameRate" : $("#frameRate_m").val(),
 			"fileType" : $("#fileType_m").val(),
-			"encryption" : $("#encryption").val(),
+			"encryption" : encryption,
 			"key" : $("#key").val(),
 			"keyID" : $("#keyID").val(),
 			"items" : items,

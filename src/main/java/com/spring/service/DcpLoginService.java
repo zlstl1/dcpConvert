@@ -29,7 +29,6 @@ public class DcpLoginService {
 	public UserVo registId(UserVo userVo) {
 		userVo.setUser_storageCapa(common.getDefaultStorage());
 		userVo.setUser_usingGpu(common.getDefaultGpu());
-		userVo.setUser_approve(common.getDefaultApprove());
 		userVo.setUser_status("미승인");
 		userVo.setUser_grade("default");
 		userVo.setUser_joined(new Date());

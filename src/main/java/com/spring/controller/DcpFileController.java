@@ -81,6 +81,13 @@ public class DcpFileController {
 		dcpCommonService.makeDir(common.getLocalDir()+email+folderName);
 	}
 	
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.OK)
+	@RequestMapping(value = "/dcp/{email}/getdirsize", method = RequestMethod.GET)
+	public String getDirSize(@PathVariable("email") String email) {
+		return dcpFileService.getDirectorySize(email);
+	}
+	
 	@RequestMapping(value = "/dcp/{email}/downloadfile")
 	public ModelAndView callDownload(@PathVariable("email") String email, @RequestParam("path") List<String> path) {
 		String fileName = "";

@@ -19,7 +19,6 @@ public class Common {
 	
 	final int defaultGpu = 1;
 	final int defaultStorage = 25;
-	final int defaultApprove = 1;
 	
 	public String getPersonalUUID() {
 		return personalUUID;
@@ -32,9 +31,6 @@ public class Common {
 	}
 	public int getDefaultStorage() {
 		return defaultStorage;
-	}
-	public int getDefaultApprove() {
-		return defaultApprove;
 	}
 	public String getLocalDir() {
 		return localDir;
