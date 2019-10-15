@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.spring.service.DcpCommonService;
 import com.spring.service.DcpHistoryService;
 import com.spring.service.DcpLoginService;
+import com.spring.service.DcpUserService;
 import com.spring.util.Common;
 import com.spring.vo.HistoryVo;
 import com.spring.vo.UserVo;
@@ -45,6 +46,8 @@ public class DcpLoginController {
 	DcpHistoryService dcpHistoryService;
 	@Autowired
 	DcpCommonService dcpCommonService;
+	@Autowired
+	DcpUserService dcpUserService;
 	
 	@RequestMapping(value = "dcp/login", method = { RequestMethod.GET, RequestMethod.POST })
 	public String login(Model model, HttpSession session) {
@@ -112,7 +115,6 @@ public class DcpLoginController {
         
         ///김규아 추가
         user.setUser_joined(new Date());
-        user.setUser_connect(new Date());
         
         if(dcpLoginService.checkRegist(email)) {
         	user = dcpLoginService.registId(user);
@@ -123,6 +125,13 @@ public class DcpLoginController {
         	historyVo.setUser_no(user.getUser_no());
         	historyVo.setHistory_msg("로그인");
         	dcpHistoryService.writeHistory(historyVo);
+        	
+        	try {
+				dcpUserService.updateconnect(email);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
         
         session.setAttribute("user", user);

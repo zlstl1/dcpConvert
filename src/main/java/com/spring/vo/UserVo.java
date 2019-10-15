@@ -88,7 +88,7 @@ public class UserVo {
 	public void setUser_grade(String user_grade) {
 		this.user_grade = user_grade;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "UserVo [user_no=" + user_no + ", user_id=" + user_id + ", user_name=" + user_name + ", user_usingGpu="
@@ -96,5 +96,5 @@ public class UserVo {
 				+ ", user_admin=" + user_admin + ", user_joined=" + user_joined + ", user_connect=" + user_connect
 				+ ", user_status=" + user_status + ", user_email=" + user_email + ", user_grade=" + user_grade + "]";
 	}
-    
+	
 }

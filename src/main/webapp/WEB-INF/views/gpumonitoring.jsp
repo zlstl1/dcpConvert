@@ -552,7 +552,7 @@ var xScale2 = d3.scaleTime()
 
 // 6. Y scale will use the randomly generate number
 var yScale2 = d3.scaleLinear()
-    .domain([((Number(min2)/Math.pow(10,9).toFixed(1))-1), ((Number(max2)/Math.pow(10,9).toFixed(1))+1)]) // input
+    .domain([(Number(min2)/Math.pow(10,9).toFixed(1))-1, (Number(max2)/Math.pow(10,9).toFixed(1))+1]) // input
     .range([height2, 0]); // output
 
 // 7. d3's line generator
