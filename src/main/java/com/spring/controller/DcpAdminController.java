@@ -16,11 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-<<<<<<< HEAD
-=======
-import com.mysql.cj.xdevapi.JsonArray;
 import com.spring.service.DcpGroupService;
->>>>>>> refs/remotes/origin/master
 import com.spring.service.DcpUserService;
 import com.spring.vo.GroupVo;
 import com.spring.vo.UserVo;
