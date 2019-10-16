@@ -60,13 +60,13 @@
 									<tr>
 										<th scope="col">아이디</th>
 										<th scope="col">이름</th>
-										<th scope="col">등급</th>
 										<th scope="col">GPU</th>
 										<th scope="col">STORAGE</th>
 										<th scope="col">이메일</th>
 										<th scope="col">가입승인일</th>
 										<th scope="col">최근 접속일</th>
 										<th scope="col">상태</th>
+										<th scope="col">그룹</th>
 										<th scope="col">관리</th>
 									</tr>
 								</thead>
@@ -75,7 +75,6 @@
 										<tr>
 											<td>${list.user_id}</td>
 											<td>${list.user_name}</td>
-											<td>${list.user_grade}</td>
 											<td>${list.user_usingGpu}</td>
 											<td>${list.user_storageCapa}</td>
 											<td>${list.user_email}</td>
@@ -86,11 +85,14 @@
 											<td><fmt:formatDate value="${list.user_connect}"
 													pattern="yyyy-MM-dd HH:mm" /></td>
 											<td>${list.user_status}</td>
-											<td><button class="btn btn-outline-dark"
-													onclick="updateuser('${list.user_id}');"
+											<td>${list.user_group}</td>
+											<td><c:if test="${list.user_status ne '미승인'}">
+												<button class="btn btn-outline-dark"
+													onclick="getuser('${list.user_id}');"
 													data-toggle="modal" data-target="#exampleModal">
 													<i class="fas fa-wrench"></i>
 												</button>
+												</c:if>
 												<button class="btn btn-outline-dark"
 													onclick="deluser('${list.user_id}');">
 													<i class="far fa-trash-alt"></i>
@@ -128,10 +130,9 @@
 									class="form-control" id="user_id" readonly>
 							</div>
 							<div class="form-group">
-								<label class="col-form-label">회원등급</label> <select
-									class="form-control" id="user_grade">
-									<option value="회원">회원</option>
-									<option value="관리자">관리자</option>
+								<label class="col-form-label">그룹</label> <select
+									class="form-control" id="user_group">
+									<option value="default">default</option>
 								</select>
 							</div>
 							<div class="form-group">
@@ -139,8 +140,11 @@
 									class="form-control" id="user_joined" readonly>
 							</div>
 							<div class="form-group">
-								<label class="col-form-label">상태</label> <input type="text"
-									class="form-control" id="user_status" readonly>
+								<label class="col-form-label">상태</label> <select
+									class="form-control" id="user_status">
+									<option value="회원">회원</option>
+									<option value="관리자">관리자</option>
+								</select>
 							</div>
 						</div>
 						<div class="col">
@@ -177,7 +181,7 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
 						data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary">Send message</button>
+					<button type="button" class="btn btn-primary" onclick="updateuser();">Send message</button>
 				</div>
 			</div>
 		</div>
@@ -222,7 +226,7 @@
 
 	 function deluser(userid){
 	        swal({
-	            title: "\'"+userid+"\' 회원을 삭제하시겠습니까?",
+	            title: "회원을 삭제하시겠습니까?",
 	            text: "삭제하시면 해당 회원은 탈퇴 처리 되며, 관련된 모든 정보가 사라집니다. 삭제하시겠습니까?",
 	            type: "warning",
 	            showCancelButton: true,
@@ -259,7 +263,7 @@
 
 		}
 	 
-	 function updateuser(userid){		 
+	 function getuser(userid){		 
 		 $.ajax({
              url:"<%=cp%>/getuser",
 				type : "POST",
@@ -269,21 +273,23 @@
 					"user_id" : userid
 				},
 				success : function(data) {
-					
-					console.log(data.user_name);
-					console.log(data.user_usingGpu);
-					
+
 					$("#user_id").val(data.user_id);
 					$("#user_name").val(data.user_name);
-					$("#user_grade").val(data.user_grade).prop("selected", true);
+					$("#user_status").val(data.user_status).prop("selected", true);
 					$("#user_email").val(data.user_email);
 					$("#user_joined").val(data.user_joined);
 					$("#user_connect").val(data.user_connect);
-					$("#user_status").val(data.user_status);
-
 					$("#user_usingGpu").val(data.user_usingGpu);
 					$("#user_storageCapa").val(data.user_storageCapa);
 					
+					if(data.user_status=="관리자"){
+						$("#user_group").val("");
+						$("#user_group option").remove();
+					}else{
+						$("#user_group").val(data.user_group).prop("selected", true);
+					}
+								
 				},
 				error : function(err) {
 					console.log(err);
@@ -293,6 +299,33 @@
 
 		}
 	 
+	 function updateuser(){
+		 $.ajax({
+             url:"<%=cp%>/updateuser",
+				type : "POST",
+				dataType : "json",
+				async : false,
+				data : {
+					"user_id" : $("#user_id").val(),
+					"user_name" : $("#user_name").val(),
+					"user_status" : $("#user_status").val(),
+					"user_email" : $("#user_email").val(),
+					"user_group" : $("#user_group").val(),
+					"user_usingGpu" : $("#user_usingGpu").val(),
+					"user_storageCapa" : $("#user_storageCapa").val()
+				},
+				success : function(data) {
+					swal("success",userid + " 회원의 정보가 수정되었습니다","success");
+					setTimeout(function() {
+						location.reload();
+					}, 2000);
+				},
+				error : function(err) {
+					console.log(err);
+				}
+
+			});
+	 }
 	</script>
 
 </body>

@@ -16,18 +16,16 @@
 		keyProperty="user_no" parameterType="com.spring.vo.UserVo">
 		<![CDATA[
 			INSERT INTO user 
-				(user_id,user_name,user_usingGpu,user_storageCapa,user_approve,user_joined,user_connect,user_status,user_email,user_grade) 
+				(user_id,user_name,user_usingGpu,user_storageCapa,user_joined,user_connect,user_status,user_email) 
 			VALUES (
 				#{user_id},
 				#{user_name},
 				#{user_usingGpu},
 				#{user_storageCapa},
-				#{user_approve},
 				#{user_joined},
 				#{user_connect},
 				#{user_status},
-				#{user_email},
-				#{user_grade}
+				#{user_email}
 			);
 		]]>
 	</insert>
@@ -85,4 +83,34 @@
 		]]>
 	</select>
 
+	<!-- 김규아 추가 -->
+	<update id="updateuser" parameterType="com.spring.vo.UserVo">
+		<![CDATA[
+			UPDATE user 
+			SET user_name =  #{user_name},
+			user_status = #{user_status},
+			user_email = #{user_email},
+			user_group = #{user_group},
+			user_usingGpu = #{user_usingGpu},
+			user_storageCapa = #{user_storageCapa}
+			WHERE user_id = #{user_id};
+		]]>
+	</update>
+	
+	<!-- 김규아 추가 -->
+	<select id="getUnapprovedUserList" parameterType="com.spring.vo.UserVo" resultType="com.spring.vo.UserVo">
+		<![CDATA[
+			select *
+			from user
+			where user_status = "미승인"
+		]]>
+	</select>
+	
+	<!-- 김규아 추가 -->
+	<select id="getGroupCount" parameterType="String" resultType="java.lang.Integer">
+		<![CDATA[
+			SELECT COUNT(*) FROM user
+			WHERE user_group = #{group_name};
+		]]>
+	</select>
 </mapper>

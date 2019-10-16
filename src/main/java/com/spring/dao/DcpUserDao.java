@@ -33,4 +33,19 @@ public class DcpUserDao {
 		
 		return sqlSession.selectOne("user_login.getuser", user_id);
 	}
+	
+	public void updateuser(UserVo user) throws Exception {
+		// TODO Auto-generated method stub
+		sqlSession.update("user_login.updateuser", user);
+	}
+	
+	public ArrayList<UserVo> getUnapprovedUserList() {
+
+		return (ArrayList) sqlSession.selectList("user_login.getUnapprovedUserList");
+	}
+	
+	public int getGroupCount(String group_name) {
+
+		return sqlSession.selectOne("user_login.getGroupCount", group_name);
+	}
 }

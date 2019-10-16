@@ -8,13 +8,12 @@ public class UserVo {
 	String user_name;
 	int user_usingGpu;
 	int user_storageCapa;
-	int user_approve;
 	boolean user_admin;
 	Date user_joined;
 	Date user_connect;
 	String user_status;
-	String user_email; 
-	String user_grade;
+	String user_email;
+	String user_group;
 	
 	public int getUser_no() {
 		return user_no;
@@ -46,12 +45,6 @@ public class UserVo {
 	public void setUser_storageCapa(int user_storageCapa) {
 		this.user_storageCapa = user_storageCapa;
 	}
-	public int getUser_approve() {
-		return user_approve;
-	}
-	public void setUser_approve(int user_approve) {
-		this.user_approve = user_approve;
-	}
 	public boolean isUser_admin() {
 		return user_admin;
 	}
@@ -82,19 +75,18 @@ public class UserVo {
 	public void setUser_email(String user_email) {
 		this.user_email = user_email;
 	}
-	public String getUser_grade() {
-		return user_grade;
+	public String getUser_group() {
+		return user_group;
 	}
-	public void setUser_grade(String user_grade) {
-		this.user_grade = user_grade;
+	public void setUser_group(String user_group) {
+		this.user_group = user_group;
 	}
-	
 	@Override
 	public String toString() {
 		return "UserVo [user_no=" + user_no + ", user_id=" + user_id + ", user_name=" + user_name + ", user_usingGpu="
-				+ user_usingGpu + ", user_storageCapa=" + user_storageCapa + ", user_approve=" + user_approve
-				+ ", user_admin=" + user_admin + ", user_joined=" + user_joined + ", user_connect=" + user_connect
-				+ ", user_status=" + user_status + ", user_email=" + user_email + ", user_grade=" + user_grade + "]";
+				+ user_usingGpu + ", user_storageCapa=" + user_storageCapa + ", user_admin=" + user_admin
+				+ ", user_joined=" + user_joined + ", user_connect=" + user_connect + ", user_status=" + user_status
+				+ ", user_email=" + user_email + ", user_group=" + user_group + "]";
 	}
 	
 }
