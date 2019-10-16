@@ -167,18 +167,17 @@
 	<%-- <jsp:include page="${pageContext.request.contextPath}/WEB-INF/views/import/indexJS.jsp" /> --%>
 	
 	<script type="text/javascript">
-
 	//파일 업로드 기능
-	$("#uploadFile").on("change",function(){
-		var uploadFile = $(this).val();
+	function uploadFunction(dirSize){
+		var uploadFile = $("#uploadFile").val();
 		
 		if(uploadFile != ""){
 			var uploadFileSize = 0
-			for(var i=0;i<this.files.length;i++){
-				uploadFileSize += this.files[i].size
+			for(var i=0;i<$("#uploadFile")[0].files.length;i++){
+				uploadFileSize += $("#uploadFile")[0].files[i].size
 			}
 			uploadFileSize = uploadFileSize / 1024.0 / 1024.0 / 1024.0;
-			var dirSize = $("#userStorage").html().split("/")[0];
+			
 			var userStorageCapa = ${user.user_storageCapa};
 			
 			if((uploadFileSize+parseFloat(dirSize)) < userStorageCapa){
@@ -202,7 +201,7 @@
 			        	$("#progressBarDiv").removeAttr("hidden");
 			        },
 			        success : function() {
-			        	swal("성공","업로드 완료", "success");
+			        	swal.fire("성공","업로드 완료", "success");
 			        	if($('#path').val() == "/"){
 			        		$('#path').val("");
 			        	}
@@ -224,11 +223,11 @@
 			    });
 			    $(this).val("");
 			}else{
-				swal("경고","개인 용량을 초과하였습니다", "error");
+				swal.fire("경고","개인 용량을 초과하였습니다", "error");
 				$(this).val("");
 			}
 		}
-	});
+   	}
 	
 	//myFileList 박스에 카드 그리기
 	function fetchFileList(path){
@@ -247,6 +246,7 @@
 				render(map.fileList);
 				$("#checkAll").prop("checked", false);
 				$("#userStorage").html(map.dirSize+"/${user.user_storageCapa}GB");
+				$('#convertArea').css("display", "none");
 				hideLoding();
 			},
 			error : function(XHR, status, error) {
@@ -255,6 +255,22 @@
 		});
 	};
 	
+	function downloadCheckFunction(dirSize){
+		var userStorageCapa = ${user.user_storageCapa};
+		if(parseFloat(dirSize) > userStorageCapa){
+			swal.fire("경고","개인 용량을 초과하였습니다", "error");
+		}else{
+			downloadFunc();
+		}
+	}
+	
+	function convertCheckFunction(dirSize){
+		var userStorageCapa = ${user.user_storageCapa};
+		if(parseFloat(dirSize) > userStorageCapa){
+			swal.fire("경고","개인 용량을 초과하였습니다", "error");
+			$(".reset").modal("hide");
+		}
+	}
 	</script>
 	
 </body>
