@@ -104,7 +104,7 @@ public class DcpOneStopService {
 	
 	// ONE STOP###############################################################################################
 	public void convertToTiffJ2c(OneStopVo oneStopVo, String workDir, String path, int frame) {
-    	//int totalThreads = Runtime.getRuntime().availableProcessors();
+		//int totalThreads = Runtime.getRuntime().availableProcessors();
     	int totalThreads = 2;
     	int j2cBundle = 50;
     	ExecutorService executorService = Executors.newFixedThreadPool(totalThreads);
@@ -199,10 +199,10 @@ public class DcpOneStopService {
     		this.end = end;
     		this.folderNum = folderNum;
     	}
-    	
+
     	public void run() {
     		MultipartFile file = oneStopVo.getPictureReel();
-    		String orgName = workDir + "/" + file.getOriginalFilename();
+    		String orgName = oneStopVo.getOriginalPath() + "/" + file.getOriginalFilename();
     		String[] cmd;
     		
     		if(file.getSize()!=0) {
@@ -272,7 +272,7 @@ public class DcpOneStopService {
 						"--no-use-isdcf-name","--no-sign",
 						"--j2k-bandwidth","10",
 						"-n","subtitleMXF",
-						workDir + "/" + oneStopVo.getSubtitleReel().getOriginalFilename()
+						oneStopVo.getOriginalPath() + "/" + oneStopVo.getSubtitleReel().getOriginalFilename()
 				};
 				
 				String[] cmd2 = new String[] {

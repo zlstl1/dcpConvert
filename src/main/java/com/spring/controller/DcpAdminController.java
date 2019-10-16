@@ -3,13 +3,11 @@ package com.spring.controller;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.mysql.cj.xdevapi.JsonArray;
 import com.spring.service.DcpUserService;
 import com.spring.vo.UserVo;
 
@@ -30,16 +27,6 @@ public class DcpAdminController {
 
 	@RequestMapping(value = "/dcp/{email}/adminpage", method = RequestMethod.GET)
 	public String adminpage(Model model, HttpSession session, @PathVariable("email") String email) {
-
-		UserVo testUser = new UserVo();
-		testUser.setUser_admin(true);
-		testUser.setUser_id("vlfl1889922");
-		testUser.setUser_name("김경섭");
-		testUser.setUser_no(1);
-		testUser.setUser_storageCapa(25);
-		testUser.setUser_usingGpu(3);
-		session.setAttribute("user", testUser);
-
 		UserVo userVo = (UserVo) session.getAttribute("user");
 		model.addAttribute("user", userVo);
 		return "adminpage";

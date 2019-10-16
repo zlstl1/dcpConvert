@@ -9,6 +9,7 @@ import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -89,17 +90,19 @@ public class DcpFileController {
 	}
 	
 	@RequestMapping(value = "/dcp/{email}/downloadfile")
-	public ModelAndView callDownload(@PathVariable("email") String email, @RequestParam("path") List<String> path) {
+	public ModelAndView callDownload(@PathVariable("email") String email, @RequestParam("path") List<String> path,Model model) {
 		String fileName = "";
 		for(int i=1; i<path.size();i++) {
 			fileName += "/" + path.get(i);
 		}
 	    File downloadFile = new File(common.getLocalDir()+email+fileName);
-	    return new ModelAndView("fileDownloadView", "downloadFile",downloadFile);
+	    model.addAttribute("downloadFile", downloadFile);
+	    model.addAttribute("isFolder", false);
+	    return new ModelAndView("fileDownloadView", "model",model);
 	}
 	
 	@RequestMapping(value = "/dcp/{email}/downloadfolder")
-	public ModelAndView downloadfolder(@PathVariable("email") String email, @RequestParam("path") List<String> path) {
+	public ModelAndView downloadfolder(@PathVariable("email") String email, @RequestParam("path") List<String> path,Model model) {
 		String fileName = "";
 		for(int i=1; i<path.size();i++) {
 			fileName += "/" + path.get(i);
@@ -107,6 +110,8 @@ public class DcpFileController {
 	    dcpCommonService.zipDir(common.getLocalDir()+email+"/"+fileName);
 	    File downloadFile = new File(common.getLocalDir()+email+fileName+".zip");
 	    
-	    return new ModelAndView("fileDownloadView", "downloadFile",downloadFile);
+	    model.addAttribute("downloadFile", downloadFile);
+	    model.addAttribute("isFolder", true);
+	    return new ModelAndView("fileDownloadView", "model",model);
 	}
 }
