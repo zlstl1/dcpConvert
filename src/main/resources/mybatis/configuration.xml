@@ -10,6 +10,7 @@
 <mappers>
 	<mapper resource="mybatis/mappers/user_history.xml"/>
 	<mapper resource="mybatis/mappers/user_login.xml"/>
+	<mapper resource="mybatis/mappers/group_mapper.xml"/>
 </mappers>
 
 </configuration>

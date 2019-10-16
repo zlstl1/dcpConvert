@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="group_mapper">
+
+	<insert id="insertgroup" parameterType="com.spring.vo.GroupVo">
+		<![CDATA[
+			INSERT INTO user_group 
+				(group_name,group_usingGpu,group_storageCapa,group_create) 
+			VALUES (
+				#{group_name},
+				#{group_usingGpu},
+				#{group_storageCapa},
+				now()
+			);
+		]]>
+	</insert>
+
+	<select id="getGroupList" parameterType="com.spring.vo.GroupVo"
+		resultType="com.spring.vo.GroupVo">
+		<![CDATA[
+			select *
+			from user_group
+		]]>
+	</select>
+
+	<select id="getGroup" parameterType="com.spring.vo.GroupVo"
+		resultType="com.spring.vo.GroupVo">
+		<![CDATA[
+			select *
+			from user_group
+			where group_name = #{group_name};
+		]]>
+	</select>
+
+	<delete id="delGroup" parameterType="String">
+		<![CDATA[
+			DELETE FROM user_group
+			WHERE group_name = #{group_name};
+		]]>
+	</delete>
+	
+	<update id="updateGroup" parameterType="com.spring.vo.GroupVo">
+		<![CDATA[
+			UPDATE user_group 
+			SET group_name =  #{group_name},
+			group_usingGpu = #{group_usingGpu},
+			group_storageCapa = #{group_storageCapa},
+			group_update = now()
+			WHERE group_no = #{group_no};
+		]]>
+	</update>
+</mapper>

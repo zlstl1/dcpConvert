@@ -31,8 +31,8 @@
 						<li><a href="#" onclick="user()"> - 회원관리</a></li>
 							<ul id="user" style="display:none">
 								<li><a href="<%=cp%>/dcp/${user.user_id}/userlist">회원리스트</a></li>
-		                    	<li><a href="<%=cp%>/dcp/waiting">가입대기회원</a></li>
-		                    	<li><a href="<%=cp%>/dcp/grade">회원등급관리</a></li>
+		                    	<li><a href="<%=cp%>/dcp/${user.user_id}/waiting">가입대기회원</a></li>
+		                    	<li><a href="<%=cp%>/dcp/${user.user_id}/group">회원그룹관리</a></li>
 							</ul>
 					</ul>
 					

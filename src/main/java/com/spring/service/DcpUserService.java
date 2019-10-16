@@ -33,4 +33,20 @@ public class DcpUserService {
 
 		return dao.getuser(user_id);
 	}
+	
+	public void updateuser(UserVo user) throws Exception {
+
+		dao.updateuser(user);
+	}
+	
+	public ArrayList<UserVo> getUnapprovedUserList() throws Exception {
+
+		return dao.getUnapprovedUserList();
+	}
+	
+	public int getGroupCount(String group_name) throws Exception {
+
+		return dao.getGroupCount(group_name);
+	}
+
 }
