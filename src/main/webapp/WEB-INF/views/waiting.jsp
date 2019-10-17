@@ -115,7 +115,7 @@
 	<!-- Footer -->
 	<%@include file="import/footer.jsp"%>
 
-	<scrip src="${pageContext.request.contextPath}/resources/jquery/jQuery3.4.1.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/jquery/jQuery3.4.1.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/js/bootstrap.bundle.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/assets/js/jquery.scrollex.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/assets/js/skel.min.js"></script>
