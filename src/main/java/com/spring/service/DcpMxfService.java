@@ -29,13 +29,13 @@ public class DcpMxfService {
 		case "picture":
 			dcpCommon.makeDir(workDir + path + "/MXF");
 			title = workDir + path + "/MXF/" + mxfVo.getTitle() + "picture.mxf";
-			String[] cmd = new String[] {
-				"opendcp_mxf",
-				"-i",workDir + items.get(0),
-				"-o",title,
-				"-n",mxfVo.getLabel(),
-				"-r",String.valueOf(mxfVo.getFrameRate())
-			};
+//			String[] cmd = new String[] {
+//				"opendcp_mxf",
+//				"-i",workDir + items.get(0),
+//				"-o",title,
+//				"-n",mxfVo.getLabel(),
+//				"-r",String.valueOf(mxfVo.getFrameRate())
+//			};
 			cli = "opendcp_mxf -i " + workDir + items.get(0) + " -o " + title + " -n " + mxfVo.getLabel() + " -r " + mxfVo.getFrameRate();
 			if(mxfVo.isEncryption()) {
 				cli += " -k " + mxfVo.getKey() + " -u " + mxfVo.getKeyID();
@@ -48,13 +48,13 @@ public class DcpMxfService {
 		case "sound":
 			dcpCommon.makeDir(workDir + path + "/MXF");
 			title = workDir + path + "/MXF/" + mxfVo.getTitle() + "sound.mxf";
-			String[] cmd2 = new String[] {
-					"opendcp_mxf",
-					"-i",workDir + items.get(0),
-					"-o",title,
-					"-n",mxfVo.getLabel(),
-					"-r",String.valueOf(mxfVo.getFrameRate())
-			};
+//			String[] cmd2 = new String[] {
+//					"opendcp_mxf",
+//					"-i",workDir + items.get(0),
+//					"-o",title,
+//					"-n",mxfVo.getLabel(),
+//					"-r",String.valueOf(mxfVo.getFrameRate())
+//			};
 			cli = "opendcp_mxf -i " + workDir + items.get(0) + " -o " + title + " -n " + mxfVo.getLabel() + " -r " + mxfVo.getFrameRate();
 			if(mxfVo.isEncryption()) {
 				cli += " -k " + mxfVo.getKey() + " -u " + mxfVo.getKeyID();

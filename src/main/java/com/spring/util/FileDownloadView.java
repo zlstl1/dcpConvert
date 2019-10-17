@@ -44,7 +44,10 @@ public class FileDownloadView extends AbstractView{
                     e.printStackTrace();
                 }
             }
-            file.delete();
+            if((boolean) model.get("isFolder")) {
+            	file.delete();
+            }
+            
         }
         out.flush();
     }

@@ -213,8 +213,8 @@ function downloadFunc(){
 	            if (result.dismiss === "cancel") { 
 	                return false;
 	            }
-	            //window.location.href=getContextPath() + '/dcp/' + getID() + '/downloadfolder?path=' + items[0].split("/");
-	            window.open(getContextPath() + '/dcp/' + getID() + '/downloadfolder?path=' + items[0].split("/"),'_blank');
+	            window.location.href=getContextPath() + '/dcp/' + getID() + '/downloadfolder?path=' + items[0].split("/");
+	            //window.open(getContextPath() + '/dcp/' + getID() + '/downloadfolder?path=' + items[0].split("/"),'_blank');
 	        });
 		}
 	}else{
