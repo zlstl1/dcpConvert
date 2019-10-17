@@ -373,7 +373,8 @@ $('.reset').on('hidden.bs.modal', function (e) {
 $('#tiffConvert').on('click',function(){
 	var items = getItem();
 	if(items[0] !== undefined){
-		var ext = items[0].split(".")[1];
+		var pos = items[0].lastIndexOf(".");
+		var ext = items[0].substring(pos, items[0].length);
 		if(ext !== undefined){
 			ext.toLowerCase();
 		}
@@ -393,9 +394,9 @@ $('#tiffConvert').on('click',function(){
 	}else if( !($.isNumeric($("#quality_t").val()))){
 		swal.fire("경고","Quality 필드에는 숫자만 입력해주세요", "error");
 	}else if(items.length > 1){
-		swal.fire("경고","TIFF 변환은 동영상 파일 하나를 선택하세요", "error");
+		swal.fire("경고","동영상 파일 하나를 선택하세요", "error");
 	}else if(ext != "mp4" && ext != "mkv" && ext != "avi" && ext != "mov" && ext != "wmv" && ext != "mpeg" && ext != "m4v" && ext != "asx" && ext != "mpg"&& ext != "ogm"){
-		swal.fire("경고","TIFF 변환은 동영상 파일을 선택하세요", "error");
+		swal.fire("경고","동영상 파일을 선택하세요", "error");
 	}else {
 		jQuery.ajaxSettings.traditional = true;
 		
@@ -438,7 +439,8 @@ $('#tiffConvert').on('click',function(){
 $('#jpegConvert').on('click',function(){
 	var items = getItem();
 	if(items[0] !== undefined){
-		var ext = items[0].split(".")[1];
+		var pos = items[0].lastIndexOf(".");
+		var ext = items[0].substring(pos, items[0].length);
 		if(ext !== undefined){
 			ext.toLowerCase();
 		}
@@ -452,7 +454,7 @@ $('#jpegConvert').on('click',function(){
 	}else if( !($.isNumeric($("#bandWidth_j").val()))){
 		swal.fire("경고","BandWidth 필드에는 숫자만 입력해주세요", "error");
 	}else if(ext != "tiff" && ext != "tif" && ext != "bmp"){
-		swal.fire("경고","JPEG 변환은 TIFF 또는 BMP 파일을 선택하세요", "error");
+		swal.fire("경고","TIFF 또는 BMP 파일을 선택하세요", "error");
 	}else{
 		jQuery.ajaxSettings.traditional = true;
 		$.ajax({
@@ -503,7 +505,8 @@ $("#encryption").on('change',function(){
 $('#mxfConvert').on('click',function(){
 	var items = getItem();
 	if(items[0] !== undefined){
-		var ext = items[0].split(".")[1];
+		var pos = items[0].lastIndexOf(".");
+		var ext = items[0].substring(pos, items[0].length);
 		if(ext !== undefined){
 			ext.toLowerCase();
 		}
@@ -515,22 +518,28 @@ $('#mxfConvert').on('click',function(){
 	if( $("#title_m").val() == ""){
 		swal.fire("경고","Title을 입력해주세요", "error");
 	}else if( $("#fileType_m").val() == "picture" ){
-		if(ext === undefined){
+		if(items.length > 1){
+			swal.fire("경고","JPEG2000 파일을 포함한 폴더 하나를 선택하세요", "error");
+		}else if(ext === undefined){
 			mxfConvert(items);
 		}else{
 			swal.fire("경고","JPEG2000 포맷의 파일이 있는 폴더를 선택하세요", "error");
 		}
 	}else if( $("#fileType_m").val() == "sound" ){
-		if(ext === undefined){
+		if(items.length > 1){
+			swal.fire("경고","WAV 파일을 포함한 폴더 하나를 선택하세요", "error");
+		}else if(ext === undefined){
 			mxfConvert(items);
 		}else{
 			swal.fire("경고","WAV 포맷의 파일이 있는 폴더를 선택하세요", "error");
 		}
 	}else if( $("#fileType_m").val() == "subtitle" ){
-		if(ext === undefined ){
-			swal.fire("경고","srt 포맷의 파일을 선택하세요", "error");
+		if(items.length > 1){
+			swal.fire("경고","SRT 포맷의 파일 하나를 선택하세요", "error");
+		}else if(ext === undefined ){
+			swal.fire("경고","SRT 포맷의 파일을 선택하세요", "error");
 		}else if( ext != "srt"){
-			swal.fire("경고","srt 포맷의 파일을 선택하세요", "error");
+			swal.fire("경고","SRT 포맷의 파일을 선택하세요", "error");
 		}else{
 			mxfConvert(items);
 		}
@@ -590,7 +599,9 @@ function mxfConvert(items){
 $('#dcpConvert').on('click',function(){
 	var items = getItem();
 	if(items[0] !== undefined){
-		var ext = items[0].split(".")[1];
+		var pos = items[0].lastIndexOf(".");
+		var ext = items[0].substring(pos, items[0].length);
+		console.log(ext);
 		if(ext !== undefined){
 			ext.toLowerCase();
 		}
@@ -651,7 +662,8 @@ $('#dcpConvert').on('click',function(){
 $('#oneStopConvert').on('click',function(){
 	var items = getItem();
 	if(items[0] !== undefined){
-		var ext = items[0].split(".")[1];
+		var pos = items[0].lastIndexOf(".");
+		var ext = items[0].substring(pos, items[0].length);
 		if(ext !== undefined){
 			ext.toLowerCase();
 		}
@@ -676,7 +688,8 @@ $('#oneStopConvert').on('click',function(){
 		swal.fire("경고","Issuer를 입력해주세요", "error");
 	}else {
 		for(var i=0;i<items.length;i++){
-			var ext = items[i].split(".")[1];
+			var pos = items[i].lastIndexOf(".");
+			var ext = items[i].substring(pos, items[0].length);
 			if(ext === undefined){
 				swal.fire("경고","폴더는 선택 불가능합니다", "error");
 				return;

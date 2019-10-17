@@ -39,18 +39,32 @@ public class DcpTiffService {
 			e.printStackTrace();
 		}
 		
-		if(tiffVo.getPictureReel().getSize()!=0) {
+		if(tiffVo.getPictureReel() != null) {
 			dcpCommon.makeDir(workDir + path + "/TIFF");
 			int frame = dcpCommon.getPlayTime(tiffVo.getPictureReel().getOriginalFilename(), dumpfile.getParent());
-			frame=250;
+			if(frame == -1) {
+				 frame = dcpCommon.getPlayTime2(tiffVo.getPictureReel().getOriginalFilename(), dumpfile.getParent());
+			}
 			int startnum = 1;
 	    	int halfFrame = frame/2;
 	    	
 			Thread divTiff = new DivideTiff(tiffVo, workDir + path, dumpfile.getParent(), startnum - 1, halfFrame - 1);
 	    	Thread divTiff2 = new DivideTiff(tiffVo, workDir + path, dumpfile.getParent(), halfFrame, frame -1);
 	    	
-	    	divTiff.start();
+			divTiff.start();
 			divTiff2.start();
+			
+//	    	int startnum = 1;
+//	    	int middleFrame = frame/3;
+//	    	int thirdFrame = (frame/3) * 2;
+//	    	
+//	    	Thread divTiff = new DivideTiff(tiffVo, workDir + path, dumpfile.getParent(), startnum - 1, middleFrame - 1);
+//	    	Thread divTiff2 = new DivideTiff(tiffVo, workDir + path, dumpfile.getParent(), middleFrame, thirdFrame -1);
+//	    	Thread divTiff3 = new DivideTiff(tiffVo, workDir + path, dumpfile.getParent(), thirdFrame, frame -1);
+//	    	
+//	    	divTiff.start();
+//			divTiff2.start();
+//			divTiff3.start();
 			
 			historyVo.setHistory_msg("TIFF 변환");
 			dcpHistoryDao.writeHistory(historyVo);
@@ -58,6 +72,7 @@ public class DcpTiffService {
 			try {
 				divTiff.join();
 				divTiff2.join();
+				//divTiff3.join();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -89,7 +104,7 @@ public class DcpTiffService {
        	public void run() {
     		MultipartFile file = tiffVo.getPictureReel();
     		
-    		if(file.getSize()!=0) {
+    		if(file != null) {
     			String orgName = originalPath + "/" + file.getOriginalFilename();
     			String[] cmd;
     			

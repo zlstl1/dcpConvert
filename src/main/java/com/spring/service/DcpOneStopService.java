@@ -3,6 +3,7 @@ package com.spring.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -37,10 +38,14 @@ public class DcpOneStopService {
 	
 	static int folder1 =0;
 	static int folder2 =0;
+	static int folder3 =0;
 	
 	public void convertOneStop(OneStopVo oneStopVo, String workDir, List<String> items, String path, HistoryVo historyVo) {
 		oneStopVo = classification(oneStopVo, workDir, items);
 		int frame = dcpCommon.getPlayTime(oneStopVo.getPictureReel().getOriginalFilename(), oneStopVo.getOriginalPath());
+		if(frame == -1) {
+			 frame = dcpCommon.getPlayTime2(oneStopVo.getPictureReel().getOriginalFilename(), oneStopVo.getOriginalPath());
+		}
 		
 		logger.info("Start convertToTiffJ2c / " + new Date());
 		convertToTiffJ2c(oneStopVo, workDir, path, frame);
@@ -63,7 +68,8 @@ public class DcpOneStopService {
 		int j=0;
 		
 		for(int i=0; i<items.size(); i++) {
-			String ext = items.get(i).split("\\.")[1].toLowerCase();
+			int pos = items.get(i).lastIndexOf(".");
+			String ext = items.get(i).substring(pos + 1).toLowerCase();
 			
 			File dumpfile = new File(workDir+items.get(i));
 			try {
@@ -115,10 +121,13 @@ public class DcpOneStopService {
     	
     	Thread divTiff = new DivideToTiff(oneStopVo, workDir, path, startnum - 1, halfFrame - 1, 1);
     	Thread divTiff2 = new DivideToTiff(oneStopVo, workDir, path, halfFrame, frame -1, 2);
-    	Thread subtitleDcp = new subtitleDcp(oneStopVo, workDir, path);
 		divTiff.start();
 		divTiff2.start();
-		subtitleDcp.start();
+		Thread subtitleDcp = null;
+		if(oneStopVo.getSubtitleReel() != null) {
+			subtitleDcp = new subtitleDcp(oneStopVo, workDir, path);
+			subtitleDcp.start();
+		}
 		
 		double audioBitrate = 6.9; //audioBitrate = bitDepth(24) * sampleRate(/*48000*/,96000) * channel (6.9Mbps)
 		double videoBitrate = ( oneStopVo.getBandWidth() - audioBitrate ) / 8; // (MB) 
@@ -177,11 +186,119 @@ public class DcpOneStopService {
     		}
     		divTiff.join();
     		divTiff2.join();
-    		subtitleDcp.join();
+    		if(subtitleDcp != null) {
+    			subtitleDcp.join();
+    		}
     	} catch (Exception e) {
 			e.printStackTrace();
 		}
     }
+	
+	//ffmpeg 3분할 버전 (frame 절삭 계산필요)
+//	public void convertToTiffJ2c(OneStopVo oneStopVo, String workDir, String path, int frame) {
+//		//int totalThreads = Runtime.getRuntime().availableProcessors();
+//    	int totalThreads = 2;
+//    	int j2cBundle = 50;
+//    	ExecutorService executorService = Executors.newFixedThreadPool(totalThreads);
+//    	int startnum = 1;
+//    	int middleFrame = frame/3;
+//    	int endFrame = (frame/3) * 2;
+//    	int startnum2 = middleFrame;
+//    	int startnum3 = endFrame;
+//    	List<Future<?>> futureList = new ArrayList<Future<?>>(totalThreads);
+//    	
+//    	Thread divTiff = new DivideToTiff(oneStopVo, workDir, path, startnum - 1, middleFrame - 1, 1);
+//    	Thread divTiff2 = new DivideToTiff(oneStopVo, workDir, path, middleFrame, endFrame -1, 2);
+//    	Thread divTiff3 = new DivideToTiff(oneStopVo, workDir, path, endFrame, frame -1, 3);
+//		divTiff.start();
+//		divTiff2.start();
+//		divTiff3.start();
+//		Thread subtitleDcp = null;
+//		if(oneStopVo.getSubtitleReel() != null) {
+//			subtitleDcp = new subtitleDcp(oneStopVo, workDir, path);
+//			subtitleDcp.start();
+//		}
+//		
+//		double audioBitrate = 6.9; //audioBitrate = bitDepth(24) * sampleRate(/*48000*/,96000) * channel (6.9Mbps)
+//		double videoBitrate = ( oneStopVo.getBandWidth() - audioBitrate ) / 8; // (MB) 
+//		double perFrame = videoBitrate / oneStopVo.getFrameRate() * 1000; // (KB)  => -size perFrame K
+//		
+//    	try {
+//    		dcpCommon.makeDir(workDir + path + "/J2C");
+//    		Thread.sleep(2000);
+//    		middleFrame++;
+//    		endFrame++;
+//    		int flag = 1;
+//    		int end = 0;
+//    		int gpu = 0;
+//    		while(true) {
+//    			File tiffDir = new File(workDir + path + "/TIFF" + flag);
+//				File[] tiffs = tiffDir.listFiles();
+//				int tiffslength = tiffs.length;
+//				
+//				if(futureList.size() < totalThreads && (startnum < (startnum2-j2cBundle) || middleFrame < (startnum3-j2cBundle) || endFrame < (frame-j2cBundle))) {
+//					if(flag == 1 && tiffslength-(folder1*j2cBundle) >= j2cBundle && startnum < (startnum2-j2cBundle)) {
+//						futureList.add(executorService.submit(new J2cThread(startnum,startnum+(j2cBundle-1),workDir,path,perFrame,flag,gpu)));
+//						startnum+=j2cBundle;
+//						folder1++;gpu++;
+//					}else if(flag == 2 && tiffslength-(folder2*j2cBundle) >= j2cBundle && middleFrame < (startnum3-j2cBundle)){
+//						futureList.add(executorService.submit(new J2cThread(middleFrame,middleFrame+(j2cBundle-1),workDir,path,perFrame,flag,gpu))); 
+//						middleFrame+=j2cBundle;
+//						folder2++;gpu++;
+//					}else if(flag == 3 && tiffslength-(folder3*j2cBundle) >= j2cBundle && endFrame < (frame-j2cBundle)){
+//						futureList.add(executorService.submit(new J2cThread(endFrame,endFrame+(j2cBundle-1),workDir,path,perFrame,flag,gpu))); 
+//						endFrame+=j2cBundle;
+//						folder3++;gpu++;
+//					}
+//				}else{
+//					if(futureList.size() < totalThreads && flag == 1 && startnum <= startnum2) {
+//						System.out.println("TIFF1 끝나기 1세트 전");
+//						end = startnum+(j2cBundle-1)<=startnum2?startnum+(j2cBundle-1):startnum2;
+//						futureList.add(executorService.submit(new J2cThread(startnum,end,workDir,path,perFrame,flag,gpu)));
+//						startnum+=j2cBundle;
+//						folder1++;gpu++;
+//					}else if(futureList.size() < totalThreads && flag == 2 && middleFrame <= startnum3){
+//						System.out.println("TIFF2 끝나기 1세트 전");
+//						end = middleFrame+(j2cBundle-1)<=startnum3?middleFrame+(j2cBundle-1):startnum3;
+//						futureList.add(executorService.submit(new J2cThread(middleFrame,end,workDir,path,perFrame,flag,gpu))); 
+//						middleFrame+=j2cBundle;
+//						folder2++;gpu++;
+//					}else if(futureList.size() < totalThreads && flag == 3 && endFrame <= frame){
+//						System.out.println("TIFF3 끝나기 1세트 전");
+//						end = endFrame+(j2cBundle-1)<=frame?endFrame+(j2cBundle-1):frame;
+//						futureList.add(executorService.submit(new J2cThread(endFrame,end,workDir,path,perFrame,flag,gpu))); 
+//						endFrame+=j2cBundle;
+//						folder3++;gpu++;
+//					}
+//				}
+//				
+//				Iterator<Future<?>> iterator = futureList.iterator();
+//				while (iterator.hasNext()){
+//					if(iterator.next().isDone()) {
+//						iterator.remove();
+//					}
+//				}
+//				
+//				if(startnum >= startnum2 && middleFrame >= startnum3 && endFrame >= frame) {
+//					System.out.println("종료");
+//					executorService.shutdown();
+//			        while(!executorService.isTerminated()) { }
+//			        break;
+//				}
+//				
+//				flag++;
+//				flag = flag==4?1:flag;
+//    		}
+//    		divTiff.join();
+//    		divTiff2.join();
+//    		divTiff3.join();
+//    		if(subtitleDcp != null) {
+//    			subtitleDcp.join();
+//    		}
+//    	} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//    }
 	
 	public class DivideToTiff extends Thread{
 		OneStopVo oneStopVo;
@@ -259,30 +376,28 @@ public class DcpOneStopService {
     	}
     	
     	public void run() {
-			if(oneStopVo.getSubtitleReel().getSize() != 0) {
-				dcpCommon.makeDir(workDir + path + "/SUBTITLE");
-				int ratio = oneStopVo.getScale().equals("scope")?239:185;
-				
-				String[] cmd1 = new String[] {
-						"dcpomatic2_create",
-						"-o", workDir + path + "/SUBTITLE",
-						"--container-ratio",String.valueOf(ratio),
-						"--content-ratio",String.valueOf(ratio),
-						"-f",String.valueOf(oneStopVo.getFrameRate()),
-						"--no-use-isdcf-name","--no-sign",
-						"--j2k-bandwidth","10",
-						"-n","subtitleMXF",
-						oneStopVo.getOriginalPath() + "/" + oneStopVo.getSubtitleReel().getOriginalFilename()
-				};
-				
-				String[] cmd2 = new String[] {
-						"dcpomatic2_cli",
-						workDir + path + "/SUBTITLE"
-				};
-				
-				dcpCommon.runCli(cmd1,workDir);
-				dcpCommon.runCli(cmd2,workDir);
-			}
+			dcpCommon.makeDir(workDir + path + "/SUBTITLE");
+			int ratio = oneStopVo.getScale().equals("scope")?239:185;
+			
+			String[] cmd1 = new String[] {
+					"dcpomatic2_create",
+					"-o", workDir + path + "/SUBTITLE",
+					"--container-ratio",String.valueOf(ratio),
+					"--content-ratio",String.valueOf(ratio),
+					"-f",String.valueOf(oneStopVo.getFrameRate()),
+					"--no-use-isdcf-name","--no-sign",
+					"--j2k-bandwidth","10",
+					"-n","subtitleMXF",
+					oneStopVo.getOriginalPath() + "/" + oneStopVo.getSubtitleReel().getOriginalFilename()
+			};
+			
+			String[] cmd2 = new String[] {
+					"dcpomatic2_cli",
+					workDir + path + "/SUBTITLE"
+			};
+			
+			dcpCommon.runCli(cmd1,workDir);
+			dcpCommon.runCli(cmd2,workDir);
     	}
 	}
 	
@@ -322,8 +437,10 @@ public class DcpOneStopService {
 			
 			if(folderNum == 1) {
 				folder1--;
-			}else {
+			}else if (folderNum == 2){
 				folder2--;
+			}else {
+				folder3--;
 			}
 		}
 	}
@@ -338,7 +455,7 @@ public class DcpOneStopService {
 		
 		String title = "";
 		
-		if(oneStopVo.getPictureReel().getSize()!=0) {
+		if(oneStopVo.getPictureReel() != null) {
 			title = workDir + "/DCP/" + oneStopVo.getTitle() + "picture.mxf";
 			String[] cmd = new String[] {
 				"opendcp_mxf",
@@ -350,7 +467,7 @@ public class DcpOneStopService {
 			dcpCommon.runCli(cmd,workDir);
 		}
 		
-		if(oneStopVo.getSoundReel()[0].getSize() != 0) {	
+		if(oneStopVo.getSoundReel().length != 0) {	
 			dcpCommon.makeDir(workDir + "/OneStopSound");
 			title = workDir + "/DCP/" + oneStopVo.getTitle() + "sound.mxf";
 			for(int i=0; i<oneStopVo.getSoundReel().length; i++) {
@@ -378,25 +495,7 @@ public class DcpOneStopService {
 			
 		}
 		
-//		if(oneStopVo.getSoundReel()[0].getSize() != 0) {	
-//			dcpCommon.makeDir(workDir + "/OneStopSound");
-//			title = workDir + "/DCP/" + oneStopVo.getTitle() + "sound.mxf";
-//			for(int i=0; i<oneStopVo.getSoundReel().length; i++) {
-//				
-//			}
-//			String[] cmd = new String[] {
-//					"opendcp_mxf",
-//					"-i",oneStopVo.getOriginalPath() + "/" + oneStopVo.getSoundReel()[0].getOriginalFilename(),
-//					"-o",title,
-//					"-n",oneStopVo.getLabel(),
-//					"-r",String.valueOf(oneStopVo.getFrameRate())
-//			};
-//			dcpCommon.runCli(cmd,workDir);
-//			
-//			
-//		}
-		
-		if(oneStopVo.getSubtitleReel().getSize()!=0) {
+		if(oneStopVo.getSubtitleReel() != null) {
 			dcpCommon.makeDir(workDir + "/SUBTITLE");
 			String FilePath = workDir + "/SUBTITLE/subtitleMXF";
 			File FileList = new File(FilePath);
@@ -412,9 +511,9 @@ public class DcpOneStopService {
 					file.renameTo(fileToMove);
 				}
 			}
+			RemoveDir removeDir = new RemoveDir(workDir + "/SUBTITLE");
+			removeDir.start();
 		}
-		RemoveDir removeDir = new RemoveDir(workDir + "/SUBTITLE");
-		removeDir.start();
 	}
 	
 	public void convertToDcp(OneStopVo oneStopVo, String workDir) {
@@ -423,13 +522,13 @@ public class DcpOneStopService {
 		
 		workDir +="/DCP";
 		String cli = "opendcp_xml ";
-		if(oneStopVo.getPictureReel().getSize() != 0) {
+		if(oneStopVo.getPictureReel() != null) {
 			cli += " -r " + workDir + "/" + oneStopVo.getTitle() + "picture.mxf ";	
 		}
-		if(oneStopVo.getSoundReel()[0].getSize() != 0) {
+		if(oneStopVo.getSoundReel().length != 0) {
 			cli += workDir + "/" + oneStopVo.getTitle() + "sound.mxf ";
 		}
-		if(oneStopVo.getSubtitleReel().getSize() != 0) {
+		if(oneStopVo.getSubtitleReel() != null) {
 			cli += workDir + "/" + oneStopVo.getTitle() + "subtitle.mxf ";
 		}
 		if(!(oneStopVo.getIssuer().equals(""))) {
