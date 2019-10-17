@@ -18,22 +18,15 @@
 	href="${pageContext.request.contextPath }/resources/css/bootstrap.css">
 
 <!-- 김규아 추가 -->
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath }/resources/css/circle.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/circle.css">
 <link rel="stylesheet" href="<%=cp%>/resources/css/cmGauge.css">
-
-
-<link rel="stylesheet"
-	href="<%=cp%>/webjars/font-awesome/5.8.1/css/all.css">
-<link rel="stylesheet"
-	href="<%=cp%>/webjars/font-awesome/5.8.1/css/fontawesome.css">
+<link rel="stylesheet" href="<%=cp%>/webjars/font-awesome/5.8.1/css/all.css">
+<link rel="stylesheet" href="<%=cp%>/webjars/font-awesome/5.8.1/css/fontawesome.css">
 <link rel="stylesheet" href="<%=cp%>/resources/css/datatables.css">
+<link rel="stylesheet" href="<%=cp%>/webjars/sweetalert2/8.18.1/dist/sweetalert2.min.css">
 
 </head>
 <body class="subpage">
-
-	<%-- <jsp:include page="${pageContext.request.contextPath}/WEB-INF/views/import/navbar.jsp" /> --%>
-	<%-- <%@include file="import/navbar.jsp" %> --%>
 	<jsp:include page="import/navbar.jsp"></jsp:include>
 
 	<!-- One -->
@@ -414,25 +407,21 @@
 	<!-- Footer -->
 	<%@include file="import/footer.jsp"%>
 
-	<script
-		src="${pageContext.request.contextPath}/resources/jquery/jQuery3.4.1.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/js/bootstrap.bundle.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/js/jquery.scrollex.min.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/js/skel.min.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/js/util.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/js/main.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/jquery/jQuery3.4.1.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/js/bootstrap.bundle.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/assets/js/jquery.scrollex.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/assets/js/skel.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/assets/js/util.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/assets/js/main.js"></script>
 
 	<%-- <script src="<%=cp%>/resources/js/adminpage.js"></script> --%>
 
+	<!-- 김규아추가 -->
 	<script src="<%=cp%>/resources/js/cmGauge.js"></script>
-
 	<script src="<%=cp%>/resources/js/fontawesome.js"></script>
 	<script src="<%=cp%>/resources/js/datatables.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
+	<script src="<%=cp%>/webjars/sweetalert2/8.18.1/dist/sweetalert2.min.js"></script>
 
 	<script type="text/javascript">
 	var table = $("#userTable").DataTable({
@@ -468,7 +457,7 @@
 		});
 		
 		function reject(userid){
-	        swal({
+			swal.fire({
 	            title: "가입신청을 거절하시겠습니까?",
 	            text: "거절하시면 가입 대기 회원에서 사라지며, 재승인 하실 수 없습니다. 취소하시려면 \"Cancle\" 버튼을 눌러주세요.",
 	            type: "warning",
@@ -490,7 +479,7 @@
 						"user_id" : userid
 					},
 					success : function(data) {
-						swal("success",userid + " 회원의 가입이 거절 처리 되었습니다.","success");
+						swal.fire("success",userid + " 회원의 가입이 거절 처리 되었습니다.","success");
 						setTimeout(function() {
 							location.reload();
 						}, 2000);
@@ -511,7 +500,7 @@
 		 var user = $("#user_id").val();
 		 var group = $("#group_name").val();
 		 
-		 swal({
+		 swal.fire({
 	           title: "가입신청을 승인하시겠습니까?",
 	           /* text: "승인하시면 가입 대기 리스트에서 사라지며, 회원 리스트에서 관리하실 수 있습니다. 취소하시려면 \"Cancle\" 버튼을 눌러주세요.", */
 	           text : "회원명 : \""+user+"\" 그룹 : \""+group+"\" 으로 등록됩니다. 취소하시려면 \"Cancle\" 버튼을 눌러주세요.",
@@ -535,7 +524,7 @@
 						"user_group" : group
 					},
 					success : function(data) {
-						swal("success",user + " 회원의 가입이 승인 처리 되었습니다.","success");
+						swal.fire("success",user + " 회원의 가입이 승인 처리 되었습니다.","success");
 						setTimeout(function() {
 							location.reload();
 						}, 2000);

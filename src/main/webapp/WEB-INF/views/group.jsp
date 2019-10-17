@@ -11,30 +11,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>관리자 페이지</title>
 
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath }/resources/assets/css/main.css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath }/resources/css/bootstrap.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/assets/css/main.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/bootstrap.css">
 
 <!-- 김규아 추가 -->
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath }/resources/css/circle.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/circle.css">
 <link rel="stylesheet" href="<%=cp%>/resources/css/cmGauge.css">
-
-
-<link rel="stylesheet"
-	href="<%=cp%>/webjars/font-awesome/5.8.1/css/fontawesome.css">
-<link rel="stylesheet"
-	href="<%=cp%>/webjars/font-awesome/5.8.1/css/all.css">
-
+<link rel="stylesheet" href="<%=cp%>/webjars/font-awesome/5.8.1/css/fontawesome.css">
+<link rel="stylesheet" href="<%=cp%>/webjars/font-awesome/5.8.1/css/all.css">
 <link rel="stylesheet" href="<%=cp%>/resources/css/datatables.css">
-<link rel="stylesheet"
-	href="<%=cp%>/webjars/sweetalert2/dist/sweetalert2.css">
+<link rel="stylesheet" href="<%=cp%>/webjars/sweetalert2/8.18.1/dist/sweetalert2.min.css">
+
 </head>
 <body class="subpage">
-
-	<%-- <jsp:include page="${pageContext.request.contextPath}/WEB-INF/views/import/navbar.jsp" /> --%>
-	<%-- <%@include file="import/navbar.jsp" %> --%>
 	<jsp:include page="import/navbar.jsp"></jsp:include>
 
 	<!-- One -->
@@ -152,22 +141,16 @@
 	<!-- Footer -->
 	<%@include file="import/footer.jsp"%>
 
-	<script
-		src="${pageContext.request.contextPath}/resources/jquery/jQuery3.4.1.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/js/bootstrap.bundle.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/js/jquery.scrollex.min.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/js/skel.min.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/js/util.js"></script>
-	<script
-		src="${pageContext.request.contextPath}/resources/assets/js/main.js"></script>
-
+	<script src="${pageContext.request.contextPath}/resources/jquery/jQuery3.4.1.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/js/bootstrap.bundle.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/assets/js/jquery.scrollex.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/assets/js/skel.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/assets/js/util.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/assets/js/main.js"></script>
 	<script src="<%=cp%>/resources/js/cmGauge.js"></script>
 	<script src="<%=cp%>/resources/js/datatables.min.js"></script>
-	<script src="<%=cp%>/webjars/sweetalert2/dist/sweetalert2.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
+	<script src="<%=cp%>/webjars/sweetalert2/8.18.1/dist/sweetalert2.min.js"></script>
 
 	<script type="text/javascript">
 	var before;
@@ -187,24 +170,23 @@
 		var type = $("#modalbutton").text();
 		
 		if($("#group_name").val()==null||$("#group_name").val()==""){
-			swal("error","그룹명을 입력해주세요.","error");
+			swal.fire("error","그룹명을 입력해주세요.","error");
 			return false;
 		}
 		
 		if($("#group_usingGpu").val()==null||$("#group_usingGpu").val()==""){
-			swal("error","GPU 개수를 입력해주세요.","error");
+			swal.fire("error","GPU 개수를 입력해주세요.","error");
 			return false;
 		}
 		
 		if($("#group_storageCapa").val()==null||$("#group_storageCapa").val()==""){
-			swal("error","STORAGE를 입력해주세요.","error");
+			swal.fire("error","STORAGE를 입력해주세요.","error");
 			return false;
 		}
 		
 		if(type=="Save"){
 
 			if(groupNameCheck(group_name)!="false"){
-				console.log("중복없음");
 				$.ajax({
 		            url:"<%=cp%>/creategroup",
 						type : "POST",
@@ -216,7 +198,7 @@
 							"group_storageCapa" : $("#group_storageCapa").val()
 						},
 						success : function(data) {
-							swal("success","등록되었습니다.","success");
+							swal.fire("success","등록되었습니다.","success");
 							setTimeout(function() {
 								location.reload();
 							}, 2000);
@@ -226,7 +208,7 @@
 						}
 					});
 			}else{
-				swal("error","이미 등록된 그룹명입니다.","error");
+				swal.fire("error","이미 등록된 그룹명입니다.","error");
 				$("#group_name").val("");
 				return false;
 			}
@@ -235,14 +217,14 @@
 			
 			if(before!=group_name){
 				if(groupNameCheck(group_name)=="false"){
-					swal("error","이미 등록된 그룹명입니다.","error");
+					swal.fire("error","이미 등록된 그룹명입니다.","error");
 					$("#group_name").val("");
 					return false;
 				}
 			}
 			
 			
-			swal({
+			swal.fire({
 	            title: "그룹 정보를 수정하시겠습니까?",
 	            text: "수정하시면 해당 그룹에 속한 모든 회원의 GPU/STORAGE 정보가 변경됩니다. 수정하시겠습니까?",
 	            type: "warning",
@@ -268,7 +250,7 @@
 							},
 							success : function(data) {
 								
-								swal("success","수정되었습니다.","success");
+								swal.fire("success","수정되었습니다.","success");
 								setTimeout(function() {
 									location.reload();
 								}, 2000);	
@@ -316,7 +298,7 @@
 	
 	function delgroup(groupname){		 
 		
-		swal({
+		swal.fire({
             title: "그룹을 삭제하시겠습니까?",
             text: "삭제하시면 해당 그룹에 속한 회원은 default 그룹으로 이동되며, 이동된 그룹의 설정값으로 변경됩니다. 삭제하시겠습니까?",
             type: "warning",
@@ -339,7 +321,7 @@
      				},
      				success : function(data) {
      					
-     					swal("success","삭제되었습니다.","success");
+     					swal.fire("success","삭제되었습니다.","success");
      					setTimeout(function() {
      						location.reload();
      					}, 2000);
