@@ -93,10 +93,13 @@
 													<i class="fas fa-wrench"></i>
 												</button>
 												</c:if>
+												<c:if test="${list.user_status ne '관리자'}">
 												<button class="btn btn-outline-dark"
 													onclick="deluser('${list.user_id}');">
 													<i class="far fa-trash-alt"></i>
-												</button></td>
+												</button>
+												</c:if>
+												</td>
 										</tr>
 									</c:forEach>
 								</tbody>
@@ -130,9 +133,8 @@
 									class="form-control" id="user_id" readonly>
 							</div>
 							<div class="form-group">
-								<label class="col-form-label">그룹</label> <select
-									class="form-control" id="user_group">
-									<option value="default">default</option>
+								<label class="col-form-label">그룹</label> 
+								<select class="form-control" id="user_group" onchange="changeGroup();">
 								</select>
 							</div>
 							<div class="form-group">
@@ -141,7 +143,7 @@
 							</div>
 							<div class="form-group">
 								<label class="col-form-label">상태</label> <select
-									class="form-control" id="user_status">
+									class="form-control" id="user_status" onchange="changeStatus();">
 									<option value="회원">회원</option>
 									<option value="관리자">관리자</option>
 								</select>
@@ -167,13 +169,13 @@
 						<div class="col">
 							<div class="form-group">
 								<label class="col-form-label">GPU</label> <input type="text"
-									class="form-control" id="user_usingGpu">
+									class="form-control" id="user_usingGpu" onkeypress="onlyNumber();">
 							</div>
 						</div>
 						<div class="col">
 							<div class="form-group">
 								<label class="col-form-label">STORAGE</label> <input type="text"
-									class="form-control" id="user_storageCapa">
+									class="form-control" id="user_storageCapa" onkeypress="onlyNumber();">
 							</div>
 						</div>
 					</div>
@@ -287,6 +289,7 @@
 						$("#user_group").val("");
 						$("#user_group option").remove();
 					}else{
+						selectedGroup();
 						$("#user_group").val(data.user_group).prop("selected", true);
 					}
 								
@@ -300,6 +303,39 @@
 		}
 	 
 	 function updateuser(){
+		 
+		 if($("#user_name").val()==null||$("#user_name").val()==""){
+			 swal("error","이름을 입력해주세요.","error")
+			 return false;
+		 }
+		 
+		 if($("#user_email").val()==null||$("#user_email").val()==""){
+			 swal("error","이메일을 입력해주세요.","error");
+			 return false;
+		 }
+		 
+		 if(chkEmail($("#user_email").val())==false){
+			 swal("error","올바른 email 형식이 아닙니다.","error");
+			 return false;
+		 }
+		 
+		 if($("#user_usingGpu").val()==null||$("#user_usingGpu").val()==""){
+			 swal("error","GPU 개수를 입력해주세요.","error");
+			 return false;
+		 }
+		 
+		 if($("#user_storageCapa").val()==null||$("#user_storageCapa").val()==""){
+			 swal("error","STORAGE를 입력해주세요.","error");
+			 return false;
+		 }
+		 
+		 var status = $("#user_status").val();
+		 var group = $("#user_group").val();
+		 
+		 if(status=="관리자"){
+			 group = "";
+		 }
+				 
 		 $.ajax({
              url:"<%=cp%>/updateuser",
 				type : "POST",
@@ -308,14 +344,14 @@
 				data : {
 					"user_id" : $("#user_id").val(),
 					"user_name" : $("#user_name").val(),
-					"user_status" : $("#user_status").val(),
 					"user_email" : $("#user_email").val(),
-					"user_group" : $("#user_group").val(),
+					"user_group" : group,
+					"user_status" : status,
 					"user_usingGpu" : $("#user_usingGpu").val(),
 					"user_storageCapa" : $("#user_storageCapa").val()
 				},
 				success : function(data) {
-					swal("success",userid + " 회원의 정보가 수정되었습니다","success");
+					swal("success",$("#user_id").val() + " 회원의 정보가 수정되었습니다","success");
 					setTimeout(function() {
 						location.reload();
 					}, 2000);
@@ -323,8 +359,87 @@
 				error : function(err) {
 					console.log(err);
 				}
-
 			});
+		 
+	 }
+	 
+	 function onlyNumber(){
+
+         if((event.keyCode<48)||(event.keyCode>57))
+
+            event.returnValue=false;
+         }
+	 
+	 function chkEmail(str) {
+
+		    var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+
+		    if (regExp.test(str)) return true;
+
+		    else return false;
+
+		}
+	 
+	 function selectedGroup(){
+		 
+		 $("#user_group option").remove();
+			
+		 var groupname;
+		 
+		 $.ajax({
+             url:"<%=cp%>/getGroupName",
+				type : "POST",
+				dataType : "json",
+				async : false,
+				data : {},
+				success : function(data) {
+					groupname = data;
+				},
+				error : function(err) {
+					console.log(err);
+				}
+			});
+		 
+		 for(var i=0; i<groupname.length;i++){
+			 var option = $("<option value=\""+groupname[i]+"\">"+groupname[i]+"</option>");
+	         $('#user_group').append(option);
+		 }
+	 }
+	 
+	 function changeStatus(){
+		 var status = $("#user_status option:selected").val();
+		 
+		 if(status=="관리자"){
+			 $("#user_group option").remove();
+		 }
+		 if(status=="회원"){
+			 selectedGroup();
+		 }
+			 
+	 }
+	 
+	 function changeGroup(){
+		 var group = $("#user_group option:selected").val();
+		 
+		 $.ajax({
+	            url:"<%=cp%>/getgroup",
+					type : "POST",
+					dataType : "json",
+					async : false,
+					data : {
+						"group_name" : group
+					},
+					success : function(data) {
+
+						$("#user_usingGpu").val(data.group_usingGpu);
+						$("#user_storageCapa").val(data.group_storageCapa);
+						
+					},error : function(err) {
+						console.log(err);
+					}
+
+				});
+		 
 	 }
 	</script>
 

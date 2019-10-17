@@ -48,5 +48,24 @@ public class DcpUserService {
 
 		return dao.getGroupCount(group_name);
 	}
+	
+	public void updateDefaultGroup(UserVo user) throws Exception {
 
+		dao.updateDefaultGroup(user);
+	}
+	
+	public void updateGroup(UserVo user) throws Exception {
+
+		dao.updateGroup(user);
+	}
+	
+	public void insertAdmin(int user_no) {
+
+		dao.insertAdmin(user_no);
+	}
+	
+	public String deleteAdmin(int user_no) throws Exception {
+
+		return dao.deleteAdmin(user_no);
+	}
 }

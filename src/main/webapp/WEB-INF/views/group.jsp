@@ -56,7 +56,7 @@
 					<div class="row">
 						<div class="col">
 							<button class="btn float-right mb-3" data-toggle="modal"
-								data-target="#exampleModal">
+								data-target="#exampleModal" onclick="addgroup();">
 								<i class="fas fa-plus"></i> 그룹 추가
 							</button>
 
@@ -112,12 +112,12 @@
 
 
 	<div class="modal fade bd-example-modal-xl" id="exampleModal"
-		tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+		tabindex="-1" role="dialog" 
 		aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">회원 정보 수정</h5>
+					<h5 class="modal-title" id="modalheader">그룹추가</h5>
 					<button type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -131,11 +131,11 @@
 					</div>
 					<div class="form-group">
 						<label class="col-form-label">GPU</label> <input type="text"
-							class="form-control" id="group_usingGpu">
+							class="form-control" id="group_usingGpu" onkeypress="onlyNumber();">
 					</div>
 					<div class="form-group">
 						<label class="col-form-label">STORAGE</label> <input type="text"
-							class="form-control" id="group_storageCapa">
+							class="form-control" id="group_storageCapa" onkeypress="onlyNumber();">
 					</div>
 					<input type="hidden" id="group_no"/>
 				</div>
@@ -172,10 +172,34 @@
 	<script type="text/javascript">
 	var before;
 	
+	function addgroup(){
+		$("#modalbutton").text("Save");
+		$("#modalheader").text("그룹추가");
+		$("#group_name").val("");
+		$("#group_usingGpu").val("");
+		$("#group_storageCapa").val("");
+		$("#group_name").prop('readonly', false);
+	}
+	
 	function creategroup(){
 		var group_name = $("#group_name").val();
 				
 		var type = $("#modalbutton").text();
+		
+		if($("#group_name").val()==null||$("#group_name").val()==""){
+			swal("error","그룹명을 입력해주세요.","error");
+			return false;
+		}
+		
+		if($("#group_usingGpu").val()==null||$("#group_usingGpu").val()==""){
+			swal("error","GPU 개수를 입력해주세요.","error");
+			return false;
+		}
+		
+		if($("#group_storageCapa").val()==null||$("#group_storageCapa").val()==""){
+			swal("error","STORAGE를 입력해주세요.","error");
+			return false;
+		}
 		
 		if(type=="Save"){
 
@@ -184,7 +208,7 @@
 				$.ajax({
 		            url:"<%=cp%>/creategroup",
 						type : "POST",
-						dataType : "json",
+						dataType : "text",
 						async : false,
 						data : {
 							"group_name" : group_name,
@@ -202,7 +226,8 @@
 						}
 					});
 			}else{
-				console.log("중복");
+				swal("error","이미 등록된 그룹명입니다.","error");
+				$("#group_name").val("");
 				return false;
 			}
 			
@@ -211,28 +236,48 @@
 			if(before!=group_name){
 				if(groupNameCheck(group_name)=="false"){
 					swal("error","이미 등록된 그룹명입니다.","error");
+					$("#group_name").val("");
 					return false;
 				}
 			}
 			
-			$.ajax({
-		          url:"<%=cp%>/updateGroup",
-						type : "POST",
-						dataType : "json",
-						async : false,
-						data : {
-							"group_no" : $("#group_no").val(),
-							"group_name" : group_name,
-							"group_usingGpu" : $("#group_usingGpu").val(),
-							"group_storageCapa" : $("#group_storageCapa").val()
-						},
-						success : function(data) {
-							
-												
-						},error : function(err) {
-							console.log(err);
-						}
-					});
+			
+			swal({
+	            title: "그룹 정보를 수정하시겠습니까?",
+	            text: "수정하시면 해당 그룹에 속한 모든 회원의 GPU/STORAGE 정보가 변경됩니다. 수정하시겠습니까?",
+	            type: "warning",
+	            showCancelButton: true,
+	            allowEscapeKey: false,
+	            allowOutsideClick: false,
+	        }).then(function (result) {
+
+	            if (result.dismiss === "cancel") { // 취소면 그냥 나감
+	                return false;
+	            }
+
+	            $.ajax({
+			          url:"<%=cp%>/updateGroup",
+							type : "POST",
+							dataType : "json",
+							async : false,
+							data : {
+								"group_no" : $("#group_no").val(),
+								"group_name" : group_name,
+								"group_usingGpu" : $("#group_usingGpu").val(),
+								"group_storageCapa" : $("#group_storageCapa").val()
+							},
+							success : function(data) {
+								
+								swal("success","수정되었습니다.","success");
+								setTimeout(function() {
+									location.reload();
+								}, 2000);	
+								
+							},error : function(err) {
+								console.log(err);
+							}
+						});
+			});
 			
 		}
 		
@@ -256,6 +301,8 @@
 					$("#group_no").val(data.group_no);
 					
 					$("#modalbutton").text("Update");
+					$("#modalheader").text("그룹 정보 수정");
+					$("#group_name").prop('readonly', true);
 					
 					before = data.group_name;
 					
@@ -327,6 +374,14 @@
 			});
 			return result;
 		}
+	
+	
+	  function onlyNumber(){
+
+          if((event.keyCode<48)||(event.keyCode>57))
+
+             event.returnValue=false;
+          }
 	
 	</script>
 

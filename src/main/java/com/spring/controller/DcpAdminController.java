@@ -3,11 +3,13 @@ package com.spring.controller;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.crypto.Data;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -121,7 +123,7 @@ public class DcpAdminController {
 		response.setCharacterEncoding("UTF-8");
 
 		PrintWriter out = response.getWriter();
-		out.print(out);
+		out.print("true");
 		out.flush();
 		out.close();
 	}
@@ -142,7 +144,7 @@ public class DcpAdminController {
 		if (user.getUser_connect() != null) {
 			connect = formatter.format(user.getUser_connect());
 		}
-
+				
 		JSONObject jobject = new JSONObject();
 
 		jobject.put("user_id", user.getUser_id());
@@ -175,9 +177,8 @@ public class DcpAdminController {
 
 		response.setCharacterEncoding("UTF-8");
 
-		UserVo user = new UserVo();
+		UserVo user = dcpUserService.getuser(user_id);
 
-		user.setUser_id(user_id);
 		user.setUser_name(user_name);
 		user.setUser_status(user_status);
 		user.setUser_email(user_email);
@@ -186,9 +187,15 @@ public class DcpAdminController {
 		user.setUser_storageCapa(Integer.parseInt(user_storageCapa));
 
 		dcpUserService.updateuser(user);
+		
+		if(user_status.equals("관리자")) {
+			dcpUserService.insertAdmin(user.getUser_no());
+		}else {
+			dcpUserService.deleteAdmin(user.getUser_no());
+		}
 
 		PrintWriter out = response.getWriter();
-		out.print(out);
+		out.print("true");
 		out.flush();
 		out.close();
 	}
@@ -197,6 +204,7 @@ public class DcpAdminController {
 	public String waiting(Model model) {
 
 		ArrayList<UserVo> list = null;
+		ArrayList<GroupVo> grouplist = null;
 		try {
 			list = dcpUserService.getUnapprovedUserList();
 		} catch (Exception e) {
@@ -204,9 +212,45 @@ public class DcpAdminController {
 			e.printStackTrace();
 		}
 
+		try {
+			grouplist = dcpGroupService.getGroupList();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		model.addAttribute("list", list);
+		model.addAttribute("grouplist", grouplist);
 
 		return "/waiting";
+	}
+
+	@RequestMapping(value = "/acceptuser", method = RequestMethod.POST)
+	public void acceptuser(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String user_id = request.getParameter("user_id");
+		String user_group = request.getParameter("user_group");
+
+		response.setCharacterEncoding("UTF-8");
+
+		GroupVo group = dcpGroupService.getGroup(user_group);
+		int storageCapa = group.getGroup_storageCapa();
+		int usingGpu = group.getGroup_usingGpu();
+
+		UserVo user = dcpUserService.getuser(user_id);
+		
+		user.setUser_id(user_id);
+		user.setUser_group(user_group);
+		user.setUser_storageCapa(storageCapa);
+		user.setUser_usingGpu(usingGpu);
+		user.setUser_status("회원");
+		user.setUser_joined(new Date());
+
+		dcpUserService.updateuser(user);
+		
+		PrintWriter out = response.getWriter();
+		out.print("true");
+		out.flush();
+		out.close();
 	}
 
 	@RequestMapping(value = "/dcp/{email}/group", method = RequestMethod.GET)
@@ -214,15 +258,15 @@ public class DcpAdminController {
 
 		ArrayList<GroupVo> list = null;
 		int count = 0;
-		
+
 		try {
 			list = dcpGroupService.getGroupList();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		for(int i = 0 ; i < list.size(); i ++) {
+
+		for (int i = 0; i < list.size(); i++) {
 
 			try {
 				count = dcpUserService.getGroupCount(list.get(i).getGroup_name());
@@ -230,12 +274,12 @@ public class DcpAdminController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			list.get(i).setGroup_count(count);
 		}
-		
+
 		model.addAttribute("list", list);
-		
+
 		return "/group";
 	}
 
@@ -255,17 +299,17 @@ public class DcpAdminController {
 		response.setCharacterEncoding("UTF-8");
 
 		PrintWriter out = response.getWriter();
-		out.print(out);
+		out.print("true");
 		out.flush();
 		out.close();
 	}
-	
+
 	@RequestMapping(value = "/getgroup", method = RequestMethod.POST)
 	public void getgroup(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String group_name = request.getParameter("group_name");
 		String group_usingGpu = request.getParameter("group_usingGpu");
 		String group_storageCapa = request.getParameter("group_storageCapa");
-		
+
 		GroupVo group = dcpGroupService.getGroup(group_name);
 
 		JSONObject jobject = new JSONObject();
@@ -282,37 +326,48 @@ public class DcpAdminController {
 		out.flush();
 		out.close();
 	}
-	
+
 	@RequestMapping(value = "/delGroup", method = RequestMethod.POST)
 	public void delGroup(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String group_name = request.getParameter("group_name");
-		
+
 		dcpGroupService.delGroup(group_name);
+
+		GroupVo group = dcpGroupService.getGroup("default");
+		int storageCapa = group.getGroup_storageCapa();
+		int usingGpu = group.getGroup_usingGpu();
+
+		UserVo user = new UserVo();
+		user.setUser_storageCapa(storageCapa);
+		user.setUser_usingGpu(usingGpu);
+		user.setUser_group(group_name);
+
+		dcpUserService.updateDefaultGroup(user);
 
 		response.setCharacterEncoding("UTF-8");
 
 		PrintWriter out = response.getWriter();
-		out.print(out);
+		out.print("true");
 		out.flush();
 		out.close();
 	}
-	
+
 	@RequestMapping(value = "/selectGroupName", method = RequestMethod.POST)
 	public void selectGroupName(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String group_name = request.getParameter("group_name");
-		
+
 		ArrayList<GroupVo> list = dcpGroupService.getGroupList();
-		
+
 		String result = null;
-		
-		for(int i = 0 ; i < list.size() ; i++) {
-			
-			if(group_name.equals(list.get(i).getGroup_name())) {
+
+		for (int i = 0; i < list.size(); i++) {
+
+			if (group_name.equals(list.get(i).getGroup_name())) {
 				result = "false";
 				break;
 			}
 		}
-		
+
 		response.setCharacterEncoding("UTF-8");
 
 		PrintWriter out = response.getWriter();
@@ -320,27 +375,58 @@ public class DcpAdminController {
 		out.flush();
 		out.close();
 	}
-	
+
 	@RequestMapping(value = "/updateGroup", method = RequestMethod.POST)
 	public void updateGroup(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String group_no = request.getParameter("group_no");
 		String group_name = request.getParameter("group_name");
 		String group_usingGpu = request.getParameter("group_usingGpu");
 		String group_storageCapa = request.getParameter("group_storageCapa");
-	
-		response.setCharacterEncoding("UTF-8");
 
-		GroupVo group = new GroupVo();
+		response.setCharacterEncoding("UTF-8");
 		
+		GroupVo group = new GroupVo();
+
 		group.setGroup_no(Integer.parseInt(group_no));
 		group.setGroup_name(group_name);
 		group.setGroup_usingGpu(Integer.parseInt(group_usingGpu));
 		group.setGroup_storageCapa(Integer.parseInt(group_storageCapa));
 
 		dcpGroupService.updateGroup(group);
+		
+		UserVo user = new UserVo();
+		user.setUser_storageCapa(Integer.parseInt(group_storageCapa));
+		user.setUser_usingGpu(Integer.parseInt(group_usingGpu));
+		user.setUser_group(group_name);
+		
+		dcpUserService.updateGroup(user);
 
 		PrintWriter out = response.getWriter();
-		out.print(out);
+		out.print("true");
+		out.flush();
+		out.close();
+	}
+	
+	@RequestMapping(value = "/getGroupName", method = RequestMethod.POST)
+	public void getGroupName(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		ArrayList<GroupVo> group = dcpGroupService.getGroupList();
+		
+		JSONArray jarray = new JSONArray();
+		
+		for(int i = 0 ; i < group.size() ; i++) {
+			jarray.add(group.get(i).getGroup_name());
+		}
+		
+		/*
+		 * JSONObject jobject = new JSONObject();
+		 * 
+		 * jobject.put("group_name", group.getGroup_name());
+		 */
+		response.setCharacterEncoding("UTF-8");
+
+		PrintWriter out = response.getWriter();
+		out.print(jarray);
 		out.flush();
 		out.close();
 	}
