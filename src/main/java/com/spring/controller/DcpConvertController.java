@@ -1,5 +1,6 @@
 package com.spring.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -58,7 +59,9 @@ public class DcpConvertController {
 		UserVo user = (UserVo)session.getAttribute("user");
 		HistoryVo historyVo = new HistoryVo();
 		historyVo.setUser_no(user.getUser_no());
+		logger.info("Start convertToTiff / " + new Date());
 		dcpTiffService.convertTiff(tiffVo, common.getLocalDir()+email, items, path, historyVo);
+		logger.info("end convertToTiff / " + new Date());
 	}
 	
 	@ResponseBody
@@ -68,7 +71,9 @@ public class DcpConvertController {
 		UserVo user = (UserVo)session.getAttribute("user");
 		HistoryVo historyVo = new HistoryVo();
 		historyVo.setUser_no(user.getUser_no());
+		logger.info("Start convertToJ2c / " + new Date());
 		dcpJpegService.convertJpeg(jpegVo, common.getLocalDir()+email, items, path, historyVo);
+		logger.info("end convertToJ2c / " + new Date());
 	}
 	
 	@ResponseBody

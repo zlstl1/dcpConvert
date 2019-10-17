@@ -44,8 +44,52 @@ public class DcpCommonService {
          }
     }
     
+    public int getPlayTime2(String originalFilename, String workDir) {
+    	String cmd[] = new String[] {
+    			"ffmpeg",
+    			"-i",workDir + "/" + originalFilename
+    	};
+    	int frame = 0;
+    	BufferedReader br = null;
+    	
+    	try {
+    			ProcessBuilder builder = new ProcessBuilder();
+    			builder.redirectErrorStream(true);
+    			builder.command(cmd);
+    			builder.directory(new File(workDir));
+    			
+    			Process p = builder.start();
+    			//p.getInputStream().close();
+				p.getErrorStream().close(); 
+				p.getOutputStream().close(); 
+				
+				br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+				String line;
+				while ((line = br.readLine()) != null) {
+					if(line.contains("NUMBER_OF_FRAMES:")) {
+						line = line.replaceFirst("NUMBER_OF_FRAMES:", ""); 
+						line = line.trim();
+	                  
+						frame = Integer.parseInt(line);
+						
+						break;
+					}
+				}
+				p.waitFor();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+		    try {
+		        if( br!=null ) {
+		        	br.close();
+		        }
+		    } catch(IOException e) {
+		    }
+		}
+    	return frame;
+    }
+    
     public int getPlayTime(String originalFilename, String workDir) {
-    	String ffmpeg = "ffprobe ";
     	String cmd[] = new String[] {
     			"ffprobe",
     			"-select_streams","v",
@@ -71,8 +115,12 @@ public class DcpCommonService {
 					if(line.contains("nb_frames=")) {
 						line = line.replaceFirst("nb_frames=", ""); 
 						line = line.trim();
-	                  
-						frame = Integer.parseInt(line);
+	                 
+						if("N/A".equals(line)) {
+							frame = -1;
+						}else {
+							frame = Integer.parseInt(line);
+						}
 						
 						break;
 					}
