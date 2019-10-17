@@ -22,7 +22,7 @@
 				#{user_name},
 				#{user_usingGpu},
 				#{user_storageCapa},
-				#{user_joined},
+				now(),
 				#{user_connect},
 				#{user_status},
 				#{user_email}
@@ -92,6 +92,7 @@
 			user_email = #{user_email},
 			user_group = #{user_group},
 			user_usingGpu = #{user_usingGpu},
+			user_joined = #{user_joined},
 			user_storageCapa = #{user_storageCapa}
 			WHERE user_id = #{user_id};
 		]]>
@@ -113,4 +114,41 @@
 			WHERE user_group = #{group_name};
 		]]>
 	</select>
+	
+	<!-- 김규아 추가 -->
+	<update id="updateDefaultGroup" parameterType="com.spring.vo.UserVo">
+		<![CDATA[
+			UPDATE user 
+			SET user_group = "default",
+			user_usingGpu = #{user_usingGpu},
+			user_storageCapa = #{user_storageCapa}
+			WHERE user_group = #{user_group};
+		]]>
+	</update>
+	
+	<!-- 김규아 추가 -->
+	<update id="updateGroup" parameterType="com.spring.vo.UserVo">
+		<![CDATA[
+			UPDATE user 
+			SET user_usingGpu = #{user_usingGpu},
+			user_storageCapa = #{user_storageCapa}
+			WHERE user_group = #{user_group};
+		]]>
+	</update>
+	
+	<!-- 김규아 추가 -->
+	<insert id="insertAdmin" parameterType="java.lang.Integer" >
+		<![CDATA[
+			INSERT INTO admin(user_no) 
+			VALUES (#{user_no});
+		]]>
+	</insert>
+	
+	<!-- 김규아 추가 -->
+	<delete id="deleteAdmin" parameterType="java.lang.Integer">
+		<![CDATA[
+			DELETE FROM admin
+			WHERE user_no = #{user_no};
+		]]>
+	</delete>
 </mapper>

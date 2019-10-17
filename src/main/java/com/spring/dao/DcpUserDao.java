@@ -48,4 +48,24 @@ public class DcpUserDao {
 
 		return sqlSession.selectOne("user_login.getGroupCount", group_name);
 	}
+	
+	public void updateDefaultGroup(UserVo user) throws Exception {
+		// TODO Auto-generated method stub
+		sqlSession.update("user_login.updateDefaultGroup", user);
+	}
+	
+	public void updateGroup(UserVo user) throws Exception {
+		// TODO Auto-generated method stub
+		sqlSession.update("user_login.updateGroup", user);
+	}
+	
+	public void insertAdmin(int user_no) {
+		
+		sqlSession.insert("user_login.insertAdmin", user_no);
+	}
+	
+	public String deleteAdmin(int user_no) throws Exception {
+		sqlSession.delete("user_login.deleteAdmin", user_no);
+		return "true";
+	}
 }

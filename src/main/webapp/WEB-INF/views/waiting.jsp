@@ -71,10 +71,14 @@
 											<td>${list.user_id}</td>
 											<td>${list.user_name}</td>
 											<td>${list.user_email}</td>
-											<td><fmt:formatDate value="${list.user_joined}" pattern="yyyy-MM-dd HH:mm" /></td>
+											<td><fmt:formatDate value="${list.user_joined}"
+													pattern="yyyy-MM-dd HH:mm" /></td>
 											<td>
-												<button class="btn btn-outline-dark" onclick="accept('${list.user_id}');">승인</button>
-												<button class="btn btn-outline-dark" onclick="reject('${list.user_id}');">거절</button>
+												<button class="btn btn-outline-dark" data-toggle="modal"
+													data-target="#addgroupmodal"
+													onclick="setUsetname('${list.user_id}');">승인</button>
+												<button class="btn btn-outline-dark"
+													onclick="reject('${list.user_id}');">거절</button>
 											</td>
 										</tr>
 									</c:forEach>
@@ -88,7 +92,38 @@
 		</div>
 
 	</section>
-	
+
+	<div class="modal fade bd-example-modal-xl" id="addgroupmodal"
+		tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalheader">그룹설정</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<label class="mb-2">Group</label> <select class="form-control"
+						id="group_name">
+						<c:forEach var="grouplist" items="${grouplist}">
+							<option value="${grouplist.group_name}">${grouplist.group_name}</option>
+						</c:forEach>
+					</select>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary"
+						onclick="accept();" id="modalbutton">Save</button>
+				</div>
+				<input type="hidden" id="user_id">
+			</div>
+		</div>
+	</div>
+
 	<!-- Footer -->
 	<%@include file="import/footer.jsp"%>
 
@@ -158,21 +193,28 @@
 						console.log(err);
 					}
 				});
-
 			});
-
 		}
 	 
-	 function accept(userid){
-	        swal({
-	            title: "가입신청을 승인하시겠습니까?",
-	            text: "승인하시면 가입 대기 리스트에서 사라지며, 회원 리스트에서 관리하실 수 있습니다. 취소하시려면 \"Cancle\" 버튼을 눌러주세요.",
-	            type: "warning",
-	            showCancelButton: true,
-	            allowEscapeKey: false,
-	            allowOutsideClick: false,
-	        }).then(function (result) {
-
+	 //모달창에 user_id 값 넘겨주기 위함 
+	 function setUsetname(userid){
+	        $("#user_id").val(userid);
+		}
+	 
+	 function accept(){
+		 var user = $("#user_id").val();
+		 var group = $("#group_name").val();
+		 
+		 swal({
+	           title: "가입신청을 승인하시겠습니까?",
+	           /* text: "승인하시면 가입 대기 리스트에서 사라지며, 회원 리스트에서 관리하실 수 있습니다. 취소하시려면 \"Cancle\" 버튼을 눌러주세요.", */
+	           text : "회원명 : \""+user+"\" 그룹 : \""+group+"\" 으로 등록됩니다. 취소하시려면 \"Cancle\" 버튼을 눌러주세요.",
+	           type: "info",
+	           showCancelButton: true,
+	           allowEscapeKey: false,
+	           allowOutsideClick: false,
+	       }).then(function (result) {
+	    	   
 	            if (result.dismiss === "cancel") { // 취소면 그냥 나감
 	                return false;
 	            }
@@ -183,10 +225,11 @@
 					dataType : "json",
 					async : false,
 					data : {
-						"user_id" : userid
+						"user_id" : user,
+						"user_group" : group
 					},
 					success : function(data) {
-						swal("success",userid + " 회원의 가입이 승인 처리 되었습니다.","success");
+						swal("success",user + " 회원의 가입이 승인 처리 되었습니다.","success");
 						setTimeout(function() {
 							location.reload();
 						}, 2000);
@@ -195,9 +238,7 @@
 						console.log(err);
 					}
 				});
-	           
 			});
-
 		}
 	
 	</script>
