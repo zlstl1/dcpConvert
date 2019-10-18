@@ -374,7 +374,7 @@ $('#tiffConvert').on('click',function(){
 	var items = getItem();
 	if(items[0] !== undefined){
 		var pos = items[0].lastIndexOf(".");
-		var ext = items[0].substring(pos, items[0].length);
+		var ext = items[0].substring(pos + 1, items[0].length);
 		if(ext !== undefined){
 			ext.toLowerCase();
 		}
