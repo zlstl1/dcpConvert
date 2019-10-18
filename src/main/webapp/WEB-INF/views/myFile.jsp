@@ -11,7 +11,7 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/assets/css/main.css">
 	<link href="${pageContext.request.contextPath }/resources/css/skin-lion/ui.fancytree.css" rel="stylesheet">
 	<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/bootstrap.css">
-	<link rel="stylesheet" href="../webjars/sweetalert2/8.18.1/dist/sweetalert2.min.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath }/webjars/sweetalert2/8.18.1/dist/sweetalert2.min.css">
 </head>
 <body class="subpage">
 	
@@ -158,7 +158,7 @@
 	<script src="${pageContext.request.contextPath}/resources/js/bootstrap.bundle.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/js/jquery.fancytree.ui-deps.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/js/jquery.fancytree.js"></script>
-	<script src="../webjars/sweetalert2/8.18.1/dist/sweetalert2.min.js"></script>
+	<script src="${pageContext.request.contextPath }/webjars/sweetalert2/8.18.1/dist/sweetalert2.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/assets/js/jquery.scrollex.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/assets/js/skel.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/assets/js/util.js"></script>
