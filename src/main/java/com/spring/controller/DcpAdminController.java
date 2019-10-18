@@ -36,18 +36,37 @@ public class DcpAdminController {
 	public String adminpage(Model model, HttpSession session, @PathVariable("email") String email) {
 		UserVo userVo = (UserVo) session.getAttribute("user");
 		model.addAttribute("user", userVo);
+		
+		ArrayList<UserVo> waiting = null;
+		ArrayList<GroupVo> grouplist = null;
+		try {
+			waiting = dcpUserService.getUnapprovedUserList();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			grouplist = dcpGroupService.getGroupList();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		model.addAttribute("waiting", waiting);
+		model.addAttribute("grouplist", grouplist);
+
+		ArrayList<UserVo> list = null;
+		try {
+			list = dcpUserService.getUserList();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		model.addAttribute("list", list);
+		
 		return "adminpage";
-	}
-
-	@RequestMapping(value = "/dcp/waiting", method = RequestMethod.GET)
-	public String waiting() {
-		return "/admin/waiting";
-	}
-
-	@RequestMapping(value = "/dcp/grade", method = RequestMethod.GET)
-	public String grade() {
-
-		return "/admin/grade";
 	}
 
 	@RequestMapping(value = "/dcp/{email}/cpumonitoring", method = RequestMethod.GET)
@@ -131,7 +150,7 @@ public class DcpAdminController {
 		if (user.getUser_connect() != null) {
 			connect = formatter.format(user.getUser_connect());
 		}
-				
+
 		JSONObject jobject = new JSONObject();
 
 		jobject.put("user_id", user.getUser_id());
@@ -174,10 +193,10 @@ public class DcpAdminController {
 		user.setUser_storageCapa(Integer.parseInt(user_storageCapa));
 
 		dcpUserService.updateuser(user);
-		
-		if(user_status.equals("관리자")) {
+
+		if (user_status.equals("관리자")) {
 			dcpUserService.insertAdmin(user.getUser_no());
-		}else {
+		} else {
 			dcpUserService.deleteAdmin(user.getUser_no());
 		}
 
@@ -224,7 +243,7 @@ public class DcpAdminController {
 		int usingGpu = group.getGroup_usingGpu();
 
 		UserVo user = dcpUserService.getuser(user_id);
-		
+
 		user.setUser_id(user_id);
 		user.setUser_group(user_group);
 		user.setUser_storageCapa(storageCapa);
@@ -233,7 +252,7 @@ public class DcpAdminController {
 		user.setUser_joined(new Date());
 
 		dcpUserService.updateuser(user);
-		
+
 		PrintWriter out = response.getWriter();
 		out.print("true");
 		out.flush();
@@ -371,7 +390,7 @@ public class DcpAdminController {
 		String group_storageCapa = request.getParameter("group_storageCapa");
 
 		response.setCharacterEncoding("UTF-8");
-		
+
 		GroupVo group = new GroupVo();
 
 		group.setGroup_no(Integer.parseInt(group_no));
@@ -380,12 +399,12 @@ public class DcpAdminController {
 		group.setGroup_storageCapa(Integer.parseInt(group_storageCapa));
 
 		dcpGroupService.updateGroup(group);
-		
+
 		UserVo user = new UserVo();
 		user.setUser_storageCapa(Integer.parseInt(group_storageCapa));
 		user.setUser_usingGpu(Integer.parseInt(group_usingGpu));
 		user.setUser_group(group_name);
-		
+
 		dcpUserService.updateGroup(user);
 
 		PrintWriter out = response.getWriter();
@@ -393,18 +412,18 @@ public class DcpAdminController {
 		out.flush();
 		out.close();
 	}
-	
+
 	@RequestMapping(value = "/getGroupName", method = RequestMethod.POST)
 	public void getGroupName(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		ArrayList<GroupVo> group = dcpGroupService.getGroupList();
-		
+
 		JSONArray jarray = new JSONArray();
-		
-		for(int i = 0 ; i < group.size() ; i++) {
+
+		for (int i = 0; i < group.size(); i++) {
 			jarray.add(group.get(i).getGroup_name());
 		}
-		
+
 		/*
 		 * JSONObject jobject = new JSONObject();
 		 * 
