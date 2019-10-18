@@ -3,9 +3,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%
     String cp = request.getContextPath();
-	UserVo user = new UserVo();
-	user = (UserVo)session.getAttribute("user");
-	String sessionGetId = user.getUser_id();
 %>
 <!-- Header -->
 	<header id="header">
