@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/bootstrap.css">
 
 <!-- 김규아 추가 -->
-<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/circle.css">
+<link rel="stylesheet" href="<%=cp%>/resources/css/circle.css">
 <link rel="stylesheet" href="<%=cp%>/resources/css/cmGauge.css">
 <link rel="stylesheet" href="<%=cp%>/webjars/font-awesome/5.8.1/css/fontawesome.css">
 <link rel="stylesheet" href="<%=cp%>/webjars/font-awesome/5.8.1/css/all.css">
@@ -131,8 +131,8 @@
 									class="form-control" id="user_joined" readonly>
 							</div>
 							<div class="form-group">
-								<label class="col-form-label">상태</label> <select
-									class="form-control" id="user_status" onchange="changeStatus();">
+								<label class="col-form-label">상태</label> 
+								<select class="form-control" id="user_status" onchange="changeStatus();">
 									<option value="회원">회원</option>
 									<option value="관리자">관리자</option>
 								</select>
@@ -277,7 +277,15 @@
 						selectedGroup();
 						$("#user_group").val(data.user_group).prop("selected", true);
 					}
-								
+					
+					var loginid = "${user.user_id}"
+
+					if(loginid==userid){
+						$('#user_status').attr('disabled', 'true');
+					}else{
+						$('#user_status').removeAttr('disabled'); 
+					}
+													
 				},
 				error : function(err) {
 					console.log(err);
@@ -320,7 +328,10 @@
 		 if(status=="관리자"){
 			 group = "";
 		 }
-				 
+				
+
+		$('#user_status').removeAttr('disabled'); 
+			
 		 $.ajax({
              url:"<%=cp%>/updateuser",
 				type : "POST",
@@ -336,7 +347,7 @@
 					"user_storageCapa" : $("#user_storageCapa").val()
 				},
 				success : function(data) {
-					swal.fire("success",$("#user_id").val() + " 회원의 정보가 수정되었습니다","success");
+					swal.fire("success","\""+$("#user_id").val() + "\"님의 회원정보가 수정되었습니다","success");
 					setTimeout(function() {
 						location.reload();
 					}, 2000);
@@ -396,9 +407,12 @@
 		 
 		 if(status=="관리자"){
 			 $("#user_group option").remove();
+			 $("#user_usingGpu").val("");
+			 $("#user_storageCapa").val("");
 		 }
 		 if(status=="회원"){
 			 selectedGroup();
+			 changeGroup();
 		 }
 			 
 	 }

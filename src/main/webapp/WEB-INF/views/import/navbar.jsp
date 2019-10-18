@@ -1,7 +1,11 @@
+<%@page import="com.spring.vo.UserVo"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%
     String cp = request.getContextPath();
+	UserVo user = new UserVo();
+	user = (UserVo)session.getAttribute("user");
+	String sessionGetId = user.getUser_id();
 %>
 <!-- Header -->
 	<header id="header">

@@ -167,7 +167,7 @@
 						"user_id" : userid
 					},
 					success : function(data) {
-						swal.fire("success",userid + " 회원의 가입이 거절 처리 되었습니다.","success");
+						swal.fire("success","\""+userid + "\"님의 회원가입이 거절 처리 되었습니다.","success");
 						setTimeout(function() {
 							location.reload();
 						}, 2000);
@@ -212,7 +212,7 @@
 						"user_group" : group
 					},
 					success : function(data) {
-						swal.fire("success",user + " 회원의 가입이 승인 처리 되었습니다.","success");
+						swal.fire("success","\""+user + "\"님의 회원가입이 승인 처리 되었습니다.","success");
 						setTimeout(function() {
 							location.reload();
 						}, 2000);
