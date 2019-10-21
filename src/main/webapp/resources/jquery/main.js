@@ -375,7 +375,7 @@ $('#tiffConvert').on('click',function(){
 	if(items[0] !== undefined){
 		var pos = items[0].lastIndexOf(".");
 		var ext = items[0].substring(pos + 1, items[0].length);
-		if(ext !== undefined){
+		if(pos !== -1){
 			ext.toLowerCase();
 		}
 	}else{
@@ -440,8 +440,8 @@ $('#jpegConvert').on('click',function(){
 	var items = getItem();
 	if(items[0] !== undefined){
 		var pos = items[0].lastIndexOf(".");
-		var ext = items[0].substring(pos, items[0].length);
-		if(ext !== undefined){
+		var ext = items[0].substring(pos + 1, items[0].length);
+		if(pos !== -1){
 			ext.toLowerCase();
 		}
 	}else{
@@ -506,8 +506,8 @@ $('#mxfConvert').on('click',function(){
 	var items = getItem();
 	if(items[0] !== undefined){
 		var pos = items[0].lastIndexOf(".");
-		var ext = items[0].substring(pos, items[0].length);
-		if(ext !== undefined){
+		var ext = items[0].substring(pos + 1, items[0].length);
+		if(pos !== -1){
 			ext.toLowerCase();
 		}
 	}else{
@@ -520,25 +520,23 @@ $('#mxfConvert').on('click',function(){
 	}else if( $("#fileType_m").val() == "picture" ){
 		if(items.length > 1){
 			swal.fire("경고","JPEG2000 파일을 포함한 폴더 하나를 선택하세요", "error");
-		}else if(ext === undefined){
-			mxfConvert(items);
-		}else{
+		}else if(pos !== -1){
 			swal.fire("경고","JPEG2000 포맷의 파일이 있는 폴더를 선택하세요", "error");
+		}else{
+			mxfConvert(items);
 		}
 	}else if( $("#fileType_m").val() == "sound" ){
 		if(items.length > 1){
 			swal.fire("경고","WAV 파일을 포함한 폴더 하나를 선택하세요", "error");
-		}else if(ext === undefined){
-			mxfConvert(items);
-		}else{
+		}else if(pos !== -1){
 			swal.fire("경고","WAV 포맷의 파일이 있는 폴더를 선택하세요", "error");
+		}else{
+			mxfConvert(items);
 		}
 	}else if( $("#fileType_m").val() == "subtitle" ){
 		if(items.length > 1){
 			swal.fire("경고","SRT 포맷의 파일 하나를 선택하세요", "error");
-		}else if(ext === undefined ){
-			swal.fire("경고","SRT 포맷의 파일을 선택하세요", "error");
-		}else if( ext != "srt"){
+		}else if(ext != "srt"){
 			swal.fire("경고","SRT 포맷의 파일을 선택하세요", "error");
 		}else{
 			mxfConvert(items);
@@ -600,9 +598,8 @@ $('#dcpConvert').on('click',function(){
 	var items = getItem();
 	if(items[0] !== undefined){
 		var pos = items[0].lastIndexOf(".");
-		var ext = items[0].substring(pos, items[0].length);
-		console.log(ext);
-		if(ext !== undefined){
+		var ext = items[0].substring(pos + 1, items[0].length);
+		if(pos !== -1){
 			ext.toLowerCase();
 		}
 	}else{
@@ -616,7 +613,7 @@ $('#dcpConvert').on('click',function(){
 		swal.fire("경고","Annotation을 입력해주세요", "error");
 	}else if( $("#issuer_d").val() == "" ){
 		swal.fire("경고","Issuer를 입력해주세요", "error");
-	}else if(ext === undefined ){
+	}else if(pos === -1 ){
 		swal.fire("경고","mxf 포맷의 파일을 선택하세요", "error");
 	}else if( ext != "mxf"){
 		swal.fire("경고","mxf 포맷의 파일을 선택하세요", "error");
@@ -663,8 +660,8 @@ $('#oneStopConvert').on('click',function(){
 	var items = getItem();
 	if(items[0] !== undefined){
 		var pos = items[0].lastIndexOf(".");
-		var ext = items[0].substring(pos, items[0].length);
-		if(ext !== undefined){
+		var ext = items[0].substring(pos + 1, items[0].length);
+		if(pos !== -1){
 			ext.toLowerCase();
 		}
 	}else{
@@ -689,8 +686,8 @@ $('#oneStopConvert').on('click',function(){
 	}else {
 		for(var i=0;i<items.length;i++){
 			var pos = items[i].lastIndexOf(".");
-			var ext = items[i].substring(pos, items[0].length);
-			if(ext === undefined){
+			var ext = items[i].substring(pos + 1, items[0].length);
+			if(pos === -1){
 				swal.fire("경고","폴더는 선택 불가능합니다", "error");
 				return;
 			}else{
