@@ -4457,3 +4457,7 @@ body.subpage {
 button.swal2-styled{
 	line-height: 0.9 !important;
 }
+
+#convertArea{
+	padding-left: 7em;
+}

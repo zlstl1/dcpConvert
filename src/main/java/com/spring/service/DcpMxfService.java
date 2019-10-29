@@ -22,6 +22,7 @@ public class DcpMxfService {
 	Common common;
 	
 	public void convertMxf(MxfVo mxfVo,String workDir,List<String> items, String path, HistoryVo historyVo) {
+		common.dbug("convertMxf - DcpMxfService ::: ");
 		String title = "";
 		String cli = "";
 		

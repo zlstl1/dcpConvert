@@ -20,6 +20,7 @@ public class DcpDcpService {
 	Common common;
 	
 	public void convertDcp(DcpVo dcpVo,String workDir,List<String> items, String path, HistoryVo historyVo) {
+		common.dbug("convertDcp - DcpDcpService ::: ");
 		String cli = "opendcp_xml ";
 		cli += " -r ";
 		

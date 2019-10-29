@@ -11,8 +11,12 @@
       		</div>
 	      	<div class="modal-body">
 	      		
-	      		<button type="button" class="button small" onclick="expandFunc()">전체 열기</button>
-	      		<button type="button" class="button small" onclick="collapseFunc()">전체 닫기</button>
+	      		<button type="button" class="button small" id="treeExpandCollapseBtn" onclick="treeExpandCollapseFunc()" value="expand">전체 열기</button>
+	      		<button type="button" class="button small" id="treeMakeFolderBtn" onclick="treeMakeFolderFunc()">폴더 생성</button>
+	      		<button type="button" class="button small" id="treeDeleteFolderBtn" onclick="treeDeleteFolderFunc()">폴더 삭제</button>
+	      		<button type="button" class="button small" id="treeRenameBtn" onclick="treeRenameFunc()">폴더명 변경</button>
+	      		
+	      		<input type="text" id="treeFolderName" class="mt-2" placeholder="폴더명">
 	      		
 	      		<div id="tree" class="mt-2">
 				    <ul id="treeData" style="display: none;">

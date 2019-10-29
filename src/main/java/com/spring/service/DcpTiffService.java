@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
@@ -26,9 +24,8 @@ public class DcpTiffService {
 	@Autowired
 	Common common;
 	
-	final Logger logger = LoggerFactory.getLogger(DcpOneStopService.class);
-	
 	public void convertTiff(TiffVo tiffVo,String workDir,List<String> items, String path, HistoryVo historyVo) {
+		common.dbug("convertTiff - DcpTiffService ::: ");
 		File dumpfile = new File(workDir+items.get(0));
 		
 		try {

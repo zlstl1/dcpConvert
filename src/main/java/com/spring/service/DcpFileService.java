@@ -27,6 +27,7 @@ public class DcpFileService {
 	DcpCommonService dcpCommonService;
 	
 	public void moveFile(String email, String path, List<String> items){
+		common.dbug("moveFile - DcpFileService ::: ");
 		for(int i=0; i<items.size(); i++) {
 			File file = new File(common.getLocalDir() + email + items.get(i));
 			File fileToMove = new File(common.getLocalDir() + email + path + "/" + file.getName());
@@ -35,6 +36,7 @@ public class DcpFileService {
 	}
 	
 	public void saveFile(String workDir, MultipartFile file) {
+		common.dbug("saveFile - DcpFileService ::: ");
 		try {
 			dcpCommonService.makeDir(workDir);
 			File dumpfile = new File(workDir + "/" + file.getOriginalFilename());
@@ -44,7 +46,17 @@ public class DcpFileService {
 		}
 	}
 	
+	public void renameFile(String email, List<String> items, String rename) {
+		common.dbug("renameFile - DcpFileService ::: ");
+		File file = new File(common.getLocalDir()+email+items.get(0));
+		File renameFile = new File(file.getParent()+"/"+rename);
+		if( file.exists() ) {
+			file.renameTo(renameFile);
+		}
+	}
+	
 	public void deleteFile(List<String> items, String email) {
+		common.dbug("deleteFile - DcpFileService ::: ");
 		try {
 			for(int i=0;i<items.size();i++) {
 				File file = new File(common.getLocalDir()+email+"/"+items.get(i));
@@ -61,6 +73,7 @@ public class DcpFileService {
 	}
 	
 	public List<FileVo> getFileList(String email, String path) {
+		common.dbug("getFileList - DcpFileService ::: ");
 		File folder = new File(common.getLocalDir()+email+"/"+path);
 		List<FileVo> fileList = new ArrayList<FileVo>();
 		String fileName;
@@ -100,6 +113,7 @@ public class DcpFileService {
 	}
 	
     public File[] sortFileList(File[] files) {
+    	common.dbug("sortFileList - DcpFileService ::: ");
     	Arrays.sort(files,new Comparator<Object>(){
     		@Override
     		public int compare(Object object1, Object object2) {
@@ -117,6 +131,7 @@ public class DcpFileService {
 	
 	@SuppressWarnings("unchecked")
 	public JSONArray getDirectoryList(String email) {
+		common.dbug("getDirectoryList - DcpFileService ::: ");
 		JSONArray jsonArray = new JSONArray();
 		JSONArray rtjsonArray = new JSONArray();
 		try {
@@ -135,6 +150,7 @@ public class DcpFileService {
 	
 	@SuppressWarnings("unchecked")
 	public JSONArray getDirectoryListFunc(String path, String email) {
+		common.dbug("getDirectoryListFunc - DcpFileService ::: ");
 		File folder = new File(path);
 		JSONArray parentArray = new JSONArray();
 		JSONArray childArray = new JSONArray();
@@ -177,6 +193,7 @@ public class DcpFileService {
 	}
 	
 	public String getDirectorySize(String email) {
+		common.dbug("getDirectorySize - DcpFileService ::: ");
 		long size = FileUtils.sizeOfDirectory(new File(common.getLocalDir()+email));
 		double dSize = size / (double)1024 / (double)1024 / (double)1024;
 		return String.format("%.2f", dSize);
