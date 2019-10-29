@@ -47,15 +47,18 @@ public class DcpOneStopService {
 			 frame = dcpCommon.getPlayTime2(oneStopVo.getPictureReel().getOriginalFilename(), oneStopVo.getOriginalPath());
 		}
 		
-		logger.info("Start convertToTiffJ2c / " + new Date());
+		
+		logger.info("======================================================");
+		logger.info("convertToOneStop -DcpOneStopService ::: Start convertToTiffJ2c / " + new Date());
 		convertToTiffJ2c(oneStopVo, workDir, path, frame);
-		logger.info("End convertToTiffJ2c / " + new Date());
-		logger.info("Start convertToMxf / " + new Date());
+		logger.info("convertToOneStop -DcpOneStopService ::: End convertToTiffJ2c / " + new Date());
+		logger.info("convertToOneStop -DcpOneStopService ::: Start convertToMxf / " + new Date());
 		convertToMxf(oneStopVo, workDir+path);
-		logger.info("End convertToMxf / " + new Date());
-		logger.info("Start convertToDcp / " + new Date());
+		logger.info("convertToOneStop -DcpOneStopService ::: End convertToMxf / " + new Date());
+		logger.info("convertToOneStop -DcpOneStopService ::: Start convertToDcp / " + new Date());
 		convertToDcp(oneStopVo, workDir+path);
-		logger.info("End convertToDcp / " + new Date());
+		logger.info("convertToOneStop -DcpOneStopService ::: End convertToDcp / " + new Date());
+		logger.info("======================================================");
 		historyVo.setHistory_msg("ONESTOP 변환");
 		dcpHistoryDao.writeHistory(historyVo);
 	}
@@ -78,7 +81,7 @@ public class DcpOneStopService {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			if(ext.equals("mp4") || ext.equals("mkv") || ext.equals("avi") || ext.equals("mov") || ext.equals("wmv") || ext.equals("mpeg")
+			if(ext.equals("mp4") || ext.equals("ts") || ext.equals("mkv") || ext.equals("avi") || ext.equals("mov") || ext.equals("wmv") || ext.equals("mpeg")
 					|| ext.equals("m4v") || ext.equals("asx") || ext.equals("mpg") || ext.equals("ogm")) {
 				String originalPath = dumpfile.getParent();
 				oneStopVo.setOriginalPath(originalPath);

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.spring.service.DcpHistoryService;
+import com.spring.util.Common;
 import com.spring.vo.HistoryVo;
 import com.spring.vo.PaginationVo;
 import com.spring.vo.UserVo;
@@ -22,10 +23,13 @@ public class DcpHistoryController {
 
 	@Autowired
 	DcpHistoryService dcpHistoryService;
+	@Autowired
+	Common common;
 	
 	@RequestMapping(value = "/dcp/{email}/history", method = RequestMethod.GET)
 	public String history(Model model, HttpSession session, @PathVariable("email") String email, 
 			@RequestParam(required = false, defaultValue = "1") int page, @RequestParam(required = false, defaultValue = "1") int range) {
+		common.dbug("history - DcpHistoryController ::: " + email);
 		UserVo userVo = (UserVo)session.getAttribute("user");
 		
 		int listCnt = dcpHistoryService.getHistoryListCnt(userVo);

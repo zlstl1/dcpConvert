@@ -37,13 +37,23 @@ public class DcpFileController {
 	@ResponseBody
 	@RequestMapping(value = "/dcp/{email}/getdirectorylist", method = RequestMethod.GET)
 	public JSONArray getDirectoryList(@PathVariable("email") String email) {
+		common.dbug("getDirectoryList - DcpFileController ::: " + email);
 		JSONArray fileList = dcpFileService.getDirectoryList(email);
 		return fileList;
 	}
 	
 	@ResponseBody
+	@ResponseStatus(value = HttpStatus.OK)
+	@RequestMapping(value = "/dcp/{email}/getdirsize", method = RequestMethod.GET)
+	public String getDirSize(@PathVariable("email") String email) {
+		common.dbug("getDirSize - DcpFileController ::: " + email);
+		return dcpFileService.getDirectorySize(email);
+	}
+	
+	@ResponseBody
 	@RequestMapping(value = "/dcp/{email}/fetchfilelist", method = RequestMethod.POST)
 	public Map<String,Object> fetchFileList(@PathVariable("email") String email, @RequestParam("path") String path) {
+		common.dbug("fetchFileList - DcpFileController ::: " + email);
 		List<FileVo> fileList = dcpFileService.getFileList(email, path);
 		Map<String,Object> map = new HashMap<String,Object>();
 		String dirSize = dcpFileService.getDirectorySize(email);
@@ -54,43 +64,17 @@ public class DcpFileController {
 	
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "/dcp/{email}/movefile", method = RequestMethod.POST)
-	public void moveFile(@PathVariable("email") String email, @RequestParam("path") String path, @RequestParam("items") List<String> items) {
-		dcpFileService.moveFile(email, path, items);
-	}
-	
-	@ResponseBody
-	@ResponseStatus(value = HttpStatus.OK)
 	@RequestMapping(value = "/dcp/{email}/uploadfile", method = RequestMethod.POST)
 	public void uploadFile(@PathVariable("email") String email, @RequestParam("uploadFile") MultipartFile[] uploadFile, @RequestParam("path") String path) {
+		common.dbug("uploadFile - DcpFileController ::: " + email);
 		for(MultipartFile file : uploadFile) {
 			dcpFileService.saveFile(common.getLocalDir()+email+path, file);
 		}
 	}
 	
-	@ResponseBody
-	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "/dcp/{email}/deletefile", method = RequestMethod.POST)
-	public void deleteFile(@PathVariable("email") String email, @RequestParam("items") List<String> items) {
-		dcpFileService.deleteFile(items,email);
-	}
-	
-	@ResponseBody
-	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "/dcp/{email}/makefolder", method = RequestMethod.POST)
-	public void makeFolder(@PathVariable("email") String email, @RequestParam("folderName") String folderName) {
-		dcpCommonService.makeDir(common.getLocalDir()+email+folderName);
-	}
-	
-	@ResponseBody
-	@ResponseStatus(value = HttpStatus.OK)
-	@RequestMapping(value = "/dcp/{email}/getdirsize", method = RequestMethod.GET)
-	public String getDirSize(@PathVariable("email") String email) {
-		return dcpFileService.getDirectorySize(email);
-	}
-	
 	@RequestMapping(value = "/dcp/{email}/downloadfile")
-	public ModelAndView callDownload(@PathVariable("email") String email, @RequestParam("path") List<String> path,Model model) {
+	public ModelAndView downloadfile(@PathVariable("email") String email, @RequestParam("path") List<String> path,Model model) {
+		common.dbug("downloadfile - DcpFileController ::: " + email);
 		String fileName = "";
 		for(int i=1; i<path.size();i++) {
 			fileName += "/" + path.get(i);
@@ -102,7 +86,8 @@ public class DcpFileController {
 	}
 	
 	@RequestMapping(value = "/dcp/{email}/downloadfolder")
-	public ModelAndView downloadfolder(@PathVariable("email") String email, @RequestParam("path") List<String> path,Model model) {
+	public ModelAndView downloadFolder(@PathVariable("email") String email, @RequestParam("path") List<String> path,Model model) {
+		common.dbug("downloadFolder - DcpFileController ::: " + email);
 		String fileName = "";
 		for(int i=1; i<path.size();i++) {
 			fileName += "/" + path.get(i);
@@ -113,5 +98,37 @@ public class DcpFileController {
 	    model.addAttribute("downloadFile", downloadFile);
 	    model.addAttribute("isFolder", true);
 	    return new ModelAndView("fileDownloadView", "model",model);
+	}
+	
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.OK)
+	@RequestMapping(value = "/dcp/{email}/movefile", method = RequestMethod.POST)
+	public void moveFile(@PathVariable("email") String email, @RequestParam("path") String path, @RequestParam("items") List<String> items) {
+		common.dbug("moveFile - DcpFileController ::: " + email);
+		dcpFileService.moveFile(email, path, items);
+	}
+	
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.OK)
+	@RequestMapping(value = "/dcp/{email}/renamefile", method = RequestMethod.POST)
+	public void renameFile(@PathVariable("email") String email, @RequestParam("items") List<String> items, @RequestParam("rename") String rename) {
+		common.dbug("renamefile - DcpFileController ::: " + email);
+		dcpFileService.renameFile(email, items, rename);
+	}
+	
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.OK)
+	@RequestMapping(value = "/dcp/{email}/deletefile", method = RequestMethod.POST)
+	public void deleteFile(@PathVariable("email") String email, @RequestParam("items") List<String> items) {
+		common.dbug("deleteFile - DcpFileController ::: " + email);
+		dcpFileService.deleteFile(items,email);
+	}
+	
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.OK)
+	@RequestMapping(value = "/dcp/{email}/makefolder", method = RequestMethod.POST)
+	public void makeFolder(@PathVariable("email") String email, @RequestParam("folderName") String folderName) {
+		common.dbug("makeFolder - DcpFileController ::: " + email);
+		dcpCommonService.makeDir(common.getLocalDir()+email+folderName);
 	}
 }

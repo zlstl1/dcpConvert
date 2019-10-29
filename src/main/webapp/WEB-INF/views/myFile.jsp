@@ -51,6 +51,8 @@
 						  	<button type="button" class="button small" id="downloadBtn"><i class="icon fa-download"></i>&nbsp;다운로드</button>
 						  	<button type="button" class="button small" id="explorerBtn" data-toggle="modal" data-target="#explorerModal">
 						  	<i class="icon fa-exchange"></i>&nbsp;파일 이동</button>
+						  	<button type="button" class="button small" id="renameBtn" data-toggle="modal" data-target="#renameModal">
+						  	<i class="icon fa-repeat"></i>&nbsp;파일명 변경</button>
 						  	<button type="button" class="button small" id="deleteBtn"><i class="icon fa-remove"></i>&nbsp;삭제</button>
 						  	<button type="button" class="button small" id="convertBtn"><i class="icon fa-random"></i>&nbsp;변환</button>
 						</div>
@@ -152,6 +154,10 @@
 	<!-- explorer modal -->
 	<%-- <jsp:include page="${pageContext.request.contextPath}/WEB-INF/views/modal/explorerModal.jsp" /> --%>
 	<%@include file="modal/explorerModal.jsp" %>
+	
+	<!-- rename modal -->
+	<%-- <jsp:include page="${pageContext.request.contextPath}/WEB-INF/views/modal/renameModal.jsp" /> --%>
+	<%@include file="modal/renameModal.jsp" %>
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/jquery/jQuery3.4.1.js"></script>

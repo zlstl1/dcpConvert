@@ -25,6 +25,7 @@ public class DcpJpegService {
 	Common common;
 	
 	public void convertJpeg(JpegVo jpegVo,String workDir,List<String> items, String path, HistoryVo historyVo) {
+		common.dbug("convertJpeg - DcpJpegService ::: ");
 		dcpCommon.makeDir(workDir + path + "/J2C");
 		
 		double audioBitrate = 6.9; //audioBitrate = bitDepth(24) * sampleRate(48000,96000) * channel (6.9Mbps)

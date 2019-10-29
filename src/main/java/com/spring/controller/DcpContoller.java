@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,8 +34,6 @@ public class DcpContoller {
 	@Autowired
 	DcpHistoryDao dcpHistoryDao;
 	
-	final Logger logger = LoggerFactory.getLogger(DcpContoller.class);
-	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String root(Model model) {
 		return "redirect:/dcp/login";
@@ -49,7 +45,8 @@ public class DcpContoller {
 	}
 	
 	@RequestMapping(value = "/dcp/{email}", method = RequestMethod.GET)
-	public String index(Model model, HttpSession session, @PathVariable("email") String email) {
+	public String myFile(Model model, HttpSession session, @PathVariable("email") String email) {
+		common.dbug("myFile - DcpController ::: " + email);
 		UserVo userVo = (UserVo)session.getAttribute("user");
 		model.addAttribute("user", userVo);
 		List<FileVo> fileList = dcpFileService.getFileList(email,"");

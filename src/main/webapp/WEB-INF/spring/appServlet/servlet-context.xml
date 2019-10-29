@@ -21,7 +21,7 @@
 	
 	<resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
 
-	<interceptors>
+	<!-- <interceptors>
 	 	<interceptor>
 	  		<mapping path="/dcp/**"/>
 	  		<exclude-mapping path="/dcp"/>
@@ -32,7 +32,7 @@
 	  		<exclude-mapping path="/rest/*"/>
 	  		<beans:bean class="com.spring.interceptor.DcpLoginInterceptor"></beans:bean>
 	 	</interceptor>
-	</interceptors>
+	</interceptors> -->
 
 	<beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
       <beans:property name="order" value="0"/>
@@ -70,8 +70,8 @@
 	
 	<!-- 승인된 자바스크립트 원본과 승인된 리디렉션 URI -->
 	<beans:bean id="googleOAuth2Parameters" class="org.springframework.social.oauth2.OAuth2Parameters">
-		<beans:property name="scope" value="profile email" />
-		<beans:property name="redirectUri" value="http://disolution.iptime.org:9000/opendcp/dcp/oauth2callback" />
+		<beans:property name="scope" value="https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"/>
+		<beans:property name="redirectUri" value="http://localhost:8080/opendcp/dcp/oauth2callback" />
 	</beans:bean>
 	
 </beans:beans>
