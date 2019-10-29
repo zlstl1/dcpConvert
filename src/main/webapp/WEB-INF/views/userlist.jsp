@@ -30,7 +30,7 @@
 	<section id="One" class="wrapper style3">
 		<div class="inner">
 			<header class="align-center">
-				<p>가입된 회원의 정보를 확인 가능합니다.</p>
+				<p>가입된 회원의 정보를 확인 및 수정 가능합니다.</p>
 				<h2>회원리스트</h2>
 			</header>
 		</div>

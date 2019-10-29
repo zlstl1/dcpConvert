@@ -128,7 +128,7 @@ function detail(){
 $(document).ready(function(){
     setInterval(function() {
         tick();
-    }, 10000);
+    }, 15000);
 
 });
 
@@ -146,7 +146,7 @@ $.ajax({
     type:"POST",
     dataType:"json",
     async:false,
-    data:{"start":start, "end": now, "step":10},
+    data:{"start":start, "end": now, "step":15},
     success:function(data){
         dataset = data.data.result[0].values;
 
@@ -158,7 +158,7 @@ $.ajax({
 
         max = Math.max.apply(null, arr);
         min = Math.min.apply(null, arr);
-
+        
         $('#memmax').text(Number(max).toFixed(2)+" %");
         $('#memmin').text(Number(min).toFixed(2)+" %");
     },
@@ -201,7 +201,7 @@ $.ajax({
 });
 
 var margin = {top: 20, right: 20, bottom: 20, left: 40}
-    , width = 960 - margin.left - margin.right// Use the window's width
+    , width = 940 - margin.left - margin.right// Use the window's width
     , height = 250 - margin.top - margin.bottom; // Use the window's height
 
 // The number of datapoints
@@ -223,14 +223,14 @@ var line = d3.line()
     .x(function(d, i) { return xScale(moment.unix(d[0]).toDate()); }) // set the x values for the line generator
     .y(function(d) { return yScale(d[1]); }) // set the y values for the line generator
     .curve(d3.curveMonotoneX);// apply smoothing to the line
-
+    
 // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
 //var dataset2 = d3.range(n).map(function(d) { return {"y": d3.randomUniform(1)() } });
 //console.log(dataset2);
 
 // 1. Add the SVG to the page and employ #2
 var svg = d3.select("#chart")
-    .attr("width", width + margin.left + margin.right)
+    .attr("width", width + margin.left + margin.right + 60)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -256,6 +256,92 @@ var path = svg.append("path")
 svg.append("circle").attr("cx",840).attr("cy", 0).attr("r", 6).style("fill", "steelblue")
 svg.append("text").attr("x", 850).attr("y", 0).text("memory").style("font-size", "15px").attr("alignment-baseline","middle")
 
+var mouseG = svg.append("g")
+        .attr("class", "mouse-over-effects");
+
+    mouseG.append("path") // this is the black vertical line to follow mouse
+        .attr("class", "mouse-line")
+        .style("stroke", "black")
+        .style("stroke-width", "1px")
+        .style("opacity", "0");
+
+    var lines = document.getElementsByClassName('line');
+
+    var mousePerLine = mouseG.selectAll('.mouse-per-line')
+        .data(dataset)
+        .enter()
+        .append("g")
+        .attr("class", "mouse-per-line");
+
+    mousePerLine.append("circle")
+        .attr("r", 7)
+        .style("stroke", "steelblue")
+        .style("fill", "none")
+        .style("stroke-width", "1px")
+        .style("opacity", "0");
+
+    mousePerLine.append("text")
+        .attr("transform", "translate(10,-5)");
+
+    mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
+        .attr('width', width) // can't catch mouse events on a g element
+        .attr('height', height)
+        .attr('fill', 'none')
+        .attr('pointer-events', 'all')
+        .on('mouseout', function() { // on mouse out hide line, circles and text
+            d3.select(".mouse-line")
+                .style("opacity", "0");
+            d3.select(".mouse-per-line circle")
+                .style("opacity", "0");
+            d3.select(".mouse-per-line text")
+                .style("opacity", "0");
+        })
+        .on('mouseover', function() { // on mouse in show line, circles and text
+            d3.select(".mouse-line")
+                .style("opacity", "1");
+            d3.select(".mouse-per-line circle")
+                .style("opacity", "1");
+            d3.select(".mouse-per-line text")
+                .style("opacity", "1");
+        })
+        .on('mousemove', function() { // mouse moving over canvas
+            var mouse = d3.mouse(this);
+            d3.select(".mouse-line")
+                .attr("d", function() {
+                    var d = "M" + mouse[0] + "," + height;
+                    d += " " + mouse[0] + "," + 0;
+                    return d;
+                });
+
+            d3.selectAll(".mouse-per-line")
+                .attr("transform", function(d, i) {
+                    //console.log(width/mouse[0])
+                    var xDate = xScale.invert(mouse[0]),
+                        bisect = d3.bisector(function(d) { return d.date; }).right;
+                    idx = bisect(d.values, xDate);
+
+                    var beginning = 0,
+                        end = lines[i].getTotalLength(),
+                        target = null;
+
+                    while (true){
+                        target = Math.floor((beginning + end) / 2);
+                        pos = lines[i].getPointAtLength(target);
+                        if ((target === end || target === beginning) && pos.x !== mouse[0]) {
+                            break;
+                        }
+                        if (pos.x > mouse[0])      end = target;
+                        else if (pos.x < mouse[0]) beginning = target;
+                        else break; //position found
+                    }
+
+                    d3.select(this).select('text')
+                        .text(yScale.invert(pos.y).toFixed(2));
+
+                    return "translate(" + mouse[0] + "," + pos.y +")";
+                });
+        });
+
 function tick() {
     var pushdata = null;
 
@@ -266,6 +352,15 @@ function tick() {
         async:false,
         data:{},
         success:function(data){
+        	var mem = Math.round(data.data.result[0].value[1]);
+        
+    		$("#rammem").removeClass(ramload);
+    		$("#rammem").addClass("p" + mem);
+
+    		ramload = "p" + mem;
+    		
+    		$("#rammemtext").text(mem + "%");
+    		
             pushdata = data.data.result[0].value;
         },
         error: function(err){

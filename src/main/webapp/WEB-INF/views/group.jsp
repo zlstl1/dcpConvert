@@ -30,7 +30,7 @@
 	<section id="One" class="wrapper style3">
 		<div class="inner">
 			<header class="align-center">
-				<p>회원을 그룹별로 관리하실 수 있습니다.</p>
+				<p>가입된 회원을 그룹별로 관리하실 수 있습니다.</p>
 				<h2>회원 그룹 관리</h2>
 			</header>
 		</div>

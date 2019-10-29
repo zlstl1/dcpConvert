@@ -89,19 +89,7 @@ public class DcpAdminController {
 
 		return "/gpumonitoring";
 	}
-
-	@RequestMapping(value = "/dcp/{email}/gpumonitoring1", method = RequestMethod.GET)
-	public String gpumonitoring1() {
-
-		return "/gpumonitoring1";
-	}
-
-	@RequestMapping(value = "/dcp/{email}/gpumonitoring2", method = RequestMethod.GET)
-	public String gpumonitoring2() {
-
-		return "/gpumonitoring2";
-	}
-
+	
 	@RequestMapping(value = "/dcp/{email}/rammonitoring", method = RequestMethod.GET)
 	public String rammonitoring() {
 
@@ -193,6 +181,16 @@ public class DcpAdminController {
 		response.setCharacterEncoding("UTF-8");
 
 		UserVo user = dcpUserService.getuser(user_id);
+		
+		if(!user.getUser_status().equals("관리자")) {
+			if (user_status.equals("관리자")) {
+				dcpUserService.insertAdmin(user.getUser_no());
+			}
+		} else {
+			if(!user_status.equals("관리자")) {
+				dcpUserService.deleteAdmin(user.getUser_no());
+			}
+		}
 
 		user.setUser_name(user_name);
 		user.setUser_status(user_status);
@@ -202,12 +200,6 @@ public class DcpAdminController {
 		user.setUser_storageCapa(Integer.parseInt(user_storageCapa));
 
 		dcpUserService.updateuser(user);
-
-		if (user_status.equals("관리자")) {
-			dcpUserService.insertAdmin(user.getUser_no());
-		} else {
-			dcpUserService.deleteAdmin(user.getUser_no());
-		}
 
 		PrintWriter out = response.getWriter();
 		out.print("true");
