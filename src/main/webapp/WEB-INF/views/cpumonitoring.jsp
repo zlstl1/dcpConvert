@@ -18,25 +18,23 @@
     
     
 <style type="text/css">
-        /* Style the lines by removing the fill and applying a stroke */
-        .line {
-            fill: none;
-            stroke: steelblue;
-            stroke-width: 1.5px;
-        }
 
-        .line2 {
-            fill: none;
-            stroke: orange;
-            stroke-width: 1.5px;
-        }
-    </style>
+/* Style the lines by removing the fill and applying a stroke */
+	.line {
+		fill: none;
+        stroke: steelblue;
+        stroke-width: 1.5px;
+    }
     
+    .line2 {
+    	fill: none;
+    	stroke: orange;
+    	stroke-width: 1.5px;
+    }
+   </style>
 </head>
 <body class="subpage">
 
-	<%-- <jsp:include page="${pageContext.request.contextPath}/WEB-INF/views/import/navbar.jsp" /> --%>
-	<%-- <%@include file="import/navbar.jsp" %> --%>
 	<jsp:include page="import/navbar.jsp"></jsp:include>
 
 	<!-- One -->
@@ -161,58 +159,56 @@
 <script type="text/javascript">
 $('#gaugeDemo3 .gauge-arrow').cmGauge();
 
-    $(document).ready(function(){
-        setInterval(function() {
-            tick();
-            tick2();
-        }, 10000);
+$(document).ready(function(){
+	setInterval(function() {
+		tick(); 
+		tick2(); 
+	}, 15000);
+});
 
-    });
+function detail(){
+	if($('#detail').css("display")=="none"){
+		$('#detail').css("display","block");
+		$('#detailtext').html("상세보기 <i class=\"fa fa-caret-up\" aria-hidden=\"true\"></i>");
+	}else{
+		$('#detail').css("display","none");
+		$('#detailtext').html("상세보기 <i class=\"fa fa-caret-down\" aria-hidden=\"true\"></i>");
+	}
+}
 
-    function detail(){
-        if($('#detail').css("display")=="none"){
-            $('#detail').css("display","block");
-            $('#detailtext').html("상세보기 <i class=\"fa fa-caret-up\" aria-hidden=\"true\"></i>");
-        }else{
-            $('#detail').css("display","none");
-            $('#detailtext').html("상세보기 <i class=\"fa fa-caret-down\" aria-hidden=\"true\"></i>");
-        }
-    }
-    
-    var now = Math.round(new Date().getTime() / 1000);
+var now = Math.round(new Date().getTime() / 1000);
 
-    var loadDt = new Date();
-    var time = new Date(Date.parse(loadDt) - 1000 * 60 * 60);
-    var start = time.getTime() / 1000;
+var loadDt = new Date();
+var time = new Date(Date.parse(loadDt) - 1000 * 60 * 60);
+var start = time.getTime() / 1000;
 
-    var dataset = null;
-    var max = null,min = null;
+var dataset = null;
+var max = null,min = null;
 
-    $.ajax({
-        url:"<%=cp%>/get/cpu",
-        type:"POST",
-        dataType:"json",
-        async:false,
-        data:{"start":start, "end": now, "step":10},
-        success:function(data){
-            dataset = data.data.result[0].values;
+$.ajax({
+	url:"<%=cp%>/get/cpu",
+	type:"POST",
+	dataType:"json",
+	async:false,
+	data:{"start":start, "end": now, "step":15},
+	success:function(data){
+		dataset = data.data.result[0].values;
+		var arr = new Array();
+		
+		for(var i = 0 ; i < dataset.length ; i++){
+			arr.push(data.data.result[0].values[i][1]);
+		}
 
-            var arr = new Array();
-
-            for(var i = 0 ; i < dataset.length ; i++){
-                arr.push(data.data.result[0].values[i][1]);
-            }
-
-            max = Math.max.apply(null, arr);
-            min = Math.min.apply(null, arr);
-
-            $('#cpumemmax').text(Number(max).toFixed(2)+" %");
-            $('#cpumemmin').text(Number(min).toFixed(2)+" %");
-        },
+		max = Math.max.apply(null, arr);
+		min = Math.min.apply(null, arr);
+		
+		$('#cpumemmax').text(Number(max).toFixed(2)+" %");
+		$('#cpumemmin').text(Number(min).toFixed(2)+" %");
+		
+		},
         error: function(err){
             console.log(err);
         }
-
     });
     
     var cpuload = null;
@@ -247,30 +243,8 @@ $('#gaugeDemo3 .gauge-arrow').cmGauge();
 
 	});
 
-	$.ajax({
-		url : "<%=cp%>/get/single/cpuClock",
-		type : "POST",
-		dataType : "json",
-		data : {},
-		success : function(data) {
-			// 2.0 ~ 3.4
-			var clock = (data.data.result[0].value[1] / Math.pow(10, 9))
-					.toFixed(1);
-			var mhz = clock - 2.0;
-			var percent = Math.round(mhz / 3.4 * 100);
-
-			$('#gaugeDemo3 .gauge-arrow').trigger('updateGauge', percent);
-
-			$('#cpuclocktext').text(clock + " Ghz");
-		},
-		error : function(err) {
-			console.log(err);
-		}
-
-	});
-
     var margin = {top: 20, right: 20, bottom: 20, left: 40}
-        , width = 960 - margin.left - margin.right// Use the window's width
+        , width = 940 - margin.left - margin.right// Use the window's width
         , height = 250 - margin.top - margin.bottom; // Use the window's height
 
     // 5. X scale will use the index of our data
@@ -296,7 +270,7 @@ $('#gaugeDemo3 .gauge-arrow').cmGauge();
 
     // 1. Add the SVG to the page and employ #2
     var svg = d3.select("#memchart")
-        .attr("width", width + margin.left + margin.right)
+        .attr("width", width + margin.left + margin.right + 60)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -321,7 +295,93 @@ $('#gaugeDemo3 .gauge-arrow').cmGauge();
     // 범례추가
     svg.append("circle").attr("cx",840).attr("cy", 0).attr("r", 6).style("fill", "steelblue")
     svg.append("text").attr("x", 850).attr("y", 0).text("memory").style("font-size", "15px").attr("alignment-baseline","middle")
+ 
+    var mouseG = svg.append("g")
+        .attr("class", "mouse-over-effects");
 
+    mouseG.append("path") // this is the black vertical line to follow mouse
+        .attr("class", "mouse-line")
+        .style("stroke", "black")
+        .style("stroke-width", "1px")
+        .style("opacity", "0");
+
+    var lines = document.getElementsByClassName('line');
+
+    var mousePerLine = mouseG.selectAll('.mouse-per-line')
+        .data(dataset)
+        .enter()
+        .append("g")
+        .attr("class", "mouse-per-line");
+
+    mousePerLine.append("circle")
+        .attr("r", 7)
+        .style("stroke", "steelblue")
+        .style("fill", "none")
+        .style("stroke-width", "1px")
+        .style("opacity", "0");
+
+    mousePerLine.append("text")
+        .attr("transform", "translate(10,-5)");
+
+    mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
+        .attr('width', width) // can't catch mouse events on a g element
+        .attr('height', height)
+        .attr('fill', 'none')
+        .attr('pointer-events', 'all')
+        .on('mouseout', function() { // on mouse out hide line, circles and text
+            d3.select(".mouse-line")
+                .style("opacity", "0");
+            d3.select(".mouse-per-line circle")
+                .style("opacity", "0");
+            d3.select(".mouse-per-line text")
+                .style("opacity", "0");
+        })
+        .on('mouseover', function() { // on mouse in show line, circles and text
+            d3.select(".mouse-line")
+                .style("opacity", "1");
+            d3.select(".mouse-per-line circle")
+                .style("opacity", "1");
+            d3.select(".mouse-per-line text")
+                .style("opacity", "1");
+        })
+        .on('mousemove', function() { // mouse moving over canvas
+            var mouse = d3.mouse(this);
+            d3.select(".mouse-line")
+                .attr("d", function() {
+                    var d = "M" + mouse[0] + "," + height;
+                    d += " " + mouse[0] + "," + 0;
+                    return d;
+                });
+
+            d3.selectAll(".mouse-per-line")
+                .attr("transform", function(d, i) {
+                    //console.log(width/mouse[0])
+                    var xDate = xScale.invert(mouse[0]),
+                        bisect = d3.bisector(function(d) { return d.date; }).right;
+                    idx = bisect(d.values, xDate);
+
+                    var beginning = 0,
+                        end = lines[i].getTotalLength(),
+                        target = null;
+
+                    while (true){
+                        target = Math.floor((beginning + end) / 2);
+                        pos = lines[i].getPointAtLength(target);
+                        if ((target === end || target === beginning) && pos.x !== mouse[0]) {
+                            break;
+                        }
+                        if (pos.x > mouse[0])      end = target;
+                        else if (pos.x < mouse[0]) beginning = target;
+                        else break; //position found
+                    }
+
+                    d3.select(this).select('text')
+                        .text(yScale.invert(pos.y).toFixed(2));
+
+                    return "translate(" + mouse[0] + "," + pos.y +")";
+                });
+        });  
+     
     function tick() {
 
         var pushdata = null;
@@ -334,6 +394,24 @@ $('#gaugeDemo3 .gauge-arrow').cmGauge();
             data:{},
             success:function(data){
                 pushdata = data.data.result[0].value;
+                
+                var mem = Math.round(data.data.result[0].value[1]);
+
+    			$("#cpumem").removeClass(cpuload);
+    			$("#cpumem").addClass("p" + mem);
+
+    			cpuload = "p" + mem;
+
+    			if (mem > 60) {
+    				$("#cpumem").removeClass("green");
+    				$("#cpumem").addClass("orange");
+    			} else {
+    				$("#cpumem").removeClass("orange");
+    				$("#cpumem").addClass("green");
+    			}
+
+    			$("#cpumemtext").text(mem + "%");
+    			
             },
             error: function(err){
                 console.log(err);
@@ -390,17 +468,19 @@ $('#gaugeDemo3 .gauge-arrow').cmGauge();
         type:"POST",
         dataType:"json",
         async:false,
-        data:{"start":start, "end": now, "step":10},
+        data:{"start":start, "end": now, "step":15},
         success:function(data){
             var arr = new Array();
 
-            for(var i = 0 ; i < dataset.length ; i++){
+            var length = data.data.result[0].values.length;
+            
+            for(var i = 0 ; i < length ; i++){
                 data.data.result[0].values[i][1] = data.data.result[0].values[i][1]/Math.pow(10,9).toFixed(1);
                 arr.push(data.data.result[0].values[i][1]);
             }
 
             dataset2 = data.data.result[0].values;
-
+            
             max2 = Math.max.apply(null, arr);
             min2 = Math.min.apply(null, arr);
 
@@ -412,9 +492,31 @@ $('#gaugeDemo3 .gauge-arrow').cmGauge();
         }
 
     });
+    
+	$.ajax({
+		url : "<%=cp%>/get/single/cpuClock",
+		type : "POST",
+		dataType : "json",
+		data : {},
+		success : function(data) {
+			// 2.0 ~ 3.4
+			var clock = (data.data.result[0].value[1] / Math.pow(10, 9))
+					.toFixed(1);
+			var mhz = clock - 2.0;
+			var percent = Math.round(mhz / 3.4 * 100);
+
+			$('#gaugeDemo3 .gauge-arrow').trigger('updateGauge', percent);
+
+			$('#cpuclocktext').text(clock + " Ghz");
+		},
+		error : function(err) {
+			console.log(err);
+		}
+
+	});
 
     var margin2 = {top: 20, right: 20, bottom: 20, left: 40}
-        , width2 = 960 - margin2.left - margin2.right// Use the window's width
+        , width2 = 940 - margin2.left - margin2.right// Use the window's width
         , height2 = 250 - margin2.top - margin2.bottom; // Use the window's height
 
     // 5. X scale will use the index of our data
@@ -440,7 +542,7 @@ $('#gaugeDemo3 .gauge-arrow').cmGauge();
 
     // 1. Add the SVG to the page and employ #2
     var svg2 = d3.select("#clockchart")
-        .attr("width", width2 + margin2.left + margin2.right)
+        .attr("width", width2 + margin2.left + margin2.right + 60)
         .attr("height", height2 + margin2.top + margin2.bottom)
         .append("g")
         .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
@@ -465,7 +567,93 @@ $('#gaugeDemo3 .gauge-arrow').cmGauge();
     // 범례추가
     svg2.append("circle").attr("cx",820).attr("cy",0).attr("r", 6).style("fill", "orange")
     svg2.append("text").attr("x", 830).attr("y", 0).text("clock speed").style("font-size", "15px").attr("alignment-baseline","middle")
+   
+    var mouseG2 = svg2.append("g")
+        .attr("class", "mouse-over-effects");
 
+    mouseG2.append("path") // this is the black vertical line to follow mouse
+        .attr("class", "mouse-line2")
+        .style("stroke", "black")
+        .style("stroke-width", "1px")
+        .style("opacity", "0");
+
+    var lines2 = document.getElementsByClassName('line2');
+
+    var mousePerLine2 = mouseG2.selectAll('.mouse-per-line2')
+        .data(dataset2)
+        .enter()
+        .append("g")
+        .attr("class", "mouse-per-line2");
+
+    mousePerLine2.append("circle")
+        .attr("r", 7)
+        .style("stroke", "orange")
+        .style("fill", "none")
+        .style("stroke-width", "1px")
+        .style("opacity", "0");
+
+    mousePerLine2.append("text")
+        .attr("transform", "translate(10,-5)");
+
+    mouseG2.append('svg:rect') // append a rect to catch mouse movements on canvas
+        .attr('width', width2) // can't catch mouse events on a g element
+        .attr('height', height2)
+        .attr('fill', 'none')
+        .attr('pointer-events', 'all')
+        .on('mouseout', function() { // on mouse out hide line, circles and text
+            d3.select(".mouse-line2")
+                .style("opacity", "0");
+            d3.select(".mouse-per-line2 circle")
+                .style("opacity", "0");
+            d3.select(".mouse-per-line2 text")
+                .style("opacity", "0");
+        })
+        .on('mouseover', function() { // on mouse in show line, circles and text
+            d3.select(".mouse-line2")
+                .style("opacity", "1");
+            d3.select(".mouse-per-line2 circle")
+                .style("opacity", "1");
+            d3.select(".mouse-per-line2 text")
+                .style("opacity", "1");
+        })
+        .on('mousemove', function() { // mouse moving over canvas
+            var mouse = d3.mouse(this);
+            d3.select(".mouse-line2")
+                .attr("d", function() {
+                    var d = "M" + mouse[0] + "," + height2;
+                    d += " " + mouse[0] + "," + 0;
+                    return d;
+                });
+
+            d3.selectAll(".mouse-per-line2")
+                .attr("transform", function(d, i) {
+                    //console.log(width/mouse[0])
+                    var xDate = xScale.invert(mouse[0]),
+                        bisect = d3.bisector(function(d) { return d.date; }).right;
+                    idx = bisect(d.values, xDate);
+
+                    var beginning = 0,
+                        end = lines2[i].getTotalLength(),
+                        target = null;
+
+                    while (true){
+                        target = Math.floor((beginning + end) / 2);
+                        pos = lines2[i].getPointAtLength(target);
+                        if ((target === end || target === beginning) && pos.x !== mouse[0]) {
+                            break;
+                        }
+                        if (pos.x > mouse[0])      end = target;
+                        else if (pos.x < mouse[0]) beginning = target;
+                        else break; //position found
+                    }
+
+                    d3.select(this).select('text')
+                        .text(yScale2.invert(pos.y).toFixed(2));
+
+                    return "translate(" + mouse[0] + "," + pos.y +")";
+                });
+        });
+    
     function tick2() {
 
         var pushdata = null;
@@ -478,6 +666,15 @@ $('#gaugeDemo3 .gauge-arrow').cmGauge();
             data:{},
             success:function(data){
                 pushdata = [data.data.result[0].value[0],data.data.result[0].value[1]/Math.pow(10,9).toFixed(1)];
+                
+                var clock = (data.data.result[0].value[1] / Math.pow(10, 9)).toFixed(1);
+				var mhz = clock - 2.0;
+				var percent = Math.round(mhz / 3.4 * 100);
+		
+				$('#gaugeDemo3 .gauge-arrow').trigger('updateGauge', percent);
+		
+				$('#cpuclocktext').text(clock + " Ghz");
+    			
             },
             error: function(err){
                 console.log(err);

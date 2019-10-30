@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class ApiController {
 	@RequestMapping(value = "/get/single/{type}", method = RequestMethod.POST)
     public void getSingleData(HttpServletResponse response, @PathVariable String type) {
-        String address = "http://192.168.0.101:9090/api/v1/query?query=";
+        String address = "http://192.168.0.102:9090/api/v1/query?query=";
 
         switch (type) {
 
@@ -90,7 +90,7 @@ public class ApiController {
 
     @RequestMapping(value = "/get/{type}", method = RequestMethod.POST)
     public void getdata(HttpServletRequest request, HttpServletResponse response, @PathVariable String type){
-        String address = "http://192.168.0.101:9090/api/v1/query_range?query=";
+        String address = "http://192.168.0.102:9090/api/v1/query_range?query=";
         String start = request.getParameter("start");
         String end = request.getParameter("end");
         String steps = request.getParameter("step");

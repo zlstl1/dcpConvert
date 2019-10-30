@@ -121,207 +121,339 @@
 	<script src="<%=cp%>/resources/js/moment.js"></script>
 
 	<script type="text/javascript">
-		$(document).ready(function() {
-			update();
-			setInterval(function() {
-				update();
-				tick();
-			}, 10000);
-		});
-		
-		function detail(){
-		    if($('#detail').css("display")=="none"){
-		        $('#detail').css("display","block");
-		        $('#detailtext').html("상세보기 <i class=\"fa fa-caret-up\" aria-hidden=\"true\"></i>");
-		    }else{
-		        $('#detail').css("display","none");
-		        $('#detailtext').html("상세보기 <i class=\"fa fa-caret-down\" aria-hidden=\"true\"></i>");
-		    }
+	var disktotal;
+	
+	$.ajax({
+		url : "<%=cp%>/get/single/disksizetotal",
+		type : "POST",
+		dataType : "json",
+		async : false,
+		data : {},
+		success : function(data) {
+			var total = data.data.result[0].value[1] / Math.pow(10, 9);
+			disktotal = total;
+		},
+		error : function(err) {
+			console.log(err);
 		}
+	
+	});
 		
-		function update(){
-			var disktotal;
-			$.ajax({
-				url : "<%=cp%>/get/single/disksizetotal",
-				type : "POST",
-				dataType : "json",
-				async : false,
-				data : {},
-				success : function(data) {
-					var total = data.data.result[0].value[1] / Math.pow(10, 9);
-					disktotal = total;
-				},
-				error : function(err) {
-					console.log(err);
-				}
+	$.ajax({
+        url:"<%=cp%>/get/single/disksize",
+        type:"POST",
+        dataType:"json",
+        async:false,
+        data:{},
+        success:function(data){		            
+            var free = data.data.result[0].value[1] / Math.pow(10, 9);
+			var used = disktotal - free;
+
+			$("#diskused").text(used.toFixed(2) + " GB");
+			$("#diskfree").text(free.toFixed(2) + " GB");
+
+			var percent = used / disktotal * 100;
+
+			$('#memusedtext').text(Math.round(percent) + "%");
+			$('#memused').width(Math.round(percent) + '%');
+        },
+        error: function(err){
+            console.log(err);
+        }
+
+    });
+	
+	$(document).ready(function() {
+		setInterval(function() {
+			tick();
+		}, 15000);
+	});
 		
-			});
-		
-			$.ajax({
-				url : "<%=cp%>/get/single/disksize",
-				type : "POST",
-				dataType : "json",
-				async : false,
-				data : {},
-				success : function(data) {
-					var used = data.data.result[0].value[1] / Math.pow(10, 9);
-					var free = disktotal - used;
-		
-					$("#diskused").text(used.toFixed(2) + " GB");
-					$("#diskfree").text(free.toFixed(2) + " GB");
-		
-					var percent = used / disktotal * 100;
-		
-					$('#memusedtext').text(Math.round(percent) + "%");
-					$('#memused').width(Math.round(percent) + '%');
-				},
-				error : function(err) {
-					console.log(err);
-				}
-		
-			});
-		}
-		
-		
-		var now = Math.round(new Date().getTime() / 1000);
-		
-		var loadDt = new Date();
-		var time = new Date(Date.parse(loadDt) - 1000 * 60 * 60);
-		var start = time.getTime() / 1000;
-		
-		var dataset = null;
-		var max,min = null;
-		
+	function detail(){
+	    if($('#detail').css("display")=="none"){
+	        $('#detail').css("display","block");
+	        $('#detailtext').html("상세보기 <i class=\"fa fa-caret-up\" aria-hidden=\"true\"></i>");
+	    }else{
+	        $('#detail').css("display","none");
+	        $('#detailtext').html("상세보기 <i class=\"fa fa-caret-down\" aria-hidden=\"true\"></i>");
+	    }
+	}
+	
+	var now = Math.round(new Date().getTime() / 1000);
+	
+	var loadDt = new Date();
+	var time = new Date(Date.parse(loadDt) - 1000 * 60 * 60);
+	var start = time.getTime() / 1000;
+	
+	var dataset = new Array();
+	var max,min = null;
+	
+	$.ajax({
+	    url:"<%=cp%>/get/disksize",
+	    type:"POST",
+	    dataType:"json",
+	    async:false,
+	    data:{"start":start, "end": now, "step":15},
+	    success:function(data){
+	    	
+	    	var length = Object.keys(data.data.result[0].values).length;
+	    	
+	        var processing = null;
+	        
+	        for(var i = 0 ; i < length ; i++){
+	        	var time = data.data.result[0].values[i][0];
+	        	var val = disktotal - data.data.result[0].values[i][1]/ Math.pow(10, 9);
+	        	processing = [time,val];
+	        	dataset[i] = processing;
+	        }
+	        
+	        var arr = new Array();
+	        
+	        for(var i = 0 ; i < dataset.length ; i++){ 
+	            arr.push(disktotal - data.data.result[0].values[i][1] / Math.pow(10, 9));
+	        }
+	        
+	        max = Math.max.apply(null, arr);
+	        min = Math.min.apply(null, arr);
+	
+	        $('#memmax').text(Number(max).toFixed(2)+" GB");
+	        $('#memmin').text(Number(min).toFixed(2)+" GB");
+	    },
+	    error: function(err){
+	        console.log(err);
+	    }
+	
+	});
+	
+	var margin = {top: 20, right: 20, bottom: 20, left: 40}
+	    , width = 940 - margin.left - margin.right// Use the window's width
+	    , height = 250 - margin.top - margin.bottom; // Use the window's height
+	
+	// The number of datapoints
+	var n = dataset.length;
+	
+	// 5. X scale will use the index of our data
+	//var xScale = d3.scaleLinear()
+	var xScale = d3.scaleTime()
+	    .domain([moment.unix(dataset[0][0]).toDate(), moment.unix(dataset[dataset.length-1][0]).toDate()]) // input
+	    .range([0, width]); // output
+	
+	// 6. Y scale will use the randomly generate number
+	var yScale = d3.scaleLinear()
+	    .domain([Number(min)-1, Number(max)+1]) // input
+	    .range([height, 0]); // output
+	
+	// 7. d3's line generator
+	var line = d3.line()
+	    .x(function(d, i) { return xScale(moment.unix(d[0]).toDate()); }) // set the x values for the line generator
+	    .y(function(d) { return yScale(d[1]); }) 
+	    .curve(d3.curveMonotoneX);// apply smoothing to the line
+	
+	// 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
+	//var dataset2 = d3.range(n).map(function(d) { return {"y": d3.randomUniform(1)() } });
+	//console.log(dataset2);
+	
+	// 1. Add the SVG to the page and employ #2
+	var svg = d3.select("#chart")
+	    .attr("width", width + margin.left + margin.right + 60)
+	    .attr("height", height + margin.top + margin.bottom)
+	    .append("g")
+	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	
+	// 3. Call the x axis in a group tag
+	var xAxis = svg.append("g")
+	    .attr("class", "x axis")
+	    .attr("transform", "translate(0," + height + ")")
+	    .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
+	
+	// 4. Call the y axis in a group tag
+	var yAxis = svg.append("g")
+	    .attr("class", "y axis")
+	    .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
+	
+	// 9. Append the path, bind the data, and call the line generator
+	var path = svg.append("path")
+	    .datum(dataset) // 10. Binds data to the line
+	    .attr("class", "line") // Assign a class for styling
+	    .attr("d", line); // 11. Calls the line generator
+	
+	// 범례추가
+	svg.append("circle").attr("cx",840).attr("cy", 0).attr("r", 6).style("fill", "steelblue")
+	svg.append("text").attr("x", 850).attr("y", 0).text("disk").style("font-size", "15px").attr("alignment-baseline","middle")
+	
+	var mouseG = svg.append("g")
+        .attr("class", "mouse-over-effects");
+
+    mouseG.append("path") // this is the black vertical line to follow mouse
+        .attr("class", "mouse-line")
+        .style("stroke", "black")
+        .style("stroke-width", "1px")
+        .style("opacity", "0");
+
+    var lines = document.getElementsByClassName('line');
+
+    var mousePerLine = mouseG.selectAll('.mouse-per-line')
+        .data(dataset)
+        .enter()
+        .append("g")
+        .attr("class", "mouse-per-line");
+
+    mousePerLine.append("circle")
+        .attr("r", 7)
+        .style("stroke", "steelblue")
+        .style("fill", "none")
+        .style("stroke-width", "1px")
+        .style("opacity", "0");
+
+    mousePerLine.append("text")
+        .attr("transform", "translate(10,-5)");
+
+    mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
+        .attr('width', width) // can't catch mouse events on a g element
+        .attr('height', height)
+        .attr('fill', 'none')
+        .attr('pointer-events', 'all')
+        .on('mouseout', function() { // on mouse out hide line, circles and text
+            d3.select(".mouse-line")
+                .style("opacity", "0");
+            d3.select(".mouse-per-line circle")
+                .style("opacity", "0");
+            d3.select(".mouse-per-line text")
+                .style("opacity", "0");
+        })
+        .on('mouseover', function() { // on mouse in show line, circles and text
+            d3.select(".mouse-line")
+                .style("opacity", "1");
+            d3.select(".mouse-per-line circle")
+                .style("opacity", "1");
+            d3.select(".mouse-per-line text")
+                .style("opacity", "1");
+        })
+        .on('mousemove', function() { // mouse moving over canvas
+            var mouse = d3.mouse(this);
+            d3.select(".mouse-line")
+                .attr("d", function() {
+                    var d = "M" + mouse[0] + "," + height;
+                    d += " " + mouse[0] + "," + 0;
+                    return d;
+                });
+
+            d3.selectAll(".mouse-per-line")
+                .attr("transform", function(d, i) {
+                    //console.log(width/mouse[0])
+                    var xDate = xScale.invert(mouse[0]),
+                        bisect = d3.bisector(function(d) { return d.date; }).right;
+                    idx = bisect(d.values, xDate);
+
+                    var beginning = 0,
+                        end = lines[i].getTotalLength(),
+                        target = null;
+
+                    while (true){
+                        target = Math.floor((beginning + end) / 2);
+                        pos = lines[i].getPointAtLength(target);
+                        if ((target === end || target === beginning) && pos.x !== mouse[0]) {
+                            break;
+                        }
+                        if (pos.x > mouse[0])      end = target;
+                        else if (pos.x < mouse[0]) beginning = target;
+                        else break; //position found
+                    }
+
+                    d3.select(this).select('text')
+                        .text(yScale.invert(pos.y).toFixed(2));
+
+                    return "translate(" + mouse[0] + "," + pos.y +")";
+                });
+        });
+    
+	function tick() {
+	    var pushdata = null;
+	    
+	    var disktotal;
 		$.ajax({
-		    url:"<%=cp%>/get/disksize",
-		    type:"POST",
-		    dataType:"json",
-		    async:false,
-		    data:{"start":start, "end": now, "step":10},
-		    success:function(data){
-		        dataset = data.data.result[0].values;
-		
-		        var arr = new Array();
-		
-		        for(var i = 0 ; i < dataset.length ; i++){
-		            arr.push(data.data.result[0].values[i][1] / Math.pow(10, 9));
-		        }
-		
-		        max = Math.max.apply(null, arr);
-		        min = Math.min.apply(null, arr);
-		
-		        $('#memmax').text(Number(max).toFixed(2)+" GB");
-		        $('#memmin').text(Number(min).toFixed(2)+" GB");
-		    },
-		    error: function(err){
-		        console.log(err);
-		    }
-		
+			url : "<%=cp%>/get/single/disksizetotal",
+			type : "POST",
+			dataType : "json",
+			async : false,
+			data : {},
+			success : function(data) {
+				var total = data.data.result[0].value[1] / Math.pow(10, 9);
+				disktotal = total;
+			},
+			error : function(err) {
+				console.log(err);
+			}
+	
 		});
 		
-		var margin = {top: 20, right: 20, bottom: 20, left: 40}
-		    , width = 960 - margin.left - margin.right// Use the window's width
-		    , height = 250 - margin.top - margin.bottom; // Use the window's height
+	    $.ajax({
+	        url:"<%=cp%>/get/single/disksize",
+	        type:"POST",
+	        dataType:"json",
+	        async:false,
+	        data:{},
+	        success:function(data){	     
+		        var time = data.data.result[0].value[0];
+		        var val = disktotal - data.data.result[0].value[1] / Math.pow(10, 9);
+		        pushdata = [time,val];
+	            
+	            var free = data.data.result[0].value[1] / Math.pow(10, 9);
+				var used = disktotal - free;
+	
+				$("#diskused").text(used.toFixed(2) + " GB");
+				$("#diskfree").text(free.toFixed(2) + " GB");
+	
+				var percent = used / disktotal * 100;
+	
+				$('#memusedtext').text(Math.round(percent) + "%");
+				$('#memused').width(Math.round(percent) + '%');
+	        },
+	        error: function(err){
+	            console.log(err);
+	        }
+	
+	    });
+	
+	    // push a new data point onto the back
+	    dataset.push(pushdata);
+	
+	    // pop the old data point off the front
+	    dataset.shift();
+	
+	    var arr = new Array();
+		    for(var i = 0 ; i < dataset.length ; i++){
+	        arr.push(dataset[i][1]);
+	    }
+	    max = Math.max.apply(null, arr);
+	    min = Math.min.apply(null, arr);
+	    
+	    xScale.domain([moment.unix(dataset[0][0]).toDate(), moment.unix(dataset[dataset.length-1][0]).toDate()]);
+	    yScale.domain([Number(min)-1, Number(max)+1]);
 		
-		// The number of datapoints
-		var n = dataset.length;
-		
-		// 5. X scale will use the index of our data
-		//var xScale = d3.scaleLinear()
-		var xScale = d3.scaleTime()
-		    .domain([moment.unix(dataset[0][0]).toDate(), moment.unix(dataset[dataset.length-1][0]).toDate()]) // input
-		    .range([0, width]); // output
-		
-		// 6. Y scale will use the randomly generate number
-		var yScale = d3.scaleLinear()
-		    .domain([Number(min)-1, Number(max)+1]) // input
-		    .range([height, 0]); // output
-		
-		// 7. d3's line generator
-		var line = d3.line()
-		    .x(function(d, i) { return xScale(moment.unix(d[0]).toDate()); }) // set the x values for the line generator
-		    .y(function(d) { return yScale(d[1] / Math.pow(10, 9)); }) 
-		    .curve(d3.curveMonotoneX);// apply smoothing to the line
-		
-		// 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
-		//var dataset2 = d3.range(n).map(function(d) { return {"y": d3.randomUniform(1)() } });
-		//console.log(dataset2);
-		
-		// 1. Add the SVG to the page and employ #2
-		var svg = d3.select("#chart")
-		    .attr("width", width + margin.left + margin.right)
-		    .attr("height", height + margin.top + margin.bottom)
-		    .append("g")
-		    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-		
-		// 3. Call the x axis in a group tag
-		var xAxis = svg.append("g")
-		    .attr("class", "x axis")
-		    .attr("transform", "translate(0," + height + ")")
-		    .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
-		
-		// 4. Call the y axis in a group tag
-		var yAxis = svg.append("g")
-		    .attr("class", "y axis")
-		    .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
-		
-		// 9. Append the path, bind the data, and call the line generator
-		var path = svg.append("path")
-		    .datum(dataset) // 10. Binds data to the line
-		    .attr("class", "line") // Assign a class for styling
-		    .attr("d", line); // 11. Calls the line generator
-		
-		// 범례추가
-		svg.append("circle").attr("cx",840).attr("cy", 0).attr("r", 6).style("fill", "steelblue")
-		svg.append("text").attr("x", 850).attr("y", 0).text("disk").style("font-size", "15px").attr("alignment-baseline","middle")
-		
-		function tick() {
-		    var pushdata = null;
-		
-		    $.ajax({
-		        url:"<%=cp%>/get/single/disksize",
-		        type:"POST",
-		        dataType:"json",
-		        async:false,
-		        data:{},
-		        success:function(data){
-		            pushdata = data.data.result[0].value;
-		            console.log(pushdata);
-		        },
-		        error: function(err){
-		            console.log(err);
-		        }
-		
-		    });
-		
-		    // push a new data point onto the back
-		
-		    dataset.push(pushdata);
-		
-		    xScale.domain([moment.unix(dataset[0][0]).toDate(), moment.unix(dataset[dataset.length-1][0]).toDate()]);
-		    yScale.domain([Number(min)-1, Number(max)+1]);
-		
-		    path // 기본 변환행렬 초기화
-		        .attr("d", line)
-		        .attr("transform", null); // 선을 다시 그린다.
-		
-		    xAxis.transition() // x축 설정, transition화
-		        .duration(750)
-		        .ease(d3.easeLinear)
-		        .attr("transform", "translate(0," + height + ")")
-		        .call(d3.axisBottom(xScale)) // Create an axis component with d3.axisBottom
-		        .transition(); // 변환 start;
-		
-		    yAxis.transition() // x축 설정, transition화
-		        .duration(750)
-		        .ease(d3.easeLinear)
-		        .call(d3.axisLeft(yScale)) // Create an axis component with d3.axisBottom
-		        .transition(); // 변환 start;
-		
-		    // pop the old data point off the front
-		    dataset.shift();
-		}
-		</script>
+	    path // 기본 변환행렬 초기화
+	        .attr("d", line)
+	        .attr("transform", null)
+	        .transition()
+	        .attr("transform", "translate(" + xScale(moment.unix(dataset[0][0]).toDate()) + ")");
+	
+	    xAxis.transition() // x축 설정, transition화
+	        .duration(750)
+	        .ease(d3.easeLinear)
+	        .attr("transform", "translate(0," + height + ")")
+	        .call(d3.axisBottom(xScale)) // Create an axis component with d3.axisBottom
+	        .transition(); // 변환 start;
+	
+	    yAxis.transition() // x축 설정, transition화
+	        .duration(750)
+	        .ease(d3.easeLinear)
+	        .call(d3.axisLeft(yScale)) // Create an axis component with d3.axisBottom
+	        .transition(); // 변환 start;
+	        
+        $('#memmax').text(Number(max).toFixed(2)+" GB");
+        $('#memmin').text(Number(min).toFixed(2)+" GB");
+	}
+	</script>
 
 </body>
 </html>
