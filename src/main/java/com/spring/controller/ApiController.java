@@ -51,6 +51,9 @@ public class ApiController {
             case "gpu_temp":
                 address += "dcgm_gpu_temp";
                 break;
+            case "gpu_power":
+                address += "dcgm_power_usage";
+                break;
             default:
                 break;
         }
@@ -121,6 +124,9 @@ public class ApiController {
                 break;
             case "gpu_temp":
                 address += "dcgm_gpu_temp";
+                break;
+            case "gpu_power":
+                address += "dcgm_power_usage";
                 break;
             default:
                 break;
