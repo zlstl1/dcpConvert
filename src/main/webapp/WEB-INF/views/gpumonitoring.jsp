@@ -662,7 +662,7 @@ function setchart(i){
         .attr("class", "mouse-per-line");
 
     mousePerLine.append("circle")
-        .attr("r", 7)
+        .attr("r", 5)
         .style("stroke", "steelblue")
         .style("fill", "none")
         .style("stroke-width", "1px")
@@ -817,7 +817,7 @@ function setchart(i){
         .attr("class", "mouse-per-line2");
 
     mousePerLine2.append("circle")
-        .attr("r", 7)
+        .attr("r", 5)
         .style("stroke", "orange")
         .style("fill", "none")
         .style("stroke-width", "1px")
@@ -959,7 +959,7 @@ function setchart(i){
         .attr("class", "mouse-per-line3");
 
     mousePerLine3.append("circle")
-        .attr("r", 7)
+        .attr("r", 5)
         .style("stroke", "green")
         .style("fill", "none")
         .style("stroke-width", "1px")
@@ -1103,7 +1103,7 @@ function setchart(i){
         .attr("class", "mouse-per-line4");
 
     mousePerLine4.append("circle")
-        .attr("r", 7)
+        .attr("r", 5)
         .style("stroke", "gray")
         .style("fill", "none")
         .style("stroke-width", "1px")
@@ -1129,7 +1129,7 @@ function setchart(i){
             d3.select(".mouse-per-line4 text")
                 .style("opacity", "0");
             d3.select(".text5")
-        		.style("opacity", "0");
+        		.style("opacity", "0 
         })
         .on('mouseover', function() { // on mouse in show line, circles and text
             d3.select(".mouse-line4")

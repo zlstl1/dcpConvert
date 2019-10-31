@@ -304,7 +304,7 @@
         .attr("class", "mouse-per-line");
 
     mousePerLine.append("circle")
-        .attr("r", 7)
+        .attr("r", 5)
         .style("stroke", "steelblue")
         .style("fill", "none")
         .style("stroke-width", "1px")

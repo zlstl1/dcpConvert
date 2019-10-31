@@ -314,7 +314,7 @@ $.ajax({
         .attr("class", "mouse-per-line");
 
     mousePerLine.append("circle")
-        .attr("r", 7)
+        .attr("r", 5)
         .style("stroke", "steelblue")
         .style("fill", "none")
         .style("stroke-width", "1px")
@@ -603,7 +603,7 @@ $.ajax({
         .attr("class", "mouse-per-line2");
 
     mousePerLine2.append("circle")
-        .attr("r", 7)
+        .attr("r", 5)
         .style("stroke", "orange")
         .style("fill", "none")
         .style("stroke-width", "1px")
