@@ -30,13 +30,8 @@
   	stroke: orange;
   	stroke-width: 1.5px;
 }
-    
-.tooltip {
-	fill: white;
-	stroke: #000;
-}
 
-.tooltip-time, .tooltip-date {
+.text3, .text2, .tooltip-date {
 	font-weight: bold;
 	font-size :12px;
 }
@@ -326,8 +321,12 @@ $.ajax({
         .style("opacity", "0");
 
     mousePerLine.append("text")
-        .attr("transform", "translate(10,-5)");
+        .attr("transform", "translate(10,-20)");
 
+    mousePerLine.append("text")
+    		.attr("transform", "translate(10,-5)")
+    		.attr("class", "text2");
+    
     mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
         .attr('width', width) // can't catch mouse events on a g element
         .attr('height', height)
@@ -340,6 +339,8 @@ $.ajax({
                 .style("opacity", "0");
             d3.select(".mouse-per-line text")
                 .style("opacity", "0");
+            d3.select(".text2")
+        		.style("opacity", "0");
         })
         .on('mouseover', function() { // on mouse in show line, circles and text
             d3.select(".mouse-line")
@@ -348,6 +349,8 @@ $.ajax({
                 .style("opacity", "1");
             d3.select(".mouse-per-line text")
                 .style("opacity", "1");
+            d3.select(".text2")
+        		.style("opacity", "1");
         })
         .on('mousemove', function() { // mouse moving over canvas
             var mouse = d3.mouse(this);
@@ -385,8 +388,12 @@ $.ajax({
 					 */
 					 
 					 d3.select(this).select('text')
-	                    .html(getTime(xScale.invert(pos.x))+", <br>"+yScale.invert(pos.y).toFixed(2))
+	                    .html(getTime(xScale.invert(pos.x))+", ")
 	                    .attr("class", "tooltip-date");
+					 
+					 d3.select(this).select('.text2')
+	                    .html(yScale.invert(pos.y).toFixed(2))
+	                    .attr("class", "text2");
 					 
                     return "translate(" + mouse[0] + "," + pos.y +")";
                 });
@@ -603,8 +610,12 @@ $.ajax({
         .style("opacity", "0");
 
     mousePerLine2.append("text")
-        .attr("transform", "translate(10,-5)");
+        .attr("transform", "translate(10,-20)");
 
+    mousePerLine2.append("text")
+    		.attr("transform", "translate(10,-5)")
+    		.attr("class", "text3");
+    
     mouseG2.append('svg:rect') // append a rect to catch mouse movements on canvas
         .attr('width', width2) // can't catch mouse events on a g element
         .attr('height', height2)
@@ -617,6 +628,8 @@ $.ajax({
                 .style("opacity", "0");
             d3.select(".mouse-per-line2 text")
                 .style("opacity", "0");
+            d3.select(".text3")
+        		.style("opacity", "0");
         })
         .on('mouseover', function() { // on mouse in show line, circles and text
             d3.select(".mouse-line2")
@@ -625,6 +638,8 @@ $.ajax({
                 .style("opacity", "1");
             d3.select(".mouse-per-line2 text")
                 .style("opacity", "1");
+            d3.select(".text3")
+        		.style("opacity", "1");
         })
         .on('mousemove', function() { // mouse moving over canvas
             var mouse = d3.mouse(this);
@@ -661,9 +676,13 @@ $.ajax({
                         .text(yScale2.invert(pos.y).toFixed(2));
                      */
                     d3.select(this).select('text')
-	                    .html(getTime(xScale2.invert(pos.x))+", <br>"+yScale2.invert(pos.y).toFixed(2))
+	                    .html(getTime(xScale2.invert(pos.x))+", ")
 	                    .attr("class", "tooltip-date");
 
+                     d3.select(this).select('.text3')
+	                    .html(yScale2.invert(pos.y).toFixed(2))
+	                    .attr("class", "text3");
+                     
                     return "translate(" + mouse[0] + "," + pos.y +")";
                 });
         });
