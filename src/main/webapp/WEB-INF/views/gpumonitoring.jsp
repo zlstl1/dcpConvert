@@ -1129,7 +1129,7 @@ function setchart(i){
             d3.select(".mouse-per-line4 text")
                 .style("opacity", "0");
             d3.select(".text5")
-        		.style("opacity", "0 
+        		.style("opacity", "0");
         })
         .on('mouseover', function() { // on mouse in show line, circles and text
             d3.select(".mouse-line4")
