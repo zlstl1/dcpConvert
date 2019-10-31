@@ -16,13 +16,23 @@
 <link rel="stylesheet" href="<%=cp%>/resources/css/circle.css">
 <link rel="stylesheet" href="<%=cp%>/resources/css/cmGauge.css">
 <style type="text/css">
-        /* Style the lines by removing the fill and applying a stroke */
-        .line {
-            fill: none;
-            stroke: steelblue;
-            stroke-width: 1.5px;
-        }
 
+/* Style the lines by removing the fill and applying a stroke */
+.line {
+	fill: none;
+	stroke: steelblue;
+	stroke-width: 1.5px;
+}
+
+.tooltip {
+	fill: white;
+	stroke: #000;
+}
+
+.tooltip-time, .tooltip-date {
+	font-weight: bold;
+	font-size :12px;
+}
 </style>
     
 </head>
@@ -334,9 +344,14 @@ var mouseG = svg.append("g")
                         else if (pos.x < mouse[0]) beginning = target;
                         else break; //position found
                     }
-
+                    /* 
                     d3.select(this).select('text')
                         .text(yScale.invert(pos.y).toFixed(2));
+                     */
+
+                    d3.select(this).select('text')
+	                    .html(getTime(xScale.invert(pos.x))+", <br>"+yScale.invert(pos.y).toFixed(2))
+	                    .attr("class", "tooltip-date");
 
                     return "translate(" + mouse[0] + "," + pos.y +")";
                 });
@@ -413,7 +428,38 @@ function tick() {
     $('#memmin').text(Number(min).toFixed(2)+" %");
 }
 
+function getTime(d) {
+	var time = d;
+	
+    var yyyy = time.getFullYear();
+    var MM = time.getMonth() + 1; //January is 0!
+    var dd = time.getDate();
+    var hh = time.getHours();
+    var mm = time.getMinutes();
+    var ss = time.getSeconds();
 
+    if (MM < 10) {
+        MM = '0' + MM
+    }
+    if (dd < 10) {
+        dd = '0' + dd
+    }
+
+    if (hh < 10) {
+        hh = '0' + hh
+    }
+
+    if (mm < 10) {
+        mm = '0' + mm
+    }
+    
+    if( ss < 10){
+    	ss = '0' + ss
+    }
+
+    //return yyyy + "-" + MM + "-" + dd + " " + hh + ":" + mm + ":" + ss;
+    return hh + ":" + mm + ":" + ss;
+};
 </script>
 
 </body>

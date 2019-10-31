@@ -18,20 +18,29 @@
     
     
 <style type="text/css">
-
 /* Style the lines by removing the fill and applying a stroke */
-	.line {
-		fill: none;
-        stroke: steelblue;
-        stroke-width: 1.5px;
-    }
+.line {
+	fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+   
+.line2 {
+ 	fill: none;
+  	stroke: orange;
+  	stroke-width: 1.5px;
+}
     
-    .line2 {
-    	fill: none;
-    	stroke: orange;
-    	stroke-width: 1.5px;
-    }
-   </style>
+.tooltip {
+	fill: white;
+	stroke: #000;
+}
+
+.tooltip-time, .tooltip-date {
+	font-weight: bold;
+	font-size :12px;
+}
+</style>
 </head>
 <body class="subpage">
 
@@ -53,21 +62,18 @@
 			<div class="box">
 				<div class="content">
 
-				
-				
 				<div class="row text-center">
-							<div class="col">
-									<p class="font-weight-bold text-secondary mt-3 text-left">LOAD</p>
-									<div class="c100 custom green" style="margin-left:30%" id="cpumem">
-										<span id="cpumemtext"></span>
-										<div class="slice">
-											<div class="bar"></div>
-											<div class="fill"></div>
-										</div>
-									</div>
-								</div>
-
-								<div class="col">
+					<div class="col">
+						<p class="font-weight-bold text-secondary mt-3 text-left">LOAD</p>
+						<div class="c100 custom green" style="margin-left:30%" id="cpumem">
+							<span id="cpumemtext"></span>
+							<div class="slice">
+								<div class="fill"></div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col">
 									<p class="font-weight-bold text-secondary mt-3 mb-4 text-left">CLOCK
 										SPEED</p>
 									<div id="gaugeDemo3" class="gauge gauge-big ml-3">
@@ -143,18 +149,17 @@
 		</div>
 	</section>
 
-	<!-- Footer -->
-	<%@include file="import/footer.jsp"%>
-
-	<script src="<%=cp%>/resources/jquery/jQuery3.4.1.js"></script>
-	<script src="<%=cp%>/resources/js/bootstrap.bundle.js"></script>
-	<script src="<%=cp%>/resources/assets/js/jquery.scrollex.min.js"></script>
-	<script src="<%=cp%>/resources/assets/js/skel.min.js"></script>
-	<script src="<%=cp%>/resources/assets/js/util.js"></script>
-	<script src="<%=cp%>/resources/assets/js/main.js"></script>
-	<script src="<%=cp%>/resources/js/cmGauge.js"></script>
-	<script src="<%=cp%>/resources/js/d3.min.js"></script>
-	<script src="<%=cp%>/resources/js/moment.js"></script>
+<!-- Footer -->
+<%@include file="import/footer.jsp"%>
+<script src="<%=cp%>/resources/jquery/jQuery3.4.1.js"></script>
+<script src="<%=cp%>/resources/js/bootstrap.bundle.js"></script>
+<script src="<%=cp%>/resources/assets/js/jquery.scrollex.min.js"></script>
+<script src="<%=cp%>/resources/assets/js/skel.min.js"></script>
+<script src="<%=cp%>/resources/assets/js/util.js"></script>
+<script src="<%=cp%>/resources/assets/js/main.js"></script>
+<script src="<%=cp%>/resources/js/cmGauge.js"></script>
+<script src="<%=cp%>/resources/js/d3.min.js"></script>
+<script src="<%=cp%>/resources/js/moment.js"></script>
 
 <script type="text/javascript">
 $('#gaugeDemo3 .gauge-arrow').cmGauge();
@@ -374,10 +379,15 @@ $.ajax({
                         else if (pos.x < mouse[0]) beginning = target;
                         else break; //position found
                     }
-
+					/* 
                     d3.select(this).select('text')
                         .text(yScale.invert(pos.y).toFixed(2));
-
+					 */
+					 
+					 d3.select(this).select('text')
+	                    .html(getTime(xScale.invert(pos.x))+", <br>"+yScale.invert(pos.y).toFixed(2))
+	                    .attr("class", "tooltip-date");
+					 
                     return "translate(" + mouse[0] + "," + pos.y +")";
                 });
         });  
@@ -646,9 +656,13 @@ $.ajax({
                         else if (pos.x < mouse[0]) beginning = target;
                         else break; //position found
                     }
-
+					/* 
                     d3.select(this).select('text')
                         .text(yScale2.invert(pos.y).toFixed(2));
+                     */
+                    d3.select(this).select('text')
+	                    .html(getTime(xScale2.invert(pos.x))+", <br>"+yScale2.invert(pos.y).toFixed(2))
+	                    .attr("class", "tooltip-date");
 
                     return "translate(" + mouse[0] + "," + pos.y +")";
                 });
@@ -723,7 +737,39 @@ $.ajax({
         $('#cpuclockmin').text(min2.toFixed(1)+" Ghz");
 
     }
+    
+    function getTime(d) {
+    	var time = d;
+    	
+        var yyyy = time.getFullYear();
+        var MM = time.getMonth() + 1; //January is 0!
+        var dd = time.getDate();
+        var hh = time.getHours();
+        var mm = time.getMinutes();
+        var ss = time.getSeconds();
 
+        if (MM < 10) {
+            MM = '0' + MM
+        }
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+
+        if (hh < 10) {
+            hh = '0' + hh
+        }
+
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+        
+        if( ss < 10){
+        	ss = '0' + ss
+        }
+
+        //return yyyy + "-" + MM + "-" + dd + " " + hh + ":" + mm + ":" + ss;
+        return hh + ":" + mm + ":" + ss;
+    };
 </script>
 
 </body>

@@ -51,6 +51,16 @@
 .c100.custom {
   font-size: 170px;
 }
+
+.tooltip {
+	fill: white;
+	stroke: #000;
+}
+
+.tooltip-time, .tooltip-date {
+	font-weight: bold;
+	font-size :12px;
+}
 </style>
 
 </head>
@@ -484,11 +494,21 @@ function updatechart(i){
 	            arr.push(data.data.result[num].values[j][1]);
 	        }
 
+	        //javascript에서 제공하는 min,max
 	        max[0] = Math.max.apply(null, arr);
 	        min[0] = Math.min.apply(null, arr);
 
+	        //d3에서 제공하는 min,mix 
+	        //d3.extent(arr, function (el){return el})
+	        
+	        //뭐가 빠른지모르겠음
+	        
 	        $('#gputempmax'+i).text(max[0] + " °C");
 	        $('#gputempmin'+i).text(min[0] + " °C");
+
+	        
+	        console.log();
+
 	    },
 	    error: function(err){
 	        console.log(err);
@@ -516,6 +536,7 @@ function updatechart(i){
 
 	        $('#gpumemmax'+i).text(max[1] +" %");
 	        $('#gpumemmin'+i).text(min[1] +" %");
+
 	    },
 	    error: function(err){
 	        console.log(err);
@@ -706,10 +727,25 @@ function setchart(i){
                         else if (pos.x < mouse[0]) beginning = target;
                         else break; //position found
                     }
-
+					/* 
                     d3.select(this).select('text')
                     	.text(Math.round(yScale.invert(pos.y)));
-                    
+                     */
+                     
+                     /* 
+                     d3.select(this).select('text')
+	                     .html(getTime(xScale.invert(pos.x))+", ")
+	                     .attr("font-size", "12px")
+	                     //.enter().append("tspan")
+	                     .append("br")
+	                     .html(Math.round(yScale.invert(pos.y)))
+	                     .attr("font-size", "12px");
+                      */
+                   
+                      d3.select(this).select('text')
+	                    .html(getTime(xScale.invert(pos.x))+", <br>"+Math.round(yScale.invert(pos.y)))
+	                    .attr("class", "tooltip-date");
+                       
                     return "translate(" + mouse[0] + "," + pos.y +")";
                 });
         });  
@@ -833,9 +869,13 @@ function setchart(i){
                         else if (pos.x < mouse[0]) beginning = target;
                         else break; //position found
                     }
-
+					/* 
                     d3.select(this).select('text')
                         .text(Math.round(yScale2.invert(pos.y)));
+                     */
+                    d3.select(this).select('text')
+	                    .html(getTime(xScale2.invert(pos.x))+", <br>"+Math.round(yScale2.invert(pos.y)))
+	                    .attr("class", "tooltip-date");
 
                     return "translate(" + mouse[0] + "," + pos.y +")";
                 });
@@ -959,9 +999,15 @@ function setchart(i){
                         else if (pos.x < mouse[0]) beginning = target;
                         else break; //position found
                     }
-
+					/* 
                     d3.select(this).select('text')
                         .text(Math.round(yScale3.invert(pos.y)));
+                     */
+                     
+                    d3.select(this).select('text')
+	                    .html(getTime(xScale3.invert(pos.x))+", <br>"+Math.round(yScale3.invert(pos.y)))
+	                    .attr("class", "tooltip-date");
+
 
                     return "translate(" + mouse[0] + "," + pos.y +")";
                 });
@@ -1085,9 +1131,13 @@ function setchart(i){
                         else if (pos.x < mouse[0]) beginning = target;
                         else break; //position found
                     }
-
+					/* 
                     d3.select(this).select('text')
                         .text(Math.round(yScale4.invert(pos.y)));
+                    */
+                    d3.select(this).select('text')
+	                    .html(getTime(xScale4.invert(pos.x))+", <br>"+Math.round(yScale4.invert(pos.y)))
+	                    .attr("class", "tooltip-date");
 
                     return "translate(" + mouse[0] + "," + pos.y +")";
                 });
