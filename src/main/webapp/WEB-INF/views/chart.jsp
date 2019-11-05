@@ -295,7 +295,7 @@ function detail(){
 	var start = time(startday,starttime).getTime() / 1000;
 	var end = time(endday,endtime).getTime() / 1000;
 	
-	if(start>end){
+	if(start>=end){
 		swal.fire("error","잘못된 검색범위입니다.","error");
 		return false;
 	}
