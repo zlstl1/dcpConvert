@@ -179,6 +179,12 @@ $(document).ready(function(){
 	                '\n' +
 	                '\n' +
 	                '                <div id="gpudetail'+i+'" style="display: none;">\n' +
+	                
+	                '<div class="row">'+
+					'	<div class="col text-right">'+
+					'	<a href="<%=cp%>/dcp/${user.user_id}/chart?type=GPU+'+i+'" style="color:gray; font-size:15px;">시간별 사용량 <i class="fa fa-arrow-right"></i></a>'+
+					'	</div>'+
+					'</div>'+
 	                '                    <div class="row ml-2">\n' +
 	                '                        <div class="col">\n' +
 	                '                            <p style="color:#000;">TEMP</p>\n' +
@@ -250,7 +256,7 @@ $(document).ready(function(){
 	                '                                </div>\n' +
 	                '                            </div>\n' +
 	                '                        </div>\n' +
-	                '                    </div> <hr>\n' +
+	                '                    </div>' +
 	                '\n' +
 	                '                    <br>\n' +
 	                '\n' +

@@ -76,6 +76,13 @@
 				
 				
 					<div id="detail" style="display:none">
+					
+						<div class="row">
+							<div class="col text-right">
+								<a href="<%=cp%>/dcp/${user.user_id}/chart?type=RAM" style="color:gray; font-size:15px;">시간별 사용량 <i class="fa fa-arrow-right"></i></a>
+							</div>
+						</div>
+						
 						<div class="row ml-2">
 	                        <div class="col">
 	                            <p style="color:#000;">MEM LOAD</p>
