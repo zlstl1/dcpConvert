@@ -299,7 +299,14 @@ function detail(){
 		swal.fire("error","잘못된 검색범위입니다.","error");
 		return false;
 	}
-
+	
+	var day = end - start; 
+	
+	if(day > 86400){
+		swal.fire("error","최대 24시간 범위만 검색가능합니다.","error");
+		return false;
+	}
+	
 	if($('#detail').css("display")=="none"){
 		$('#detail').css("display","block");
 	}
