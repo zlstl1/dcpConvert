@@ -428,4 +428,10 @@ public class DcpAdminController {
 		out.flush();
 		out.close();
 	}
+	
+	@RequestMapping(value = "/dcp/{email}/chart", method = RequestMethod.GET)
+	public String chart(Model model) {
+
+		return "/chart";
+	}
 }

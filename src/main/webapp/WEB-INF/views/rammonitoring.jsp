@@ -16,13 +16,18 @@
 <link rel="stylesheet" href="<%=cp%>/resources/css/circle.css">
 <link rel="stylesheet" href="<%=cp%>/resources/css/cmGauge.css">
 <style type="text/css">
-        /* Style the lines by removing the fill and applying a stroke */
-        .line {
-            fill: none;
-            stroke: steelblue;
-            stroke-width: 1.5px;
-        }
 
+/* Style the lines by removing the fill and applying a stroke */
+.line {
+	fill: none;
+	stroke: steelblue;
+	stroke-width: 1.5px;
+}
+
+.text2, .tooltip-date {
+	font-weight: bold;
+	font-size :12px;
+}
 </style>
     
 </head>
@@ -71,6 +76,13 @@
 				
 				
 					<div id="detail" style="display:none">
+					
+						<div class="row">
+							<div class="col text-right">
+								<a href="<%=cp%>/dcp/${user.user_id}/chart?type=RAM" style="color:gray; font-size:15px;">시간별 사용량 <i class="fa fa-arrow-right"></i></a>
+							</div>
+						</div>
+						
 						<div class="row ml-2">
 	                        <div class="col">
 	                            <p style="color:#000;">MEM LOAD</p>
@@ -274,15 +286,19 @@ var mouseG = svg.append("g")
         .attr("class", "mouse-per-line");
 
     mousePerLine.append("circle")
-        .attr("r", 7)
+        .attr("r", 5)
         .style("stroke", "steelblue")
         .style("fill", "none")
         .style("stroke-width", "1px")
         .style("opacity", "0");
 
     mousePerLine.append("text")
-        .attr("transform", "translate(10,-5)");
+        .attr("transform", "translate(10,-20)");
 
+    mousePerLine.append("text")
+    		.attr("transform", "translate(10,-5)")
+    		.attr("class", "text2");
+    
     mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
         .attr('width', width) // can't catch mouse events on a g element
         .attr('height', height)
@@ -295,6 +311,8 @@ var mouseG = svg.append("g")
                 .style("opacity", "0");
             d3.select(".mouse-per-line text")
                 .style("opacity", "0");
+            d3.select(".text2")
+        		.style("opacity", "0");
         })
         .on('mouseover', function() { // on mouse in show line, circles and text
             d3.select(".mouse-line")
@@ -303,6 +321,8 @@ var mouseG = svg.append("g")
                 .style("opacity", "1");
             d3.select(".mouse-per-line text")
                 .style("opacity", "1");
+            d3.select(".text2")
+        		.style("opacity", "1");
         })
         .on('mousemove', function() { // mouse moving over canvas
             var mouse = d3.mouse(this);
@@ -334,11 +354,20 @@ var mouseG = svg.append("g")
                         else if (pos.x < mouse[0]) beginning = target;
                         else break; //position found
                     }
-
+                    /* 
                     d3.select(this).select('text')
                         .text(yScale.invert(pos.y).toFixed(2));
+                     */
+                     
+					d3.select(this).select('text')
+						.html(getTime(xScale.invert(pos.x))+", ")
+						.attr("class", "tooltip-date");
+                     
+                   d3.select(this).select('.text2')
+                   		.html(yScale.invert(pos.y).toFixed(2))
+                   		.attr("class", "text2");
 
-                    return "translate(" + mouse[0] + "," + pos.y +")";
+				 return "translate(" + mouse[0] + "," + pos.y +")";
                 });
         });
 
@@ -413,7 +442,38 @@ function tick() {
     $('#memmin').text(Number(min).toFixed(2)+" %");
 }
 
+function getTime(d) {
+	var time = d;
+	
+    var yyyy = time.getFullYear();
+    var MM = time.getMonth() + 1; //January is 0!
+    var dd = time.getDate();
+    var hh = time.getHours();
+    var mm = time.getMinutes();
+    var ss = time.getSeconds();
 
+    if (MM < 10) {
+        MM = '0' + MM
+    }
+    if (dd < 10) {
+        dd = '0' + dd
+    }
+
+    if (hh < 10) {
+        hh = '0' + hh
+    }
+
+    if (mm < 10) {
+        mm = '0' + mm
+    }
+    
+    if( ss < 10){
+    	ss = '0' + ss
+    }
+
+    //return yyyy + "-" + MM + "-" + dd + " " + hh + ":" + mm + ":" + ss;
+    return hh + ":" + mm + ":" + ss;
+};
 </script>
 
 </body>

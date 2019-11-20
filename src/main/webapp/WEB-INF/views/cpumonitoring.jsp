@@ -18,20 +18,24 @@
     
     
 <style type="text/css">
-
 /* Style the lines by removing the fill and applying a stroke */
-	.line {
-		fill: none;
-        stroke: steelblue;
-        stroke-width: 1.5px;
-    }
-    
-    .line2 {
-    	fill: none;
-    	stroke: orange;
-    	stroke-width: 1.5px;
-    }
-   </style>
+.line {
+	fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+   
+.line2 {
+ 	fill: none;
+  	stroke: orange;
+  	stroke-width: 1.5px;
+}
+
+.text3, .text2, .tooltip-date {
+	font-weight: bold;
+	font-size :12px;
+}
+</style>
 </head>
 <body class="subpage">
 
@@ -53,21 +57,18 @@
 			<div class="box">
 				<div class="content">
 
-				
-				
 				<div class="row text-center">
-							<div class="col">
-									<p class="font-weight-bold text-secondary mt-3 text-left">LOAD</p>
-									<div class="c100 custom green" style="margin-left:30%" id="cpumem">
-										<span id="cpumemtext"></span>
-										<div class="slice">
-											<div class="bar"></div>
-											<div class="fill"></div>
-										</div>
-									</div>
-								</div>
-
-								<div class="col">
+					<div class="col">
+						<p class="font-weight-bold text-secondary mt-3 text-left">LOAD</p>
+						<div class="c100 custom green" style="margin-left:30%" id="cpumem">
+							<span id="cpumemtext"></span>
+							<div class="slice">
+								<div class="fill"></div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col">
 									<p class="font-weight-bold text-secondary mt-3 mb-4 text-left">CLOCK
 										SPEED</p>
 									<div id="gaugeDemo3" class="gauge gauge-big ml-3">
@@ -90,6 +91,13 @@
 				
 				
 				<div id="detail" style="display:none">
+				
+					<div class="row">
+						<div class="col text-right">
+							<a href="<%=cp%>/dcp/${user.user_id}/chart?type=CPU" style="color:gray; font-size:15px;">시간별 사용량 <i class="fa fa-arrow-right"></i></a>
+						</div>
+					</div>
+					
 					<div class="row ml-2">
 	                        <div class="col">
 	                            <p style="color:#000;">MEM LOAD</p>
@@ -143,18 +151,17 @@
 		</div>
 	</section>
 
-	<!-- Footer -->
-	<%@include file="import/footer.jsp"%>
-
-	<script src="<%=cp%>/resources/jquery/jQuery3.4.1.js"></script>
-	<script src="<%=cp%>/resources/js/bootstrap.bundle.js"></script>
-	<script src="<%=cp%>/resources/assets/js/jquery.scrollex.min.js"></script>
-	<script src="<%=cp%>/resources/assets/js/skel.min.js"></script>
-	<script src="<%=cp%>/resources/assets/js/util.js"></script>
-	<script src="<%=cp%>/resources/assets/js/main.js"></script>
-	<script src="<%=cp%>/resources/js/cmGauge.js"></script>
-	<script src="<%=cp%>/resources/js/d3.min.js"></script>
-	<script src="<%=cp%>/resources/js/moment.js"></script>
+<!-- Footer -->
+<%@include file="import/footer.jsp"%>
+<script src="<%=cp%>/resources/jquery/jQuery3.4.1.js"></script>
+<script src="<%=cp%>/resources/js/bootstrap.bundle.js"></script>
+<script src="<%=cp%>/resources/assets/js/jquery.scrollex.min.js"></script>
+<script src="<%=cp%>/resources/assets/js/skel.min.js"></script>
+<script src="<%=cp%>/resources/assets/js/util.js"></script>
+<script src="<%=cp%>/resources/assets/js/main.js"></script>
+<script src="<%=cp%>/resources/js/cmGauge.js"></script>
+<script src="<%=cp%>/resources/js/d3.min.js"></script>
+<script src="<%=cp%>/resources/js/moment.js"></script>
 
 <script type="text/javascript">
 $('#gaugeDemo3 .gauge-arrow').cmGauge();
@@ -314,15 +321,19 @@ $.ajax({
         .attr("class", "mouse-per-line");
 
     mousePerLine.append("circle")
-        .attr("r", 7)
+        .attr("r", 5)
         .style("stroke", "steelblue")
         .style("fill", "none")
         .style("stroke-width", "1px")
         .style("opacity", "0");
 
     mousePerLine.append("text")
-        .attr("transform", "translate(10,-5)");
+        .attr("transform", "translate(10,-20)");
 
+    mousePerLine.append("text")
+    		.attr("transform", "translate(10,-5)")
+    		.attr("class", "text2");
+    
     mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
         .attr('width', width) // can't catch mouse events on a g element
         .attr('height', height)
@@ -335,6 +346,8 @@ $.ajax({
                 .style("opacity", "0");
             d3.select(".mouse-per-line text")
                 .style("opacity", "0");
+            d3.select(".text2")
+        		.style("opacity", "0");
         })
         .on('mouseover', function() { // on mouse in show line, circles and text
             d3.select(".mouse-line")
@@ -343,6 +356,8 @@ $.ajax({
                 .style("opacity", "1");
             d3.select(".mouse-per-line text")
                 .style("opacity", "1");
+            d3.select(".text2")
+        		.style("opacity", "1");
         })
         .on('mousemove', function() { // mouse moving over canvas
             var mouse = d3.mouse(this);
@@ -374,10 +389,19 @@ $.ajax({
                         else if (pos.x < mouse[0]) beginning = target;
                         else break; //position found
                     }
-
+					/* 
                     d3.select(this).select('text')
                         .text(yScale.invert(pos.y).toFixed(2));
-
+					 */
+					 
+					 d3.select(this).select('text')
+	                    .html(getTime(xScale.invert(pos.x))+", ")
+	                    .attr("class", "tooltip-date");
+					 
+					 d3.select(this).select('.text2')
+	                    .html(yScale.invert(pos.y).toFixed(2))
+	                    .attr("class", "text2");
+					 
                     return "translate(" + mouse[0] + "," + pos.y +")";
                 });
         });  
@@ -586,15 +610,19 @@ $.ajax({
         .attr("class", "mouse-per-line2");
 
     mousePerLine2.append("circle")
-        .attr("r", 7)
+        .attr("r", 5)
         .style("stroke", "orange")
         .style("fill", "none")
         .style("stroke-width", "1px")
         .style("opacity", "0");
 
     mousePerLine2.append("text")
-        .attr("transform", "translate(10,-5)");
+        .attr("transform", "translate(10,-20)");
 
+    mousePerLine2.append("text")
+    		.attr("transform", "translate(10,-5)")
+    		.attr("class", "text3");
+    
     mouseG2.append('svg:rect') // append a rect to catch mouse movements on canvas
         .attr('width', width2) // can't catch mouse events on a g element
         .attr('height', height2)
@@ -607,6 +635,8 @@ $.ajax({
                 .style("opacity", "0");
             d3.select(".mouse-per-line2 text")
                 .style("opacity", "0");
+            d3.select(".text3")
+        		.style("opacity", "0");
         })
         .on('mouseover', function() { // on mouse in show line, circles and text
             d3.select(".mouse-line2")
@@ -615,6 +645,8 @@ $.ajax({
                 .style("opacity", "1");
             d3.select(".mouse-per-line2 text")
                 .style("opacity", "1");
+            d3.select(".text3")
+        		.style("opacity", "1");
         })
         .on('mousemove', function() { // mouse moving over canvas
             var mouse = d3.mouse(this);
@@ -646,10 +678,18 @@ $.ajax({
                         else if (pos.x < mouse[0]) beginning = target;
                         else break; //position found
                     }
-
+					/* 
                     d3.select(this).select('text')
                         .text(yScale2.invert(pos.y).toFixed(2));
+                     */
+                    d3.select(this).select('text')
+	                    .html(getTime(xScale2.invert(pos.x))+", ")
+	                    .attr("class", "tooltip-date");
 
+                     d3.select(this).select('.text3')
+	                    .html(yScale2.invert(pos.y).toFixed(2))
+	                    .attr("class", "text3");
+                     
                     return "translate(" + mouse[0] + "," + pos.y +")";
                 });
         });
@@ -723,7 +763,39 @@ $.ajax({
         $('#cpuclockmin').text(min2.toFixed(1)+" Ghz");
 
     }
+    
+    function getTime(d) {
+    	var time = d;
+    	
+        var yyyy = time.getFullYear();
+        var MM = time.getMonth() + 1; //January is 0!
+        var dd = time.getDate();
+        var hh = time.getHours();
+        var mm = time.getMinutes();
+        var ss = time.getSeconds();
 
+        if (MM < 10) {
+            MM = '0' + MM
+        }
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+
+        if (hh < 10) {
+            hh = '0' + hh
+        }
+
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+        
+        if( ss < 10){
+        	ss = '0' + ss
+        }
+
+        //return yyyy + "-" + MM + "-" + dd + " " + hh + ":" + mm + ":" + ss;
+        return hh + ":" + mm + ":" + ss;
+    };
 </script>
 
 </body>

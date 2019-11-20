@@ -23,6 +23,11 @@
 	stroke: steelblue;
 	stroke-width: 1.5px;
 }
+
+.text2, .tooltip-date {
+	font-weight: bold;
+	font-size :12px;
+}
 </style>
 </head>
 <body class="subpage">
@@ -74,7 +79,13 @@
 					<hr>
 
 					<div id="detail" style="display: none">
-
+	
+						<div class="row">
+							<div class="col text-right">
+								<a href="<%=cp%>/dcp/${user.user_id}/chart?type=STORAGE" style="color:gray; font-size:15px;">시간별 사용량 <i class="fa fa-arrow-right"></i></a>
+							</div>
+						</div>
+						
 						<div class="row ml-2">
 							<div class="col">
 								<p style="color:#000;">C:Drive</p>
@@ -291,6 +302,8 @@
         .style("opacity", "0");
 
     var lines = document.getElementsByClassName('line');
+    
+    console.log(lines);
 
     var mousePerLine = mouseG.selectAll('.mouse-per-line')
         .data(dataset)
@@ -299,14 +312,18 @@
         .attr("class", "mouse-per-line");
 
     mousePerLine.append("circle")
-        .attr("r", 7)
+        .attr("r", 5)
         .style("stroke", "steelblue")
         .style("fill", "none")
         .style("stroke-width", "1px")
         .style("opacity", "0");
 
     mousePerLine.append("text")
-        .attr("transform", "translate(10,-5)");
+        .attr("transform", "translate(10,-20)");
+    
+    mousePerLine.append("text")
+    		.attr("transform", "translate(10,-5)")
+    		.attr("class", "text2");
 
     mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
         .attr('width', width) // can't catch mouse events on a g element
@@ -320,6 +337,8 @@
                 .style("opacity", "0");
             d3.select(".mouse-per-line text")
                 .style("opacity", "0");
+            d3.select(".text2")
+            	.style("opacity", "0");
         })
         .on('mouseover', function() { // on mouse in show line, circles and text
             d3.select(".mouse-line")
@@ -328,6 +347,8 @@
                 .style("opacity", "1");
             d3.select(".mouse-per-line text")
                 .style("opacity", "1");
+            d3.select(".text2")
+            	.style("opacity", "1");
         })
         .on('mousemove', function() { // mouse moving over canvas
             var mouse = d3.mouse(this);
@@ -344,7 +365,10 @@
                     var xDate = xScale.invert(mouse[0]),
                         bisect = d3.bisector(function(d) { return d.date; }).right;
                     idx = bisect(d.values, xDate);
-
+                    
+                    console.log(lines[0]);
+                    console.log(lines[1]);
+                    
                     var beginning = 0,
                         end = lines[i].getTotalLength(),
                         target = null;
@@ -359,10 +383,19 @@
                         else if (pos.x < mouse[0]) beginning = target;
                         else break; //position found
                     }
-
+					/* 
                     d3.select(this).select('text')
                         .text(yScale.invert(pos.y).toFixed(2));
-
+					 */
+					 
+					 d3.select(this).select('text')
+	                    .html(getTime(xScale.invert(pos.x))+", ")
+	                    .attr("class", "tooltip-date");
+					 
+					 d3.select(this).select('.text2')
+	                    .html(yScale.invert(pos.y).toFixed(2))
+	                    .attr("class", "text2");
+					 
                     return "translate(" + mouse[0] + "," + pos.y +")";
                 });
         });
@@ -453,6 +486,40 @@
         $('#memmax').text(Number(max).toFixed(2)+" GB");
         $('#memmin').text(Number(min).toFixed(2)+" GB");
 	}
+	
+
+    function getTime(d) {
+    	var time = d;
+    	
+        var yyyy = time.getFullYear();
+        var MM = time.getMonth() + 1; //January is 0!
+        var dd = time.getDate();
+        var hh = time.getHours();
+        var mm = time.getMinutes();
+        var ss = time.getSeconds();
+
+        if (MM < 10) {
+            MM = '0' + MM
+        }
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+
+        if (hh < 10) {
+            hh = '0' + hh
+        }
+
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+        
+        if( ss < 10){
+        	ss = '0' + ss
+        }
+
+        //return yyyy + "-" + MM + "-" + dd + " " + hh + ":" + mm + ":" + ss;
+        return hh + ":" + mm + ":" + ss;
+    };
 	</script>
 
 </body>
