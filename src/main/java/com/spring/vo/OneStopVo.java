@@ -15,6 +15,9 @@ public class OneStopVo {
 	String label;
 	String scale;
 	int frameRate;
+	boolean encryption;
+	String key;
+	String keyID;
 	String originalPath;
 	MultipartFile pictureReel;
 	MultipartFile[] soundReel;
@@ -80,6 +83,24 @@ public class OneStopVo {
 	public void setFrameRate(int frameRate) {
 		this.frameRate = frameRate;
 	}
+	public boolean isEncryption() {
+		return encryption;
+	}
+	public void setEncryption(boolean encryption) {
+		this.encryption = encryption;
+	}
+	public String getKey() {
+		return key;
+	}
+	public void setKey(String key) {
+		this.key = key;
+	}
+	public String getKeyID() {
+		return keyID;
+	}
+	public void setKeyID(String keyID) {
+		this.keyID = keyID;
+	}
 	public String getOriginalPath() {
 		return originalPath;
 	}
@@ -109,8 +130,8 @@ public class OneStopVo {
 	public String toString() {
 		return "OneStopVo [title=" + title + ", quality=" + quality + ", bandWidth=" + bandWidth + ", annotation="
 				+ annotation + ", issuer=" + issuer + ", rating=" + rating + ", kind=" + kind + ", label=" + label
-				+ ", scale=" + scale + ", frameRate=" + frameRate + ", originalPath=" + originalPath + ", pictureReel="
-				+ pictureReel + ", soundReel=" + Arrays.toString(soundReel) + ", subtitleReel=" + subtitleReel + "]";
+				+ ", scale=" + scale + ", frameRate=" + frameRate + ", encryption=" + encryption + ", key=" + key
+				+ ", keyID=" + keyID + ", originalPath=" + originalPath + ", pictureReel=" + pictureReel
+				+ ", soundReel=" + Arrays.toString(soundReel) + ", subtitleReel=" + subtitleReel + "]";
 	}
-	
 }

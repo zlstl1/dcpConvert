@@ -2,14 +2,18 @@ package com.spring.service;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.spring.controller.DcpContoller;
 import com.spring.dao.DcpHistoryDao;
 import com.spring.util.Common;
 import com.spring.vo.HistoryVo;
@@ -23,6 +27,8 @@ public class DcpTiffService {
 	DcpHistoryDao dcpHistoryDao;
 	@Autowired
 	Common common;
+	
+	final Logger logger = LoggerFactory.getLogger(DcpContoller.class);
 	
 	public void convertTiff(TiffVo tiffVo,String workDir,List<String> items, String path, HistoryVo historyVo) {
 		common.dbug("convertTiff - DcpTiffService ::: ");
@@ -42,6 +48,7 @@ public class DcpTiffService {
 			if(frame == -1) {
 				 frame = dcpCommon.getPlayTime2(tiffVo.getPictureReel().getOriginalFilename(), dumpfile.getParent());
 			}
+			logger.info("convertTiff - DcpTiffService ::: TotalFrame = " + frame);
 			int startnum = 1;
 	    	int halfFrame = frame/2;
 	    	
@@ -114,6 +121,7 @@ public class DcpTiffService {
     	    				"-aspect","2.39",
     	    				"-s","2048:858",
     	    				"-an",
+    	    				"-compression_algo","raw",
     	    				"-pix_fmt","rgb48le",
     	    				"-src_range","1",
     	    				"-dst_range","1",
@@ -129,8 +137,9 @@ public class DcpTiffService {
 	    				"-i",orgName,
 	    				"-q:v",String.valueOf(tiffVo.getQuality()),
 	    				"-aspect","1.85",
-	    				"-s","1988:1080",
+	    				"-s","1998:1080",
 	    				"-an",
+	    				"-compression_algo","raw",
 	    				"-pix_fmt","rgb48le",
 	    				"-src_range","1",
 	    				"-dst_range","1",

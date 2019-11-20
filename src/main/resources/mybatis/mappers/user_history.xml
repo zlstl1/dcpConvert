@@ -26,12 +26,14 @@
 	</insert>
 	
 	<select id="getHistoryListCnt" parameterType="com.spring.vo.HistoryVo" resultType="int">
-		SELECT
-			count(*) as listCnt
-		FROM
-			user_history
-		WHERE
-			user_no = #{user_no}
+		<![CDATA[
+			SELECT
+				count(*) as listCnt
+			FROM
+				user_history
+			WHERE
+				user_no = #{user_no}
+		]]>
 	</select>
 	
 </mapper>

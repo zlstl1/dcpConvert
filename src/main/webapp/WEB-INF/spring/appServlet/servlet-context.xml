@@ -20,6 +20,7 @@
 	<resources mapping="/resources/**" location="/resources/" />
 	
 	<resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
+	
 	<interceptors>
 	 	<interceptor>
 	  		<mapping path="/dcp/**"/>

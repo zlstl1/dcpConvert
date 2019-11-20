@@ -3,7 +3,6 @@ package com.spring.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -49,6 +48,7 @@ public class DcpOneStopService {
 		
 		
 		logger.info("======================================================");
+		logger.info("convertToOneStop -DcpOneStopService ::: Total Frame = " + frame);
 		logger.info("convertToOneStop -DcpOneStopService ::: Start convertToTiffJ2c / " + new Date());
 		convertToTiffJ2c(oneStopVo, workDir, path, frame);
 		logger.info("convertToOneStop -DcpOneStopService ::: End convertToTiffJ2c / " + new Date());
@@ -336,6 +336,7 @@ public class DcpOneStopService {
     	    				"-aspect","2.39",
     	    				"-s","2048:858",
     	    				"-an",
+    	    				"-compression_algo","raw",
     	    				"-pix_fmt","rgb48le",
     	    				"-src_range","1",
     	    				"-dst_range","1",
@@ -351,8 +352,9 @@ public class DcpOneStopService {
 	    				"-i",orgName,
 	    				"-q:v",String.valueOf(oneStopVo.getQuality()),
 	    				"-aspect","1.85",
-	    				"-s","1988:1080",
+	    				"-s","1998:1080",
 	    				"-an",
+	    				"-compression_algo","raw",
 	    				"-pix_fmt","rgb48le",
 	    				"-src_range","1",
 	    				"-dst_range","1",
@@ -460,14 +462,11 @@ public class DcpOneStopService {
 		
 		if(oneStopVo.getPictureReel() != null) {
 			title = workDir + "/DCP/" + oneStopVo.getTitle() + "picture.mxf";
-			String[] cmd = new String[] {
-				"opendcp_mxf",
-				"-i",workDir + "/J2C",
-				"-o",title,
-				"-n",oneStopVo.getLabel(),
-				"-r",String.valueOf(oneStopVo.getFrameRate())
-			};
-			dcpCommon.runCli(cmd,workDir);
+			String cli = "opendcp_mxf -i " + workDir + "/J2C" + " -o " + title + " -n " + oneStopVo.getLabel() + " -r " + oneStopVo.getFrameRate();
+			if(oneStopVo.isEncryption()) {
+				cli += " -k " + oneStopVo.getKey() + " -u " + oneStopVo.getKeyID();
+			}
+			dcpCommon.runCli(cli.split(" "),workDir);
 		}
 		
 		if(oneStopVo.getSoundReel().length != 0) {	
@@ -478,14 +477,11 @@ public class DcpOneStopService {
 				File fileToMove = new File(workDir+"/OneStopSound/" + oneStopVo.getSoundReel()[i].getOriginalFilename());
 				file.renameTo(fileToMove);
 			}
-			String[] cmd = new String[] {
-					"opendcp_mxf",
-					"-i",workDir + "/OneStopSound",
-					"-o",title,
-					"-n",oneStopVo.getLabel(),
-					"-r",String.valueOf(oneStopVo.getFrameRate())
-			};
-			dcpCommon.runCli(cmd,workDir);
+			String cli = "opendcp_mxf -i " + workDir + "/OneStopSound" + " -o " + title + " -n " + oneStopVo.getLabel() + " -r " + oneStopVo.getFrameRate();
+			if(oneStopVo.isEncryption()) {
+				cli += " -k " + oneStopVo.getKey() + " -u " + oneStopVo.getKeyID();
+			}
+			dcpCommon.runCli(cli.split(" "),workDir);
 			
 			for(int i=0; i<oneStopVo.getSoundReel().length; i++) {
 				File file = new File(workDir+"/OneStopSound/" + oneStopVo.getSoundReel()[i].getOriginalFilename());

@@ -637,14 +637,15 @@ $('#jpegConvert').on('click',function(){
 });
 
 //MXF 모달의 암호화 활성화 및 비활성화
-$("#encryption").on('change',function(){
-	var checked = $('#encryption').prop("checked");
+$(".encryption").on('change',function(){
+	var checked = $(this).prop("checked");
+	var convertValue = $(this).val();
 	if(checked){
-		$('#key').attr('disabled',false);
-		$('#keyID').attr('disabled',false);
+		$('#key_'+convertValue).attr('disabled',false);
+		$('#keyID_'+convertValue).attr('disabled',false);
 	}else{
-		$('#key').attr('disabled',true);
-		$('#keyID').attr('disabled',true);
+		$('#key_'+convertValue).attr('disabled',true);
+		$('#keyID_'+convertValue).attr('disabled',true);
 	}
 });
 
@@ -695,7 +696,7 @@ $('#mxfConvert').on('click',function(){
 
 function mxfConvert(items){
 	var encryption;
-	if ($("#encryption").prop("checked")) {
+	if ($("#encryption_m").prop("checked")) {
 		encryption = true;
 	}else{
 		encryption = false;
@@ -714,8 +715,8 @@ function mxfConvert(items){
 			"frameRate" : $("#frameRate_m").val(),
 			"fileType" : $("#fileType_m").val(),
 			"encryption" : encryption,
-			"key" : $("#key").val(),
-			"keyID" : $("#keyID").val(),
+			"key" : $("#key_mxf").val(),
+			"keyID" : $("#keyID_mxf").val(),
 			"items" : items,
 			"path" : $("#path_m").val()
 		},
@@ -846,6 +847,13 @@ $('#oneStopConvert').on('click',function(){
 				}
 			}
 		}
+		var encryption;
+		if ($("#encryption_o").prop("checked")) {
+			encryption = true;
+		}else{
+			encryption = false;
+		}
+		
 		jQuery.ajaxSettings.traditional = true;
 	
        	$.ajax({
@@ -863,6 +871,9 @@ $('#oneStopConvert').on('click',function(){
 				"label" : $("#label_o").val(),
 				"scale" : $("#scale_o").val(),
 				"frameRate" : $("#frameRate_o").val(),
+				"encryption" : encryption,
+				"key" : $("#key_mxf").val(),
+				"keyID" : $("#keyID_mxf").val(),
 				"items" : items,
 				"path" : $("#path_o").val()
 			},

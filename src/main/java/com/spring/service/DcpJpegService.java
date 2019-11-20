@@ -31,6 +31,7 @@ public class DcpJpegService {
 		double audioBitrate = 6.9; //audioBitrate = bitDepth(24) * sampleRate(48000,96000) * channel (6.9Mbps)
 		double videoBitrate = ( jpegVo.getBandWidth() - audioBitrate ) / 8; // (MB) 
 		double perFrame = videoBitrate / jpegVo.getFrameRate() * 1000; // (KB)  => -size perFrame K
+		System.out.println("perFrame = " + perFrame);
 		
 		int tiffslength = items.size();
 		int end = 0;

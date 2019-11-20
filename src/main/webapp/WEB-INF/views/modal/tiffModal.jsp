@@ -25,7 +25,7 @@
 					<div class="select-wrapper">
 						<select id="scale_t" name="scale">
 							<option value="scope" >Scope (2048:858 / 2.39)</option>
-							<option value="flat">Flat (1988:1080 / 1.85)</option>
+							<option value="flat">Flat (1998:1080 / 1.85)</option>
 						</select>
 					</div>
 					

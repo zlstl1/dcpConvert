@@ -62,7 +62,7 @@ public class DcpConvertController {
 		historyVo.setUser_no(user.getUser_no());
 		logger.info("convertToTiff - DcpConvertController ::: Start convertToTiff / " + new Date());
 		dcpTiffService.convertTiff(tiffVo, common.getLocalDir()+email, items, path, historyVo);
-		logger.info("convertToTiff - DcpConvertController ::: end convertToTiff / " + new Date());
+		logger.info("convertToTiff - DcpConvertController ::: End convertToTiff / " + new Date());
 	}
 	
 	@ResponseBody
@@ -75,7 +75,7 @@ public class DcpConvertController {
 		historyVo.setUser_no(user.getUser_no());
 		logger.info("convertToJ2C - DcpConvertController ::: Start convertToJ2c / " + new Date());
 		dcpJpegService.convertJpeg(jpegVo, common.getLocalDir()+email, items, path, historyVo);
-		logger.info("convertToJ2C - DcpConvertController ::: end convertToJ2c / " + new Date());
+		logger.info("convertToJ2C - DcpConvertController ::: End convertToJ2c / " + new Date());
 	}
 	
 	@ResponseBody
@@ -88,7 +88,7 @@ public class DcpConvertController {
 		historyVo.setUser_no(user.getUser_no());
 		logger.info("convertToMxf - DcpConvertController ::: Start convertToMxf / " + new Date());
 		dcpMxfService.convertMxf(mxfVo, common.getLocalDir()+email, items, path, historyVo);
-		logger.info("convertToMxf - DcpConvertController ::: end convertToMxf / " + new Date());
+		logger.info("convertToMxf - DcpConvertController ::: End convertToMxf / " + new Date());
 	}
 	
 	@ResponseBody
@@ -101,7 +101,7 @@ public class DcpConvertController {
 		historyVo.setUser_no(user.getUser_no());
 		logger.info("convertToDcp - DcpConvertController ::: Start convertToDcp / " + new Date());
 		dcpDcpService.convertDcp(dcpVo, common.getLocalDir()+email, items, path, historyVo);
-		logger.info("convertToDcp - DcpConvertController ::: end convertToDcp / " + new Date());
+		logger.info("convertToDcp - DcpConvertController ::: End convertToDcp / " + new Date());
 	}
 	
 	@ResponseBody

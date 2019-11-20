@@ -170,7 +170,6 @@
 	<script src="${pageContext.request.contextPath}/resources/assets/js/util.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/assets/js/main.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/jquery/main.js"></script>
-	<%-- <jsp:include page="${pageContext.request.contextPath}/WEB-INF/views/import/indexJS.jsp" /> --%>
 	
 	<script type="text/javascript">
 	//파일 업로드 기능

@@ -66,7 +66,7 @@
 					<div class="select-wrapper">
 						<select id="scale_o" name="scale">
 							<option value="scope" >Scope (2048:858 / 2.39)</option>
-							<option value="flat">Flat (1988:1080 / 1.85)</option>
+							<option value="flat">Flat (1998:1080 / 1.85)</option>
 						</select>
 					</div>
 					
@@ -81,6 +81,25 @@
 							<option value="60">60</option>
 							<option value="96">96</option>
 						</select>
+					</div>
+					
+					<div class="mt-2 mb-2">
+						<input type="checkbox" class="encryption" id="encryption_o" name="encryption_o" value="onestop">
+						<label for="encryption_o">Enable Encryption</label>
+					</div>
+					
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+					    	<span class="input-group-text"><label for="key_onestop">Key(32 char) : </label></span>
+						</div>
+						<input type="text" id="key_onestop" name="key_onestop" aria-describedby="key_onestop" disabled="disabled" value="00000000000000000000000000000000">
+					</div>
+					
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+					    	<span class="input-group-text"><label for="keyID_onestop">Key ID(32 char) : </label></span>
+						</div>
+						<input type="text" id="keyID_onestop" name="keyID_onestop" aria-describedby="keyID_onestop" disabled="disabled" value="00000000-0000-0000-0000-000000000000">
 					</div>
 					
 					<div class="form-group">

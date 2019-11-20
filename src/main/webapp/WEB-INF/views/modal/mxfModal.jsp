@@ -54,22 +54,22 @@
 					</div>
 
 					<div class="mt-2 mb-2">
-						<input type="checkbox" id="encryption" name="encryption">
-						<label for="encryption">Enable Encryption</label>
+						<input type="checkbox" class="encryption" id="encryption_m" name="encryption_m" value="mxf">
+						<label for="encryption_m">Enable Encryption</label>
 					</div>
 					
 					<div class="input-group mb-3">
 						<div class="input-group-prepend">
-					    	<span class="input-group-text"><label for="key">Key(32 char) : </label></span>
+					    	<span class="input-group-text"><label for="key_mxf">Key(32 char) : </label></span>
 						</div>
-						<input type="text" id="key" name="key" aria-describedby="Key" disabled="disabled" value="00000000000000000000000000000000">
+						<input type="text" id="key_mxf" name="key_mxf" aria-describedby="key_mxf" disabled="disabled" value="00000000000000000000000000000000">
 					</div>
 					
 					<div class="input-group mb-3">
 						<div class="input-group-prepend">
-					    	<span class="input-group-text"><label for="keyid">Key ID(32 char) : </label></span>
+					    	<span class="input-group-text"><label for="keyID_mxf">Key ID(32 char) : </label></span>
 						</div>
-						<input type="text" id="keyID" name="keyID" aria-describedby="Key ID" disabled="disabled" value="00000000-0000-0000-0000-000000000000">
+						<input type="text" id="keyID_mxf" name="keyID_mxf" aria-describedby="keyID_mxf" disabled="disabled" value="00000000-0000-0000-0000-000000000000">
 					</div>
 					
 					<div class="form-group">
