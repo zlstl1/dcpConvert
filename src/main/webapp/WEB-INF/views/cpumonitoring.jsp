@@ -69,23 +69,21 @@
 					</div>
 					
 					<div class="col">
-									<p class="font-weight-bold text-secondary mt-3 mb-4 text-left">CLOCK
-										SPEED</p>
-									<div id="gaugeDemo3" class="gauge gauge-big ml-3">
-										<div class="gauge-arrow" data-percentage="98"
-											style="transform: rotate(0deg);"></div>
-									</div>
-									<h4 class="mt-3 text-center text-secondary" id="cpuclocktext"></h4>
-								</div>
+						<p class="font-weight-bold text-secondary mt-3 mb-4 text-left">CLOCK SPEED</p>
+							<div id="gaugeDemo3" class="gauge gauge-big ml-3">
+								<div class="gauge-arrow" data-percentage="98" style="transform: rotate(0deg);"></div>
+							</div>
+						<h4 class="mt-3 text-center text-secondary" id="cpuclocktext"></h4>
 					</div>
+				</div>
 					
-					<div class="row text-right mt-3">
-						<div class="col">
-							<a href="#"style="color: black;" onclick="detail();" id="detailtext">상세보기 <i class="fa fa-caret-down" aria-hidden="true"></i></a>
-						</div>
-	                </div>
-	
-	                <hr>
+				<div class="row text-right mt-3">
+					<div class="col">
+						<a href="#"style="color: black;" onclick="detail();" id="detailtext">상세보기 <i class="fa fa-caret-down" aria-hidden="true"></i></a>
+					</div>
+	            </div>
+	                	
+	            <hr>
 				
 				
 				
@@ -94,7 +92,7 @@
 				
 					<div class="row">
 						<div class="col text-right">
-							<a href="<%=cp%>/dcp/${user.user_id}/chart?type=CPU" style="color:gray; font-size:15px;">시간별 사용량 <i class="fa fa-arrow-right"></i></a>
+							<a href="<%=cp%>/dcp/${user.user_id}/test2?type=CPU" style="color:gray; font-size:15px;">시간별 사용량 <i class="fa fa-arrow-right"></i></a>
 						</div>
 					</div>
 					
@@ -198,7 +196,7 @@ $.ajax({
 	dataType:"json",
 	async:false,
 	data:{"start":start, "end": now, "step":15},
-	success:function(data){
+	success:function(data){		
 		dataset = data.data.result[0].values;
 		var arr = new Array();
 		

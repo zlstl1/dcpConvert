@@ -28,7 +28,7 @@
 .ui-datepicker select.ui-datepicker-month{ width:30%; font-size: 11px; }
 .ui-datepicker select.ui-datepicker-year{ width:40%; font-size: 11px; }
  */
- .line {
+.line {
 	fill: none;
     stroke: steelblue;
     stroke-width: 1.5px;
@@ -294,6 +294,11 @@ function detail(){
 		
 	var start = time(startday,starttime).getTime() / 1000;
 	var end = time(endday,endtime).getTime() / 1000;
+		
+	if(startday==""||endday==""||starttime==""||endtime==""){
+		swal.fire("error","검색범위를 입력해주세요.","error");
+		return false;
+	}
 	
 	if(start>=end){
 		swal.fire("error","잘못된 검색범위입니다.","error");
@@ -303,7 +308,7 @@ function detail(){
 	var day = end - start; 
 	
 	if(day > 86400){
-		swal.fire("error","최대 24시간 범위만 검색가능합니다.","error");
+		swal.fire("error","최대 24시간 범위 이내의 데이터만 검색가능합니다.","error");
 		return false;
 	}
 	
@@ -631,10 +636,7 @@ function average(array) {
 
 
 function chart(){
-
-	
-	
-	var margin2 = {top: 20, right: 20, bottom: 20, left: 40}
+var margin2 = {top: 20, right: 20, bottom: 20, left: 40}
     , width2 = 940 - margin2.left - margin2.right// Use the window's width
     , height2 = 250 - margin2.top - margin2.bottom; // Use the window's height
 

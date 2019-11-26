@@ -82,7 +82,7 @@
 	
 						<div class="row">
 							<div class="col text-right">
-								<a href="<%=cp%>/dcp/${user.user_id}/chart?type=STORAGE" style="color:gray; font-size:15px;">시간별 사용량 <i class="fa fa-arrow-right"></i></a>
+								<a href="<%=cp%>/dcp/${user.user_id}/test2?type=STORAGE" style="color:gray; font-size:15px;">시간별 사용량 <i class="fa fa-arrow-right"></i></a>
 							</div>
 						</div>
 						
@@ -302,8 +302,6 @@
         .style("opacity", "0");
 
     var lines = document.getElementsByClassName('line');
-    
-    console.log(lines);
 
     var mousePerLine = mouseG.selectAll('.mouse-per-line')
         .data(dataset)
@@ -364,10 +362,7 @@
                     //console.log(width/mouse[0])
                     var xDate = xScale.invert(mouse[0]),
                         bisect = d3.bisector(function(d) { return d.date; }).right;
-                    idx = bisect(d.values, xDate);
-                    
-                    console.log(lines[0]);
-                    console.log(lines[1]);
+                    idx = bisect(d.values, xDate);                  
                     
                     var beginning = 0,
                         end = lines[i].getTotalLength(),
