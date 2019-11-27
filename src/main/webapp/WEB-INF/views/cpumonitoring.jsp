@@ -63,6 +63,7 @@
 						<div class="c100 custom green" style="margin-left:30%" id="cpumem">
 							<span id="cpumemtext"></span>
 							<div class="slice">
+								<div class="bar"></div>
 								<div class="fill"></div>
 							</div>
 						</div>
@@ -248,9 +249,9 @@ $.ajax({
 
 	});
 
-    var margin = {top: 20, right: 20, bottom: 20, left: 40}
+    var margin = {top: 30, right: 20, bottom: 20, left: 40}
         , width = 940 - margin.left - margin.right// Use the window's width
-        , height = 250 - margin.top - margin.bottom; // Use the window's height
+        , height = 270 - margin.top - margin.bottom; // Use the window's height
 
     // 5. X scale will use the index of our data
     //var xScale = d3.scaleLinear()
@@ -298,8 +299,8 @@ $.ajax({
         .attr("d", line); // 11. Calls the line generato
 
     // 범례추가
-    svg.append("circle").attr("cx",840).attr("cy", 0).attr("r", 6).style("fill", "steelblue")
-    svg.append("text").attr("x", 850).attr("y", 0).text("memory").style("font-size", "15px").attr("alignment-baseline","middle")
+    //svg.append("circle").attr("cx",840).attr("cy", 0).attr("r", 6).style("fill", "steelblue")
+    //svg.append("text").attr("x", 850).attr("y", 0).text("memory").style("font-size", "15px").attr("alignment-baseline","middle")
  
     var mouseG = svg.append("g")
         .attr("class", "mouse-over-effects");
@@ -537,9 +538,9 @@ $.ajax({
 
 	});
 
-    var margin2 = {top: 20, right: 20, bottom: 20, left: 40}
+    var margin2 = {top: 30, right: 20, bottom: 20, left: 40}
         , width2 = 940 - margin2.left - margin2.right// Use the window's width
-        , height2 = 250 - margin2.top - margin2.bottom; // Use the window's height
+        , height2 = 270 - margin2.top - margin2.bottom; // Use the window's height
 
     // 5. X scale will use the index of our data
     //var xScale = d3.scaleLinear()
@@ -587,9 +588,9 @@ $.ajax({
         .attr("d", line2); // 11. Calls the line generato
 
     // 범례추가
-    svg2.append("circle").attr("cx",820).attr("cy",0).attr("r", 6).style("fill", "orange")
-    svg2.append("text").attr("x", 830).attr("y", 0).text("clock speed").style("font-size", "15px").attr("alignment-baseline","middle")
-   
+    //svg2.append("circle").attr("cx",820).attr("cy",0).attr("r", 6).style("fill", "orange")
+    //svg2.append("text").attr("x", 830).attr("y", 0).text("clock speed").style("font-size", "15px").attr("alignment-baseline","middle")
+
     var mouseG2 = svg2.append("g")
         .attr("class", "mouse-over-effects");
 

@@ -212,9 +212,9 @@ $.ajax({
 
 });
 
-var margin = {top: 20, right: 20, bottom: 20, left: 40}
+var margin = {top: 30, right: 20, bottom: 20, left: 40}
     , width = 940 - margin.left - margin.right// Use the window's width
-    , height = 250 - margin.top - margin.bottom; // Use the window's height
+    , height = 270 - margin.top - margin.bottom; // Use the window's height
 
 // The number of datapoints
 var n = dataset.length;
@@ -265,8 +265,8 @@ var path = svg.append("path")
     .attr("d", line); // 11. Calls the line generator
 
 // 범례추가
-svg.append("circle").attr("cx",840).attr("cy", 0).attr("r", 6).style("fill", "steelblue")
-svg.append("text").attr("x", 850).attr("y", 0).text("memory").style("font-size", "15px").attr("alignment-baseline","middle")
+//svg.append("circle").attr("cx",840).attr("cy", 0).attr("r", 6).style("fill", "steelblue")
+//svg.append("text").attr("x", 850).attr("y", 0).text("memory").style("font-size", "15px").attr("alignment-baseline","middle")
 
 var mouseG = svg.append("g")
         .attr("class", "mouse-over-effects");

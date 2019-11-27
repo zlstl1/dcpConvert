@@ -609,9 +609,9 @@ var xScal4 = null, yScale4 = null, path4=null, xAxis4=null, yAxis4=null, line4=n
 
 function setchart(i){
 	
-	margin = {top: 20, right: 20, bottom: 20, left: 40}
+	margin = {top: 30, right: 20, bottom: 20, left: 40}
 	    , width = 940 - margin.left - margin.right
-	    , height = 250 - margin.top - margin.bottom; 
+	    , height = 270 - margin.top - margin.bottom; 
 
 	xScale = d3.scaleTime()
 	    .domain([moment.unix(dataset[0][0][0]).toDate(), moment.unix(dataset[0][dataset[0].length-1][0]).toDate()]) // input
@@ -647,8 +647,8 @@ function setchart(i){
 	    .attr("class", "line1") // Assign a class for styling
 	    .attr("d", line); // 11. Calls the line generato
 
-	svg.append("circle").attr("cx",835).attr("cy", 0).attr("r", 6).style("fill", "steelblue")
-	svg.append("text").attr("x", 845).attr("y", 0).text("temp").style("font-size", "15px").attr("alignment-baseline","middle")
+	//svg.append("circle").attr("cx",835).attr("cy", 0).attr("r", 6).style("fill", "steelblue")
+	//svg.append("text").attr("x", 845).attr("y", 0).text("temp").style("font-size", "15px").attr("alignment-baseline","middle")
 	
 	var mouseG = svg.append("g")
         .attr("class", "mouse-over-effects");
@@ -764,9 +764,9 @@ function setchart(i){
                 });
         });  
     
-	margin2 = {top: 20, right: 20, bottom: 20, left: 40}
+	margin2 = {top: 30, right: 20, bottom: 20, left: 40}
     , width2 = 940 - margin2.left - margin2.right
-    , height2 = 250 - margin2.top - margin2.bottom;
+    , height2 = 270 - margin2.top - margin2.bottom;
 
 	xScale2 = d3.scaleTime()
 	    .domain([moment.unix(dataset[1][0][0]).toDate(), moment.unix(dataset[1][dataset[1].length-1][0]).toDate()])
@@ -802,8 +802,8 @@ function setchart(i){
 	    .attr("class", "line2") 
 	    .attr("d", line2);
 	
-	svg2.append("circle").attr("cx",815).attr("cy", 0).attr("r", 6).style("fill", "orange")
-	svg2.append("text").attr("x", 825).attr("y", 0).text("memory").style("font-size", "15px").attr("alignment-baseline","middle")
+	//svg2.append("circle").attr("cx",815).attr("cy", 0).attr("r", 6).style("fill", "orange")
+	//svg2.append("text").attr("x", 825).attr("y", 0).text("memory").style("font-size", "15px").attr("alignment-baseline","middle")
 	
 	var mouseG2 = svg2.append("g")
         .attr("class", "mouse-over-effects");
@@ -907,9 +907,9 @@ function setchart(i){
                 });
         });
     	
-	margin3 = {top: 20, right: 20, bottom: 20, left: 40}
+	margin3 = {top: 30, right: 20, bottom: 20, left: 40}
 	    , width3 = 940 - margin3.left - margin3.right
-	    , height3 = 250 - margin3.top - margin3.bottom; 
+	    , height3 = 270 - margin3.top - margin3.bottom; 
 	
 	xScale3 = d3.scaleTime()
 	    .domain([moment.unix(dataset[2][0][0]).toDate(), moment.unix(dataset[2][dataset[2].length-1][0]).toDate()]) // input
@@ -944,8 +944,8 @@ function setchart(i){
 	    .attr("class", "line3") 
 	    .attr("d", line3); 
 	    
-	svg3.append("circle").attr("cx",790).attr("cy", 0).attr("r", 6).style("fill", "green")
-	svg3.append("text").attr("x", 800).attr("y", 0).text("clock speed").style("font-size", "15px").attr("alignment-baseline","middle")
+	//svg3.append("circle").attr("cx",790).attr("cy", 0).attr("r", 6).style("fill", "green")
+	//svg3.append("text").attr("x", 800).attr("y", 0).text("clock speed").style("font-size", "15px").attr("alignment-baseline","middle")
 	
 	var mouseG3 = svg3.append("g")
         .attr("class", "mouse-over-effects");
@@ -1051,9 +1051,9 @@ function setchart(i){
                 });
         });
     
-    margin4 = {top: 20, right: 20, bottom: 20, left: 40}
+    margin4 = {top: 30, right: 20, bottom: 20, left: 40}
 	    , width4 = 940 - margin4.left - margin4.right
-	    , height4 = 250 - margin4.top - margin4.bottom; 
+	    , height4 = 270 - margin4.top - margin4.bottom; 
 	
 	xScale4 = d3.scaleTime()
 	    .domain([moment.unix(dataset[3][0][0]).toDate(), moment.unix(dataset[3][dataset[3].length-1][0]).toDate()]) // input
@@ -1088,8 +1088,8 @@ function setchart(i){
 	    .attr("class", "line4") 
 	    .attr("d", line4); 
 	    
-	svg4.append("circle").attr("cx",830).attr("cy", 0).attr("r", 6).style("fill", "gray")
-	svg4.append("text").attr("x", 840).attr("y", 0).text("power").style("font-size", "15px").attr("alignment-baseline","middle")
+	//svg4.append("circle").attr("cx",830).attr("cy", 0).attr("r", 6).style("fill", "gray")
+	//svg4.append("text").attr("x", 840).attr("y", 0).text("power").style("font-size", "15px").attr("alignment-baseline","middle")
 
     var mouseG4 = svg4.append("g")
         .attr("class", "mouse-over-effects");

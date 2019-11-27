@@ -338,6 +338,8 @@ function detail(){
 
 	d3.selectAll("#chart1 > *").remove();
 	d3.selectAll("#chart2 > *").remove();
+	d3.selectAll("#chart3 > *").remove();
+	d3.selectAll("#chart4 > *").remove();
 
 	if(type=="CPU"){
 		$.ajax({
@@ -569,11 +571,11 @@ function detail(){
 
 
 function chart(){	
-	var margin = {top: 20, right: 20, bottom: 110, left: 40},
+	var margin = {top: 30, right: 20, bottom: 110, left: 40},
 	margin2 = {top: 280, right: 20, bottom: 30, left: 40},
     width = 940 - margin.left - margin.right,
-    height = 350 - margin.top - margin.bottom,
-    height2 = 350 - margin2.top - margin2.bottom;
+    height = 370 - margin.top - margin.bottom,
+    height2 = 370 - margin2.top - margin2.bottom;
 
 	var svg = d3.select("#chart1")
 	.attr("width", width + margin.left + margin.right + 60)
@@ -627,7 +629,7 @@ function chart(){
 	var context = svg.append("g")
 	    .attr("class", "context")
 	    .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
-	
+	<%-- 
 	// 범례추가
 	svg.append("circle").attr("cx",860).attr("cy", 10).attr("r", 6).style("fill", "steelblue")
 
@@ -638,7 +640,7 @@ function chart(){
 	}else{
 		svg.append("text").attr("x", 870).attr("y", 10).text("temp").style("font-size", "15px").attr("alignment-baseline","middle")
 	}
-	
+	 --%>
 	d3.json(dataset , function (json) {
 		
 		x.domain([moment.unix(dataset[0][0]).toDate(), moment.unix(dataset[dataset.length-1][0]).toDate()]);
@@ -942,11 +944,11 @@ function chart(){
 		context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
 	}
 	
-	var margin3 = {top: 20, right: 20, bottom: 110, left: 40},
+	var margin3 = {top: 30, right: 20, bottom: 110, left: 40},
 		margin4 = {top: 280, right: 20, bottom: 30, left: 40},
 	    width3 = 940 - margin3.left - margin3.right,
-	    height3 = 350 - margin3.top - margin3.bottom,
-	    height4 = 350 - margin4.top - margin4.bottom;
+	    height3 = 370 - margin3.top - margin3.bottom,
+	    height4 = 370 - margin4.top - margin4.bottom;
 
 	var svg2 = d3.select("#chart2")
 		.attr("width", width3 + margin3.left + margin3.right + 60)
@@ -1000,7 +1002,7 @@ function chart(){
 	var context2 = svg2.append("g")
 	    .attr("class", "context2")
 	    .attr("transform", "translate(" + margin4.left + "," + margin4.top + ")");
-	
+	<%-- 
 	// 범례추가
 	svg2.append("circle").attr("cx",860).attr("cy", 10).attr("r", 6).style("fill", "orange")
 
@@ -1009,7 +1011,7 @@ function chart(){
 	}else {
 		svg2.append("text").attr("x", 870).attr("y", 10).text("memory").style("font-size", "15px").attr("alignment-baseline","middle")
 	}
-	
+	 --%>
 	d3.json(dataset2 , function (json) {
 		
 		x3.domain([moment.unix(dataset2[0][0]).toDate(), moment.unix(dataset2[dataset2.length-1][0]).toDate()]);
@@ -1242,11 +1244,11 @@ function chart(){
 		context2.select(".brush2").call(brush2.move, x3.range().map(t.invertX, t));
 	}
 	
-	var margin5 = {top: 20, right: 20, bottom: 110, left: 40},
+	var margin5 = {top: 30, right: 20, bottom: 110, left: 40},
 		margin6 = {top: 280, right: 20, bottom: 30, left: 40},
 	    width5 = 940 - margin5.left - margin5.right,
-	    height5 = 350 - margin5.top - margin5.bottom,
-	    height6 = 350 - margin6.top - margin6.bottom;
+	    height5 = 370 - margin5.top - margin5.bottom,
+	    height6 = 370 - margin6.top - margin6.bottom;
 	
 	var svg3 = d3.select("#chart3")
 		.attr("width", width5 + margin5.left + margin5.right + 60)
@@ -1300,11 +1302,11 @@ function chart(){
 	var context3 = svg3.append("g")
 	    .attr("class", "context3")
 	    .attr("transform", "translate(" + margin6.left + "," + margin6.top + ")");
-	
+	/* 
 	// 범례추가
 	svg3.append("circle").attr("cx",860).attr("cy", 10).attr("r", 6).style("fill", "green")
 	svg3.append("text").attr("x", 870).attr("y", 10).text("clock speed").style("font-size", "15px").attr("alignment-baseline","middle")
-	
+	 */
 	d3.json(dataset3 , function (json) {
 		
 		x5.domain([moment.unix(dataset3[0][0]).toDate(), moment.unix(dataset3[dataset3.length-1][0]).toDate()]);
@@ -1506,11 +1508,11 @@ function chart(){
 		context3.select(".brush3").call(brush3.move, x5.range().map(t.invertX, t));
 	}
 	
-	var margin7 = {top: 20, right: 20, bottom: 110, left: 40},
+	var margin7 = {top: 30, right: 20, bottom: 110, left: 40},
 		margin8 = {top: 280, right: 20, bottom: 30, left: 40},
 	    width7 = 940 - margin7.left - margin7.right,
-	    height7 = 350 - margin7.top - margin7.bottom,
-	    height8 = 350 - margin8.top - margin8.bottom;
+	    height7 = 370 - margin7.top - margin7.bottom,
+	    height8 = 370 - margin8.top - margin8.bottom;
 	
 	var svg4 = d3.select("#chart4")
 		.attr("width", width7 + margin7.left + margin7.right + 60)
@@ -1564,11 +1566,11 @@ function chart(){
 	var context4 = svg4.append("g")
 	    .attr("class", "context4")
 	    .attr("transform", "translate(" + margin8.left + "," + margin8.top + ")");
-	
+	/* 
 	// 범례추가
 	svg4.append("circle").attr("cx",860).attr("cy", 10).attr("r", 6).style("fill", "gray")
 	svg4.append("text").attr("x", 870).attr("y", 10).text("power").style("font-size", "15px").attr("alignment-baseline","middle")
-	
+	 */
 	d3.json(dataset4 , function (json) {
 		
 		x7.domain([moment.unix(dataset4[0][0]).toDate(), moment.unix(dataset4[dataset4.length-1][0]).toDate()]);
