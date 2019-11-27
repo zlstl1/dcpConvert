@@ -441,18 +441,17 @@ public class DcpAdminController {
 	@RequestMapping(value = "/dcp/{email}/chart", method = RequestMethod.GET)
 	public String chart(Model model) {
 
-		return "/chart";
-	}
-	
-	@RequestMapping(value = "/dcp/{email}/test", method = RequestMethod.GET)
-	public String test(Model model) {
-
-		return "/test";
-	}
-	
-	@RequestMapping(value = "/dcp/{email}/test2", method = RequestMethod.GET)
-	public String test2(Model model) {
-
 		return "/test2";
 	}
+	/*
+	 * @RequestMapping(value = "/dcp/{email}/test", method = RequestMethod.GET)
+	 * public String test(Model model) {
+	 * 
+	 * return "/test"; }
+	 * 
+	 * @RequestMapping(value = "/dcp/{email}/test2", method = RequestMethod.GET)
+	 * public String test2(Model model) {
+	 * 
+	 * return "/test2"; }
+	 */
 }
