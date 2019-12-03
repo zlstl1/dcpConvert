@@ -752,6 +752,7 @@ function chart(){
 			
 			d3.selectAll(".mouse-per-line")
 				.attr("transform", function(d, i) {
+										
 					var xDate = x.invert(mouse[0]),
 						bisect = d3.bisector(function(d) { return d.date; }).right;
 						idx = bisect(d.values, xDate);
@@ -776,10 +777,16 @@ function chart(){
 						.html(getTime(x.invert(pos.x))+", ")
 						.attr("class", "tooltip-date");
 					
-					d3.select(this).select('.text2')
-						.html(y.invert(pos.y).toFixed(2))
-						.attr("class", "text2");
-						 
+					if(type.indexOf("GPU")!=-1){
+						d3.select(this).select('.text2')
+							.html(Math.round(y.invert(pos.y)))
+							.attr("class", "text2");
+					}else{
+						d3.select(this).select('.text2')
+							.html(y.invert(pos.y).toFixed(2))
+							.attr("class", "text2");
+					}
+					
 		           return "translate(" + mouse[0] + "," + pos.y +")";
 		   });
 		});  
@@ -812,9 +819,9 @@ function chart(){
 					min = Math.min.apply(null, arr);
 					avg = average(arr);
 					
-			        $('#max1').text(Number(max).toFixed(2)+" GB");
-			        $('#min1').text(Number(min).toFixed(2)+" GB");
-			        $('#avg1').text(Number(avg).toFixed(2)+" GB");
+			        $('#max1').text(Number(max).toFixed(2)+" %");
+			        $('#min1').text(Number(min).toFixed(2)+" %");
+			        $('#avg1').text(Number(avg).toFixed(2)+" %");
 			        					
 					},
 			        error: function(err){
@@ -944,832 +951,844 @@ function chart(){
 		context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
 	}
 	
-	var margin3 = {top: 30, right: 20, bottom: 110, left: 40},
-		margin4 = {top: 280, right: 20, bottom: 30, left: 40},
-	    width3 = 940 - margin3.left - margin3.right,
-	    height3 = 370 - margin3.top - margin3.bottom,
-	    height4 = 370 - margin4.top - margin4.bottom;
-
-	var svg2 = d3.select("#chart2")
-		.attr("width", width3 + margin3.left + margin3.right + 60)
-		.attr("height", height3 + margin3.top + margin3.bottom)
-		.append("g")
-		
-	var x3 = d3.scaleTime().range([0, width3]),
-	    x4 = d3.scaleTime().range([0, width3]),
-	    y3 = d3.scaleLinear().range([height3, 0]),
-	    y4 = d3.scaleLinear().range([height4, 0]);
-
-	var xAxis3 = d3.axisBottom(x3),
-	    xAxis4 = d3.axisBottom(x4),
-	    yAxis3 = d3.axisLeft(y3);
-
-	var brush2 = d3.brushX()
-	    .extent([[0, 0], [width3, height4]])
-	    .on("brush end", brushed2);
-
-	var zoom2 = d3.zoom()
-	    .scaleExtent([1, Infinity])
-	    .translateExtent([[0, 0], [width3, height3]])
-	    .extent([[0, 0], [width3, height3]])
-	    .on("zoom", zoomed2);
+	if(type!="RAM"&&type!="STORAGE"){
 	
-	var line3 = d3.line()
-	    .x(function(d, i) { return x3(moment.unix(d[0]).toDate()); }) // set the x values for the line generator
-	    .y(function(d) { return y3(d[1]); }) // set the y values for the line generator
-
-	var line4 = d3.line()
-		.x(function(d, i) { return x4(moment.unix(d[0]).toDate()); }) // set the x values for the line generator
-	    .y(function(d) { return y4(d[1]); }) // set the y values for the line generator
-
-	var clip2 = svg2.append("defs").append("svg2:clipPath")
-	    .attr("id", "clip2")
-	    .append("svg:rect")
-	    .attr("width", width3)
-	    .attr("height", height3)
-	    .attr("x", 0)
-	    .attr("y", 0); 
+		var margin3 = {top: 30, right: 20, bottom: 110, left: 40},
+			margin4 = {top: 280, right: 20, bottom: 30, left: 40},
+		    width3 = 940 - margin3.left - margin3.right,
+		    height3 = 370 - margin3.top - margin3.bottom,
+		    height4 = 370 - margin4.top - margin4.bottom;
 	
-	var Line_chart2 = svg2.append("g")
-	    .attr("class", "focus2")
-	    .attr("transform", "translate(" + margin3.left + "," + margin3.top + ")")
-	    .attr("clip-path", "url(#clip2)");
-	
-	var focus2 = svg2.append("g")
-	    .attr("class", "focus2")
-	    .attr("transform", "translate(" + margin3.left + "," + margin3.top + ")");
-	
-	var context2 = svg2.append("g")
-	    .attr("class", "context2")
-	    .attr("transform", "translate(" + margin4.left + "," + margin4.top + ")");
-	<%-- 
-	// 범례추가
-	svg2.append("circle").attr("cx",860).attr("cy", 10).attr("r", 6).style("fill", "orange")
-
-	if("<%=type%>"=="CPU"){
-		svg2.append("text").attr("x", 870).attr("y", 10).text("clock speed").style("font-size", "15px").attr("alignment-baseline","middle")
-	}else {
-		svg2.append("text").attr("x", 870).attr("y", 10).text("memory").style("font-size", "15px").attr("alignment-baseline","middle")
-	}
-	 --%>
-	d3.json(dataset2 , function (json) {
-		
-		x3.domain([moment.unix(dataset2[0][0]).toDate(), moment.unix(dataset2[dataset2.length-1][0]).toDate()]);
-		y3.domain([Number(min2)-1, Number(max2)+1]);
-		x4.domain(x3.domain());
-		y4.domain(y3.domain());
-		
-		focus2.append("g")
-			.attr("class", "axis axis--x")
-	        .attr("transform", "translate(0," + height3 + ")")
-	        .call(xAxis3);
-	
-	    focus2.append("g")
-	        .attr("class", "axis axis--y")
-	        .call(yAxis3);
-	
-	    Line_chart2.append("path")
-	        .datum(dataset2)
-	        .attr("class", "line3")
-	        .attr("d", line3);
-	
-	    context2.append("path")
-	        .datum(dataset2)
-	        .attr("class", "line4")
-	        .attr("d", line4);
-	    
-	    context2.append("g")
-	    	.attr("class", "axis axis--x")
-	      	.attr("transform", "translate(0," + height4 + ")")
-	      	.call(xAxis4);
-	
-	    context2.append("g")
-	    	.attr("class", "brush")
-	      	.call(brush2)
-	      	.call(brush2.move, x3.range());
-	    
-	    svg2.append("rect")
-	    	.attr("class", "zoom")
-	      	.attr("width", width3)
-	      	.attr("height", height3)
-	     	.attr("transform", "translate(" + margin3.left + "," + margin3.top + ")")
-	      	.call(zoom2);
-	
-	    var mouseG2 = svg2.append("g")
-			.attr("class", "mouse-over-effects")
-			.attr("transform", "translate(" + margin3.left + "," + margin3.top + ")");
-		
-		mouseG2.append("path") // this is the black vertical line to follow mouse
-			.attr("class", "mouse-line2")
-		  	.style("stroke", "black")
-		  	.style("stroke-width", "1px")
-		  	.style("opacity", "0");
-		
-		var lines2 = document.getElementsByClassName('line3');
-		
-		var mousePerLine2 = mouseG2.selectAll('.mouse-per-line2')
-			.data(dataset2)
-			.enter()
-		  	.append("g")
-		  	.attr("class", "mouse-per-line2");
-		
-		mousePerLine2.append("circle")
-			.attr("r", 5)
-			.style("stroke", "orange")
-		  	.style("fill", "none")
-		  	.style("stroke-width", "1px")
-		  	.style("opacity", "0");
-		
-		mousePerLine2.append("text")
-			.attr("transform", "translate(10,-20)");
-		
-		mousePerLine2.append("text")
-			.attr("transform", "translate(10,-5)")
-			.attr("class", "text4");
-		
-		mouseG2.append('svg:rect') // append a rect to catch mouse movements on canvas
-			.attr('width', width3) // can't catch mouse events on a g element
-			.attr('height', height3)
-			.attr('fill', 'none')
-			.attr('pointer-events', 'all')
-			.on('mouseout', function() { // on mouse out hide line, circles and text
-			d3.select(".mouse-line2")
-				.style("opacity", "0");
-			d3.select(".mouse-per-line2 circle")
-				.style("opacity", "0");
-			d3.select(".mouse-per-line2 text")
-				.style("opacity", "0");
-			d3.select(".text4")
-		  		.style("opacity", "0");
-		  })
-		  .on('mouseover', function() { // on mouse in show line, circles and text
-			d3.select(".mouse-line2")
-				.style("opacity", "1");
-			d3.select(".mouse-per-line2 circle")
-				.style("opacity", "1");
-			d3.select(".mouse-per-line2 text")
-				.style("opacity", "1");
-			d3.select(".text4")
-				.style("opacity", "1");
-		  })
-		  .on('mousemove', function() { // mouse moving over canvas
-			var mouse = d3.mouse(this);
-			d3.select(".mouse-line2")
-	          .attr("d", function() {
-	              var d = "M" + mouse[0] + "," + height3;
-	              d += " " + mouse[0] + "," + 0;
-	              return d;
-	        });
+		var svg2 = d3.select("#chart2")
+			.attr("width", width3 + margin3.left + margin3.right + 60)
+			.attr("height", height3 + margin3.top + margin3.bottom)
+			.append("g")
 			
-			d3.selectAll(".mouse-per-line2")
-				.attr("transform", function(d, i) {
-					var xDate = x.invert(mouse[0]),
-						bisect = d3.bisector(function(d) { return d.date; }).right;
-						idx = bisect(d.values, xDate);
-				
-					var beginning = 0,
-						end = lines2[i].getTotalLength(),
-		                target = null;
-				
-					while (true){
-						target = Math.floor((beginning + end) / 2);
-						pos = lines2[i].getPointAtLength(target);
-						
-						if ((target === end || target === beginning) && pos.x !== mouse[0]) {
-		                      break;
-		                }
-						if (pos.x > mouse[0])      end = target;
-						else if (pos.x < mouse[0]) beginning = target;
-						else break; //position found
-		           	}
-					
-					d3.select(this).select('text')
-						.html(getTime(x3.invert(pos.x))+", ")
-						.attr("class", "tooltip-date");
-					
-					d3.select(this).select('.text4')
-						.html(y3.invert(pos.y).toFixed(2))
-						.attr("class", "text4");
-											 
-		           return "translate(" + mouse[0] + "," + pos.y +")";
-				});
-	   });
-	});    
-
-	function brushed2() {
-		if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
-		var s = d3.event.selection || x4.range();
-
-		var zoomstart = s.map(x4.invert, x4)[0].getTime()/1000;
-		var zoomend = s.map(x4.invert, x4)[1].getTime()/1000;
+		var x3 = d3.scaleTime().range([0, width3]),
+		    x4 = d3.scaleTime().range([0, width3]),
+		    y3 = d3.scaleLinear().range([height3, 0]),
+		    y4 = d3.scaleLinear().range([height4, 0]);
+	
+		var xAxis3 = d3.axisBottom(x3),
+		    xAxis4 = d3.axisBottom(x4),
+		    yAxis3 = d3.axisLeft(y3);
+	
+		var brush2 = d3.brushX()
+		    .extent([[0, 0], [width3, height4]])
+		    .on("brush end", brushed2);
+	
+		var zoom2 = d3.zoom()
+		    .scaleExtent([1, Infinity])
+		    .translateExtent([[0, 0], [width3, height3]])
+		    .extent([[0, 0], [width3, height3]])
+		    .on("zoom", zoomed2);
 		
+		var line3 = d3.line()
+		    .x(function(d, i) { return x3(moment.unix(d[0]).toDate()); }) // set the x values for the line generator
+		    .y(function(d) { return y3(d[1]); }) // set the y values for the line generator
+	
+		var line4 = d3.line()
+			.x(function(d, i) { return x4(moment.unix(d[0]).toDate()); }) // set the x values for the line generator
+		    .y(function(d) { return y4(d[1]); }) // set the y values for the line generator
+	
+		var clip2 = svg2.append("defs").append("svg2:clipPath")
+		    .attr("id", "clip2")
+		    .append("svg:rect")
+		    .attr("width", width3)
+		    .attr("height", height3)
+		    .attr("x", 0)
+		    .attr("y", 0); 
+		
+		var Line_chart2 = svg2.append("g")
+		    .attr("class", "focus2")
+		    .attr("transform", "translate(" + margin3.left + "," + margin3.top + ")")
+		    .attr("clip-path", "url(#clip2)");
+		
+		var focus2 = svg2.append("g")
+		    .attr("class", "focus2")
+		    .attr("transform", "translate(" + margin3.left + "," + margin3.top + ")");
+		
+		var context2 = svg2.append("g")
+		    .attr("class", "context2")
+		    .attr("transform", "translate(" + margin4.left + "," + margin4.top + ")");
+		<%-- 
+		// 범례추가
+		svg2.append("circle").attr("cx",860).attr("cy", 10).attr("r", 6).style("fill", "orange")
+	
 		if("<%=type%>"=="CPU"){
-			$.ajax({
-		        url:"<%=cp%>/get/cpuClock",
-		        type:"POST",
-		        dataType:"json",
-		        async:false,
-		        data:{"start":zoomstart, "end": zoomend, "step":15},
-		        success:function(data){
-		            dataset2 = data.data.result[0].values;
-		            
-		            var arr = new Array();
-		            
-		            for(var i = 0 ; i < dataset2.length ; i++){
-		                data.data.result[0].values[i][1] = data.data.result[0].values[i][1]/Math.pow(10,9).toFixed(1);
-		                arr.push(data.data.result[0].values[i][1]);
-		            }
-		            
-		            max2 = Math.max.apply(null, arr);
-		            min2 = Math.min.apply(null, arr);
-					avg2 = average(arr);
+			svg2.append("text").attr("x", 870).attr("y", 10).text("clock speed").style("font-size", "15px").attr("alignment-baseline","middle")
+		}else {
+			svg2.append("text").attr("x", 870).attr("y", 10).text("memory").style("font-size", "15px").attr("alignment-baseline","middle")
+		}
+		 --%>
+		d3.json(dataset2 , function (json) {
+			
+			x3.domain([moment.unix(dataset2[0][0]).toDate(), moment.unix(dataset2[dataset2.length-1][0]).toDate()]);
+			y3.domain([Number(min2)-1, Number(max2)+1]);
+			x4.domain(x3.domain());
+			y4.domain(y3.domain());
+			
+			focus2.append("g")
+				.attr("class", "axis axis--x")
+		        .attr("transform", "translate(0," + height3 + ")")
+		        .call(xAxis3);
+		
+		    focus2.append("g")
+		        .attr("class", "axis axis--y")
+		        .call(yAxis3);
+		
+		    Line_chart2.append("path")
+		        .datum(dataset2)
+		        .attr("class", "line3")
+		        .attr("d", line3);
+		
+		    context2.append("path")
+		        .datum(dataset2)
+		        .attr("class", "line4")
+		        .attr("d", line4);
+		    
+		    context2.append("g")
+		    	.attr("class", "axis axis--x")
+		      	.attr("transform", "translate(0," + height4 + ")")
+		      	.call(xAxis4);
+		
+		    context2.append("g")
+		    	.attr("class", "brush")
+		      	.call(brush2)
+		      	.call(brush2.move, x3.range());
+		    
+		    svg2.append("rect")
+		    	.attr("class", "zoom")
+		      	.attr("width", width3)
+		      	.attr("height", height3)
+		     	.attr("transform", "translate(" + margin3.left + "," + margin3.top + ")")
+		      	.call(zoom2);
+		
+		    var mouseG2 = svg2.append("g")
+				.attr("class", "mouse-over-effects")
+				.attr("transform", "translate(" + margin3.left + "," + margin3.top + ")");
+			
+			mouseG2.append("path") // this is the black vertical line to follow mouse
+				.attr("class", "mouse-line2")
+			  	.style("stroke", "black")
+			  	.style("stroke-width", "1px")
+			  	.style("opacity", "0");
+			
+			var lines2 = document.getElementsByClassName('line3');
+			
+			var mousePerLine2 = mouseG2.selectAll('.mouse-per-line2')
+				.data(dataset2)
+				.enter()
+			  	.append("g")
+			  	.attr("class", "mouse-per-line2");
+			
+			mousePerLine2.append("circle")
+				.attr("r", 5)
+				.style("stroke", "orange")
+			  	.style("fill", "none")
+			  	.style("stroke-width", "1px")
+			  	.style("opacity", "0");
+			
+			mousePerLine2.append("text")
+				.attr("transform", "translate(10,-20)");
+			
+			mousePerLine2.append("text")
+				.attr("transform", "translate(10,-5)")
+				.attr("class", "text4");
+			
+			mouseG2.append('svg:rect') // append a rect to catch mouse movements on canvas
+				.attr('width', width3) // can't catch mouse events on a g element
+				.attr('height', height3)
+				.attr('fill', 'none')
+				.attr('pointer-events', 'all')
+				.on('mouseout', function() { // on mouse out hide line, circles and text
+				d3.select(".mouse-line2")
+					.style("opacity", "0");
+				d3.select(".mouse-per-line2 circle")
+					.style("opacity", "0");
+				d3.select(".mouse-per-line2 text")
+					.style("opacity", "0");
+				d3.select(".text4")
+			  		.style("opacity", "0");
+			  })
+			  .on('mouseover', function() { // on mouse in show line, circles and text
+				d3.select(".mouse-line2")
+					.style("opacity", "1");
+				d3.select(".mouse-per-line2 circle")
+					.style("opacity", "1");
+				d3.select(".mouse-per-line2 text")
+					.style("opacity", "1");
+				d3.select(".text4")
+					.style("opacity", "1");
+			  })
+			  .on('mousemove', function() { // mouse moving over canvas
+				var mouse = d3.mouse(this);
+				d3.select(".mouse-line2")
+		          .attr("d", function() {
+		              var d = "M" + mouse[0] + "," + height3;
+		              d += " " + mouse[0] + "," + 0;
+		              return d;
+		        });
+				
+				d3.selectAll(".mouse-per-line2")
+					.attr("transform", function(d, i) {
+						var xDate = x.invert(mouse[0]),
+							bisect = d3.bisector(function(d) { return d.date; }).right;
+							idx = bisect(d.values, xDate);
 					
-			        $('#max2').text(Number(max2).toFixed(2)+" GB");
-			        $('#min2').text(Number(min2).toFixed(2)+" GB");
-			        $('#avg2').text(Number(avg2).toFixed(2)+" GB");
-		        },
-		        error: function(err){
-		            console.log(err);
-		        }
-			});
-		}else{
+						var beginning = 0,
+							end = lines2[i].getTotalLength(),
+			                target = null;
+					
+						while (true){
+							target = Math.floor((beginning + end) / 2);
+							pos = lines2[i].getPointAtLength(target);
+							
+							if ((target === end || target === beginning) && pos.x !== mouse[0]) {
+			                      break;
+			                }
+							if (pos.x > mouse[0])      end = target;
+							else if (pos.x < mouse[0]) beginning = target;
+							else break; //position found
+			           	}
+						
+						d3.select(this).select('text')
+							.html(getTime(x3.invert(pos.x))+", ")
+							.attr("class", "tooltip-date");
+						
+						if(type.indexOf("GPU")!=-1){
+							d3.select(this).select('.text4')
+							.html(Math.round(y3.invert(pos.y)))
+							.attr("class", "text4");
+						}else{
+							d3.select(this).select('.text4')
+							.html(y3.invert(pos.y).toFixed(2))
+							.attr("class", "text4");
+						}
+								 
+			           return "translate(" + mouse[0] + "," + pos.y +")";
+					});
+		   });
+		});    
+	
+		function brushed2() {
+			if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+			var s = d3.event.selection || x4.range();
+	
+			var zoomstart = s.map(x4.invert, x4)[0].getTime()/1000;
+			var zoomend = s.map(x4.invert, x4)[1].getTime()/1000;
+			
+			if("<%=type%>"=="CPU"){
+				$.ajax({
+			        url:"<%=cp%>/get/cpuClock",
+			        type:"POST",
+			        dataType:"json",
+			        async:false,
+			        data:{"start":zoomstart, "end": zoomend, "step":15},
+			        success:function(data){
+			            dataset2 = data.data.result[0].values;
+			            
+			            var arr = new Array();
+			            
+			            for(var i = 0 ; i < dataset2.length ; i++){
+			                data.data.result[0].values[i][1] = data.data.result[0].values[i][1]/Math.pow(10,9).toFixed(1);
+			                arr.push(data.data.result[0].values[i][1]);
+			            }
+			            
+			            max2 = Math.max.apply(null, arr);
+			            min2 = Math.min.apply(null, arr);
+						avg2 = average(arr);
+						
+				        $('#max2').text(Number(max2).toFixed(1)+" Ghz");
+				        $('#min2').text(Number(min2).toFixed(1)+" Ghz");
+				        $('#avg2').text(Number(avg2).toFixed(1)+" Ghz");
+			        },
+			        error: function(err){
+			            console.log(err);
+			        }
+				});
+			}else{
+				var str = "<%=type%>";
+				var lastChar = str.substr(str.length - 1); 
+				
+				var i = lastChar-1;
+				
+				$.ajax({
+				    url:"<%=cp%>/get/gpu",
+				    type:"POST",
+				    dataType:"json",
+				    async:false,
+				    data:{"start":zoomstart, "end": zoomend, "step":15},
+				    success:function(data){
+				    	dataset2 = data.data.result[i].values;
+	
+				        var arr = new Array();
+	
+				        for(var j = 0 ; j < dataset2.length ; j++){
+				            arr.push(data.data.result[i].values[j][1]);
+				        }
+	
+				        max2 = Math.max.apply(null, arr);
+			            min2 = Math.min.apply(null, arr);
+						avg2 = average(arr);
+				        
+				        $('#max2').text(max2+" %");
+				        $('#min2').text(min2+" %");
+						$('#avg2').text(Math.round(avg2)+" %");
+				    },
+				    error: function(err){
+				        console.log(err);
+				    }
+	
+				});
+			}
+			x3.domain(s.map(x4.invert, x4));
+			Line_chart2.select(".line3").attr("d", line3);
+			focus2.select(".axis--x").call(xAxis3);
+			svg2.select(".zoom2").call(zoom2.transform, d3.zoomIdentity
+					.scale(width3 / (s[1] - s[0]))
+					.translate(-s[0], 0));
+		}
+	
+		function zoomed2() {
+			if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
+			var t = d3.event.transform;
+			x3.domain(t.rescaleX(x4).domain());
+			Line_chart2.select(".line3").attr("d", line3);
+			focus2.select(".axis--x").call(xAxis3);
+			context2.select(".brush2").call(brush2.move, x3.range().map(t.invertX, t));
+		}	
+	}
+	
+
+	if(type!="RAM"&&type!="STORAGE"&&type!="CPU"){
+		var margin5 = {top: 30, right: 20, bottom: 110, left: 40},
+			margin6 = {top: 280, right: 20, bottom: 30, left: 40},
+		    width5 = 940 - margin5.left - margin5.right,
+		    height5 = 370 - margin5.top - margin5.bottom,
+		    height6 = 370 - margin6.top - margin6.bottom;
+		
+		var svg3 = d3.select("#chart3")
+			.attr("width", width5 + margin5.left + margin5.right + 60)
+			.attr("height", height5 + margin5.top + margin5.bottom)
+			.append("g")
+			
+		var x5 = d3.scaleTime().range([0, width5]),
+		    x6 = d3.scaleTime().range([0, width5]),
+		    y5 = d3.scaleLinear().range([height5, 0]),
+		    y6 = d3.scaleLinear().range([height6, 0]);
+		
+		var xAxis5 = d3.axisBottom(x5),
+		    xAxis6 = d3.axisBottom(x6),
+		    yAxis5 = d3.axisLeft(y5);
+		
+		var brush3 = d3.brushX()
+		    .extent([[0, 0], [width5, height6]])
+		    .on("brush end", brushed3);
+		
+		var zoom3 = d3.zoom()
+		    .scaleExtent([1, Infinity])
+		    .translateExtent([[0, 0], [width5, height5]])
+		    .extent([[0, 0], [width5, height5]])
+		    .on("zoom", zoomed3);
+		
+		var line5 = d3.line()
+		    .x(function(d, i) { return x5(moment.unix(d[0]).toDate()); }) // set the x values for the line generator
+		    .y(function(d) { return y5(d[1]); }) // set the y values for the line generator
+		
+		var line6 = d3.line()
+			.x(function(d, i) { return x6(moment.unix(d[0]).toDate()); }) // set the x values for the line generator
+		    .y(function(d) { return y6(d[1]); }) // set the y values for the line generator
+		
+		var clip3 = svg3.append("defs").append("svg3:clipPath")
+		    .attr("id", "clip3")
+		    .append("svg:rect")
+		    .attr("width", width5)
+		    .attr("height", height5)
+		    .attr("x", 0)
+		    .attr("y", 0); 
+		
+		var Line_chart3 = svg3.append("g")
+		    .attr("class", "focus3")
+		    .attr("transform", "translate(" + margin5.left + "," + margin5.top + ")")
+		    .attr("clip-path", "url(#clip3)");
+		
+		var focus3 = svg3.append("g")
+		    .attr("class", "focus3")
+		    .attr("transform", "translate(" + margin5.left + "," + margin5.top + ")");
+		
+		var context3 = svg3.append("g")
+		    .attr("class", "context3")
+		    .attr("transform", "translate(" + margin6.left + "," + margin6.top + ")");
+		/* 
+		// 범례추가
+		svg3.append("circle").attr("cx",860).attr("cy", 10).attr("r", 6).style("fill", "green")
+		svg3.append("text").attr("x", 870).attr("y", 10).text("clock speed").style("font-size", "15px").attr("alignment-baseline","middle")
+		 */
+		d3.json(dataset3 , function (json) {
+			
+			x5.domain([moment.unix(dataset3[0][0]).toDate(), moment.unix(dataset3[dataset3.length-1][0]).toDate()]);
+			y5.domain([Number(min3)-1, Number(max3)+1]);
+			x6.domain(x5.domain());
+			y6.domain(y5.domain());
+			
+			focus3.append("g")
+				.attr("class", "axis axis--x")
+		        .attr("transform", "translate(0," + height5 + ")")
+		        .call(xAxis5);
+		
+		    focus3.append("g")
+		        .attr("class", "axis axis--y")
+		        .call(yAxis5);
+		
+		    Line_chart3.append("path")
+		        .datum(dataset3)
+		        .attr("class", "line5")
+		        .attr("d", line5);
+		
+		    context3.append("path")
+		        .datum(dataset3)
+		        .attr("class", "line6")
+		        .attr("d", line6);
+		    
+		    context3.append("g")
+		    	.attr("class", "axis axis--x")
+		      	.attr("transform", "translate(0," + height6 + ")")
+		      	.call(xAxis6);
+		
+		    context3.append("g")
+		    	.attr("class", "brush")
+		      	.call(brush3)
+		      	.call(brush3.move, x5.range());
+		    
+		    svg3.append("rect")
+		    	.attr("class", "zoom")
+		      	.attr("width", width5)
+		      	.attr("height", height5)
+		     	.attr("transform", "translate(" + margin5.left + "," + margin5.top + ")")
+		      	.call(zoom3);
+		
+		    var mouseG3 = svg3.append("g")
+				.attr("class", "mouse-over-effects")
+				.attr("transform", "translate(" + margin5.left + "," + margin5.top + ")");
+			
+			mouseG3.append("path") // this is the black vertical line to follow mouse
+				.attr("class", "mouse-line3")
+			  	.style("stroke", "black")
+			  	.style("stroke-width", "1px")
+			  	.style("opacity", "0");
+			
+			var lines3 = document.getElementsByClassName('line5');
+			
+			var mousePerLine3 = mouseG3.selectAll('.mouse-per-line3')
+				.data(dataset3)
+				.enter()
+			  	.append("g")
+			  	.attr("class", "mouse-per-line3");
+			
+			mousePerLine3.append("circle")
+				.attr("r", 5)
+				.style("stroke", "green")
+			  	.style("fill", "none")
+			  	.style("stroke-width", "1px")
+			  	.style("opacity", "0");
+			
+			mousePerLine3.append("text")
+				.attr("transform", "translate(10,-20)");
+			
+			mousePerLine3.append("text")
+				.attr("transform", "translate(10,-5)")
+				.attr("class", "text6");
+			
+			mouseG3.append('svg:rect') // append a rect to catch mouse movements on canvas
+				.attr('width', width5) // can't catch mouse events on a g element
+				.attr('height', height5)
+				.attr('fill', 'none')
+				.attr('pointer-events', 'all')
+				.on('mouseout', function() { // on mouse out hide line, circles and text
+				d3.select(".mouse-line3")
+					.style("opacity", "0");
+				d3.select(".mouse-per-line3 circle")
+					.style("opacity", "0");
+				d3.select(".mouse-per-line3 text")
+					.style("opacity", "0");
+				d3.select(".text6")
+			  		.style("opacity", "0");
+			  })
+			  .on('mouseover', function() { // on mouse in show line, circles and text
+				d3.select(".mouse-line3")
+					.style("opacity", "1");
+				d3.select(".mouse-per-line3 circle")
+					.style("opacity", "1");
+				d3.select(".mouse-per-line3 text")
+					.style("opacity", "1");
+				d3.select(".text6")
+					.style("opacity", "1");
+			  })
+			  .on('mousemove', function() { // mouse moving over canvas
+				var mouse = d3.mouse(this);
+				d3.select(".mouse-line3")
+		          .attr("d", function() {
+		              var d = "M" + mouse[0] + "," + height5;
+		              d += " " + mouse[0] + "," + 0;
+		              return d;
+		        });
+				
+				d3.selectAll(".mouse-per-line3")
+					.attr("transform", function(d, i) {
+						var xDate = x.invert(mouse[0]),
+							bisect = d3.bisector(function(d) { return d.date; }).right;
+							idx = bisect(d.values, xDate);
+					
+						var beginning = 0,
+							end = lines3[i].getTotalLength(),
+			                target = null;
+					
+						while (true){
+							target = Math.floor((beginning + end) / 2);
+							pos = lines3[i].getPointAtLength(target);
+							
+							if ((target === end || target === beginning) && pos.x !== mouse[0]) {
+			                      break;
+			                }
+							if (pos.x > mouse[0])      end = target;
+							else if (pos.x < mouse[0]) beginning = target;
+							else break; //position found
+			           	}
+						
+						d3.select(this).select('text')
+							.html(getTime(x5.invert(pos.x))+", ")
+							.attr("class", "tooltip-date");
+						
+						d3.select(this).select('.text6')
+							.html(Math.round(y5.invert(pos.y)))
+							.attr("class", "text6");
+												 
+			           return "translate(" + mouse[0] + "," + pos.y +")";
+					});
+		   });
+		});    
+		
+		function brushed3() {
+			if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+			var s = d3.event.selection || x6.range();
+		
+			var zoomstart = s.map(x6.invert, x6)[0].getTime()/1000;
+			var zoomend = s.map(x6.invert, x6)[1].getTime()/1000;
+			
 			var str = "<%=type%>";
 			var lastChar = str.substr(str.length - 1); 
-			
+				
 			var i = lastChar-1;
-			
+				
 			$.ajax({
-			    url:"<%=cp%>/get/gpu",
+			    url:"<%=cp%>/get/gpu_clock",
 			    type:"POST",
-			    dataType:"json",
-			    async:false,
+				dataType:"json",
+				async:false,
 			    data:{"start":zoomstart, "end": zoomend, "step":15},
 			    success:function(data){
-			    	dataset2 = data.data.result[i].values;
-
-			        var arr = new Array();
-
-			        for(var j = 0 ; j < dataset2.length ; j++){
+			    	dataset3 = data.data.result[i].values;	
+				    
+			    	var arr = new Array();
+		
+				    for(var j = 0 ; j < dataset3.length ; j++){
 			            arr.push(data.data.result[i].values[j][1]);
 			        }
-
-			        max2 = Math.max.apply(null, arr);
-		            min2 = Math.min.apply(null, arr);
-					avg2 = average(arr);
-			        
-			        $('#max2').text(max2+" %");
-			        $('#min2').text(min2+" %");
-					$('#avg2').text(Math.round(avg2)+" %");
-			    },
-			    error: function(err){
-			        console.log(err);
-			    }
-
+				    
+				    max3 = Math.max.apply(null, arr);
+			        min3 = Math.min.apply(null, arr);
+			        avg3 = average(arr);
+				        
+			     	$('#max3').text(max3+" Ghz");
+		        	$('#min3').text(min3+" Ghz");
+		        	$('#avg3').text(Math.round(avg3)+" Ghz");
+				},
+				error: function(err){
+					console.log(err);	
+				}
 			});
+				
+			x5.domain(s.map(x6.invert, x6));
+			Line_chart3.select(".line5").attr("d", line5);
+			focus3.select(".axis--x").call(xAxis5);
+			svg3.select(".zoom3").call(zoom3.transform, d3.zoomIdentity
+					.scale(width5 / (s[1] - s[0]))
+					.translate(-s[0], 0));
 		}
-		x3.domain(s.map(x4.invert, x4));
-		Line_chart2.select(".line3").attr("d", line3);
-		focus2.select(".axis--x").call(xAxis3);
-		svg2.select(".zoom2").call(zoom2.transform, d3.zoomIdentity
-				.scale(width3 / (s[1] - s[0]))
-				.translate(-s[0], 0));
-	}
-
-	function zoomed2() {
-		if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
-		var t = d3.event.transform;
-		x3.domain(t.rescaleX(x4).domain());
-		Line_chart2.select(".line3").attr("d", line3);
-		focus2.select(".axis--x").call(xAxis3);
-		context2.select(".brush2").call(brush2.move, x3.range().map(t.invertX, t));
-	}
-	
-	var margin5 = {top: 30, right: 20, bottom: 110, left: 40},
-		margin6 = {top: 280, right: 20, bottom: 30, left: 40},
-	    width5 = 940 - margin5.left - margin5.right,
-	    height5 = 370 - margin5.top - margin5.bottom,
-	    height6 = 370 - margin6.top - margin6.bottom;
-	
-	var svg3 = d3.select("#chart3")
-		.attr("width", width5 + margin5.left + margin5.right + 60)
-		.attr("height", height5 + margin5.top + margin5.bottom)
-		.append("g")
 		
-	var x5 = d3.scaleTime().range([0, width5]),
-	    x6 = d3.scaleTime().range([0, width5]),
-	    y5 = d3.scaleLinear().range([height5, 0]),
-	    y6 = d3.scaleLinear().range([height6, 0]);
-	
-	var xAxis5 = d3.axisBottom(x5),
-	    xAxis6 = d3.axisBottom(x6),
-	    yAxis5 = d3.axisLeft(y5);
-	
-	var brush3 = d3.brushX()
-	    .extent([[0, 0], [width5, height6]])
-	    .on("brush end", brushed3);
-	
-	var zoom3 = d3.zoom()
-	    .scaleExtent([1, Infinity])
-	    .translateExtent([[0, 0], [width5, height5]])
-	    .extent([[0, 0], [width5, height5]])
-	    .on("zoom", zoomed3);
-	
-	var line5 = d3.line()
-	    .x(function(d, i) { return x5(moment.unix(d[0]).toDate()); }) // set the x values for the line generator
-	    .y(function(d) { return y5(d[1]); }) // set the y values for the line generator
-	
-	var line6 = d3.line()
-		.x(function(d, i) { return x6(moment.unix(d[0]).toDate()); }) // set the x values for the line generator
-	    .y(function(d) { return y6(d[1]); }) // set the y values for the line generator
-	
-	var clip3 = svg3.append("defs").append("svg3:clipPath")
-	    .attr("id", "clip3")
-	    .append("svg:rect")
-	    .attr("width", width5)
-	    .attr("height", height5)
-	    .attr("x", 0)
-	    .attr("y", 0); 
-	
-	var Line_chart3 = svg3.append("g")
-	    .attr("class", "focus3")
-	    .attr("transform", "translate(" + margin5.left + "," + margin5.top + ")")
-	    .attr("clip-path", "url(#clip3)");
-	
-	var focus3 = svg3.append("g")
-	    .attr("class", "focus3")
-	    .attr("transform", "translate(" + margin5.left + "," + margin5.top + ")");
-	
-	var context3 = svg3.append("g")
-	    .attr("class", "context3")
-	    .attr("transform", "translate(" + margin6.left + "," + margin6.top + ")");
-	/* 
-	// 범례추가
-	svg3.append("circle").attr("cx",860).attr("cy", 10).attr("r", 6).style("fill", "green")
-	svg3.append("text").attr("x", 870).attr("y", 10).text("clock speed").style("font-size", "15px").attr("alignment-baseline","middle")
-	 */
-	d3.json(dataset3 , function (json) {
+		function zoomed3() {
+			if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
+			var t = d3.event.transform;
+			x5.domain(t.rescaleX(x6).domain());
+			Line_chart3.select(".line5").attr("d", line5);
+			focus3.select(".axis--x").call(xAxis5);
+			context3.select(".brush3").call(brush3.move, x5.range().map(t.invertX, t));
+		}
 		
-		x5.domain([moment.unix(dataset3[0][0]).toDate(), moment.unix(dataset3[dataset3.length-1][0]).toDate()]);
-		y5.domain([Number(min3)-1, Number(max3)+1]);
-		x6.domain(x5.domain());
-		y6.domain(y5.domain());
+		var margin7 = {top: 30, right: 20, bottom: 110, left: 40},
+			margin8 = {top: 280, right: 20, bottom: 30, left: 40},
+		    width7 = 940 - margin7.left - margin7.right,
+		    height7 = 370 - margin7.top - margin7.bottom,
+		    height8 = 370 - margin8.top - margin8.bottom;
 		
-		focus3.append("g")
-			.attr("class", "axis axis--x")
-	        .attr("transform", "translate(0," + height5 + ")")
-	        .call(xAxis5);
-	
-	    focus3.append("g")
-	        .attr("class", "axis axis--y")
-	        .call(yAxis5);
-	
-	    Line_chart3.append("path")
-	        .datum(dataset3)
-	        .attr("class", "line5")
-	        .attr("d", line5);
-	
-	    context3.append("path")
-	        .datum(dataset3)
-	        .attr("class", "line6")
-	        .attr("d", line6);
-	    
-	    context3.append("g")
-	    	.attr("class", "axis axis--x")
-	      	.attr("transform", "translate(0," + height6 + ")")
-	      	.call(xAxis6);
-	
-	    context3.append("g")
-	    	.attr("class", "brush")
-	      	.call(brush3)
-	      	.call(brush3.move, x5.range());
-	    
-	    svg3.append("rect")
-	    	.attr("class", "zoom")
-	      	.attr("width", width5)
-	      	.attr("height", height5)
-	     	.attr("transform", "translate(" + margin5.left + "," + margin5.top + ")")
-	      	.call(zoom3);
-	
-	    var mouseG3 = svg3.append("g")
-			.attr("class", "mouse-over-effects")
-			.attr("transform", "translate(" + margin5.left + "," + margin5.top + ")");
-		
-		mouseG3.append("path") // this is the black vertical line to follow mouse
-			.attr("class", "mouse-line3")
-		  	.style("stroke", "black")
-		  	.style("stroke-width", "1px")
-		  	.style("opacity", "0");
-		
-		var lines3 = document.getElementsByClassName('line5');
-		
-		var mousePerLine3 = mouseG3.selectAll('.mouse-per-line3')
-			.data(dataset3)
-			.enter()
-		  	.append("g")
-		  	.attr("class", "mouse-per-line3");
-		
-		mousePerLine3.append("circle")
-			.attr("r", 5)
-			.style("stroke", "green")
-		  	.style("fill", "none")
-		  	.style("stroke-width", "1px")
-		  	.style("opacity", "0");
-		
-		mousePerLine3.append("text")
-			.attr("transform", "translate(10,-20)");
-		
-		mousePerLine3.append("text")
-			.attr("transform", "translate(10,-5)")
-			.attr("class", "text6");
-		
-		mouseG3.append('svg:rect') // append a rect to catch mouse movements on canvas
-			.attr('width', width5) // can't catch mouse events on a g element
-			.attr('height', height5)
-			.attr('fill', 'none')
-			.attr('pointer-events', 'all')
-			.on('mouseout', function() { // on mouse out hide line, circles and text
-			d3.select(".mouse-line3")
-				.style("opacity", "0");
-			d3.select(".mouse-per-line3 circle")
-				.style("opacity", "0");
-			d3.select(".mouse-per-line3 text")
-				.style("opacity", "0");
-			d3.select(".text6")
-		  		.style("opacity", "0");
-		  })
-		  .on('mouseover', function() { // on mouse in show line, circles and text
-			d3.select(".mouse-line3")
-				.style("opacity", "1");
-			d3.select(".mouse-per-line3 circle")
-				.style("opacity", "1");
-			d3.select(".mouse-per-line3 text")
-				.style("opacity", "1");
-			d3.select(".text6")
-				.style("opacity", "1");
-		  })
-		  .on('mousemove', function() { // mouse moving over canvas
-			var mouse = d3.mouse(this);
-			d3.select(".mouse-line3")
-	          .attr("d", function() {
-	              var d = "M" + mouse[0] + "," + height5;
-	              d += " " + mouse[0] + "," + 0;
-	              return d;
-	        });
+		var svg4 = d3.select("#chart4")
+			.attr("width", width7 + margin7.left + margin7.right + 60)
+			.attr("height", height7 + margin7.top + margin7.bottom)
+			.append("g")
 			
-			d3.selectAll(".mouse-per-line3")
-				.attr("transform", function(d, i) {
-					var xDate = x.invert(mouse[0]),
-						bisect = d3.bisector(function(d) { return d.date; }).right;
-						idx = bisect(d.values, xDate);
+		var x7 = d3.scaleTime().range([0, width7]),
+		    x8 = d3.scaleTime().range([0, width7]),
+		    y7 = d3.scaleLinear().range([height7, 0]),
+		    y8 = d3.scaleLinear().range([height8, 0]);
+		
+		var xAxis7 = d3.axisBottom(x7),
+		    xAxis8 = d3.axisBottom(x8),
+		    yAxis7 = d3.axisLeft(y7);
+			
+		var brush4 = d3.brushX()
+		    .extent([[0, 0], [width7, height8]])
+		    .on("brush end", brushed4);
+		
+		var zoom4 = d3.zoom()
+		    .scaleExtent([1, Infinity])
+		    .translateExtent([[0, 0], [width7, height7]])
+		    .extent([[0, 0], [width7, height7]])
+		    .on("zoom", zoomed4);
+		
+		var line7 = d3.line()
+		    .x(function(d, i) { return x7(moment.unix(d[0]).toDate()); }) // set the x values for the line generator
+		    .y(function(d) { return y7(d[1]); }) // set the y values for the line generator
+		
+		var line8 = d3.line()
+			.x(function(d, i) { return x8(moment.unix(d[0]).toDate()); }) // set the x values for the line generator
+		    .y(function(d) { return y8(d[1]); }) // set the y values for the line generator
+		
+		var clip4 = svg4.append("defs").append("svg4:clipPath")
+		    .attr("id", "clip4")
+		    .append("svg:rect")
+		    .attr("width", width7)
+		    .attr("height", height7)
+		    .attr("x", 0)
+		    .attr("y", 0); 
+	
+		var Line_chart4 = svg4.append("g")
+		    .attr("class", "focus4")
+		    .attr("transform", "translate(" + margin7.left + "," + margin7.top + ")")
+		    .attr("clip-path", "url(#clip4)");
+		
+		var focus4 = svg4.append("g")
+		    .attr("class", "focus4")
+		    .attr("transform", "translate(" + margin7.left + "," + margin7.top + ")");
+		
+		var context4 = svg4.append("g")
+		    .attr("class", "context4")
+		    .attr("transform", "translate(" + margin8.left + "," + margin8.top + ")");
+		/* 
+		// 범례추가
+		svg4.append("circle").attr("cx",860).attr("cy", 10).attr("r", 6).style("fill", "gray")
+		svg4.append("text").attr("x", 870).attr("y", 10).text("power").style("font-size", "15px").attr("alignment-baseline","middle")
+		 */
+		d3.json(dataset4 , function (json) {
+			
+			x7.domain([moment.unix(dataset4[0][0]).toDate(), moment.unix(dataset4[dataset4.length-1][0]).toDate()]);
+			y7.domain([Number(min4)-1, Number(max4)+1]);
+			x8.domain(x7.domain());
+			y8.domain(y7.domain());
+	
+			focus4.append("g")
+				.attr("class", "axis axis--x")
+		        .attr("transform", "translate(0," + height7 + ")")
+		        .call(xAxis7);
+		
+		    focus4.append("g")
+		        .attr("class", "axis axis--y")
+		        .call(yAxis7);
+		
+		    Line_chart4.append("path")
+		        .datum(dataset4)
+		        .attr("class", "line7")
+		        .attr("d", line7);
+		    
+		    context4.append("path")
+		        .datum(dataset4)
+		        .attr("class", "line8")
+		        .attr("d", line8);
+		    
+		    context4.append("g")
+		    	.attr("class", "axis axis--x")
+		      	.attr("transform", "translate(0," + height8 + ")")
+		      	.call(xAxis8);
+		    
+		    context4.append("g")
+		    	.attr("class", "brush")
+		      	.call(brush4)
+		      	.call(brush4.move, x7.range());
+		   
+		    svg4.append("rect")
+		    	.attr("class", "zoom")
+		      	.attr("width", width7)
+		      	.attr("height", height7)
+		     	.attr("transform", "translate(" + margin7.left + "," + margin7.top + ")")
+		      	.call(zoom4);
+		
+		    var mouseG4 = svg4.append("g")
+				.attr("class", "mouse-over-effects")
+				.attr("transform", "translate(" + margin7.left + "," + margin7.top + ")");
+	
+			mouseG4.append("path") // this is the black vertical line to follow mouse
+				.attr("class", "mouse-line4")
+			  	.style("stroke", "black")
+			  	.style("stroke-width", "1px")
+			  	.style("opacity", "0");
+			
+			var lines4 = document.getElementsByClassName('line7');
+			
+			var mousePerLine4 = mouseG4.selectAll('.mouse-per-line4')
+				.data(dataset4)
+				.enter()
+			  	.append("g")
+			  	.attr("class", "mouse-per-line4");
+			
+			mousePerLine4.append("circle")
+				.attr("r", 5)
+				.style("stroke", "gray")
+			  	.style("fill", "none")
+			  	.style("stroke-width", "1px")
+			  	.style("opacity", "0");
+			
+			mousePerLine4.append("text")
+				.attr("transform", "translate(10,-20)");
+			
+			mousePerLine4.append("text")
+				.attr("transform", "translate(10,-5)")
+				.attr("class", "text8");
+			
+			mouseG4.append('svg:rect') // append a rect to catch mouse movements on canvas
+				.attr('width', width7) // can't catch mouse events on a g element
+				.attr('height', height7)
+				.attr('fill', 'none')
+				.attr('pointer-events', 'all')
+				.on('mouseout', function() { // on mouse out hide line, circles and text
+				d3.select(".mouse-line4")
+					.style("opacity", "0");
+				d3.select(".mouse-per-line4 circle")
+					.style("opacity", "0");
+				d3.select(".mouse-per-line4 text")
+					.style("opacity", "0");
+				d3.select(".text8")
+			  		.style("opacity", "0");
+			  })
+			  .on('mouseover', function() { // on mouse in show line, circles and text
+				d3.select(".mouse-line4")
+					.style("opacity", "1");
+				d3.select(".mouse-per-line4 circle")
+					.style("opacity", "1");
+				d3.select(".mouse-per-line4 text")
+					.style("opacity", "1");
+				d3.select(".text8")
+					.style("opacity", "1");
+			  })
+			  .on('mousemove', function() { // mouse moving over canvas
+				var mouse = d3.mouse(this);
+				d3.select(".mouse-line4")
+		          .attr("d", function() {
+		              var d = "M" + mouse[0] + "," + height7;
+		              d += " " + mouse[0] + "," + 0;
+		              return d;
+		        });
 				
-					var beginning = 0,
-						end = lines3[i].getTotalLength(),
-		                target = null;
-				
-					while (true){
-						target = Math.floor((beginning + end) / 2);
-						pos = lines3[i].getPointAtLength(target);
+				d3.selectAll(".mouse-per-line4")
+					.attr("transform", function(d, i) {
+						var xDate = x.invert(mouse[0]),
+							bisect = d3.bisector(function(d) { return d.date; }).right;
+							idx = bisect(d.values, xDate);
+					
+						var beginning = 0,
+							end = lines4[i].getTotalLength(),
+			                target = null;
+					
+						while (true){
+							target = Math.floor((beginning + end) / 2);
+							pos = lines4[i].getPointAtLength(target);
+							
+							if ((target === end || target === beginning) && pos.x !== mouse[0]) {
+			                      break;
+			                }
+							if (pos.x > mouse[0])      end = target;
+							else if (pos.x < mouse[0]) beginning = target;
+							else break; //position found
+			           	}
 						
-						if ((target === end || target === beginning) && pos.x !== mouse[0]) {
-		                      break;
-		                }
-						if (pos.x > mouse[0])      end = target;
-						else if (pos.x < mouse[0]) beginning = target;
-						else break; //position found
-		           	}
-					
-					d3.select(this).select('text')
-						.html(getTime(x5.invert(pos.x))+", ")
-						.attr("class", "tooltip-date");
-					
-					d3.select(this).select('.text6')
-						.html(y5.invert(pos.y).toFixed(2))
-						.attr("class", "text6");
-											 
-		           return "translate(" + mouse[0] + "," + pos.y +")";
-				});
-	   });
-	});    
-	
-	function brushed3() {
-		if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
-		var s = d3.event.selection || x6.range();
-	
-		var zoomstart = s.map(x6.invert, x6)[0].getTime()/1000;
-		var zoomend = s.map(x6.invert, x6)[1].getTime()/1000;
-		
-		var str = "<%=type%>";
-		var lastChar = str.substr(str.length - 1); 
-			
-		var i = lastChar-1;
-			
-		$.ajax({
-		    url:"<%=cp%>/get/gpu_clock",
-		    type:"POST",
-			dataType:"json",
-			async:false,
-		    data:{"start":zoomstart, "end": zoomend, "step":15},
-		    success:function(data){
-		    	dataset3 = data.data.result[i].values;	
-			    
-		    	var arr = new Array();
-	
-			    for(var j = 0 ; j < dataset3.length ; j++){
-		            arr.push(data.data.result[i].values[j][1]);
-		        }
-			    
-			    max3 = Math.max.apply(null, arr);
-		        min3 = Math.min.apply(null, arr);
-		        avg3 = average(arr);
-			        
-		     	$('#max3').text(max3+" Ghz");
-	        	$('#min3').text(min3+" Ghz");
-	        	$('#avg3').text(Math.round(avg3)+" Ghz");
-			},
-			error: function(err){
-				console.log(err);	
-			}
-		});
-			
-		x5.domain(s.map(x6.invert, x6));
-		Line_chart3.select(".line5").attr("d", line5);
-		focus3.select(".axis--x").call(xAxis5);
-		svg3.select(".zoom3").call(zoom3.transform, d3.zoomIdentity
-				.scale(width5 / (s[1] - s[0]))
-				.translate(-s[0], 0));
-	}
-	
-	function zoomed3() {
-		if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
-		var t = d3.event.transform;
-		x5.domain(t.rescaleX(x6).domain());
-		Line_chart3.select(".line5").attr("d", line5);
-		focus3.select(".axis--x").call(xAxis5);
-		context3.select(".brush3").call(brush3.move, x5.range().map(t.invertX, t));
-	}
-	
-	var margin7 = {top: 30, right: 20, bottom: 110, left: 40},
-		margin8 = {top: 280, right: 20, bottom: 30, left: 40},
-	    width7 = 940 - margin7.left - margin7.right,
-	    height7 = 370 - margin7.top - margin7.bottom,
-	    height8 = 370 - margin8.top - margin8.bottom;
-	
-	var svg4 = d3.select("#chart4")
-		.attr("width", width7 + margin7.left + margin7.right + 60)
-		.attr("height", height7 + margin7.top + margin7.bottom)
-		.append("g")
-		
-	var x7 = d3.scaleTime().range([0, width7]),
-	    x8 = d3.scaleTime().range([0, width7]),
-	    y7 = d3.scaleLinear().range([height7, 0]),
-	    y8 = d3.scaleLinear().range([height8, 0]);
-	
-	var xAxis7 = d3.axisBottom(x7),
-	    xAxis8 = d3.axisBottom(x8),
-	    yAxis7 = d3.axisLeft(y7);
-		
-	var brush4 = d3.brushX()
-	    .extent([[0, 0], [width7, height8]])
-	    .on("brush end", brushed4);
-	
-	var zoom4 = d3.zoom()
-	    .scaleExtent([1, Infinity])
-	    .translateExtent([[0, 0], [width7, height7]])
-	    .extent([[0, 0], [width7, height7]])
-	    .on("zoom", zoomed4);
-	
-	var line7 = d3.line()
-	    .x(function(d, i) { return x7(moment.unix(d[0]).toDate()); }) // set the x values for the line generator
-	    .y(function(d) { return y7(d[1]); }) // set the y values for the line generator
-	
-	var line8 = d3.line()
-		.x(function(d, i) { return x8(moment.unix(d[0]).toDate()); }) // set the x values for the line generator
-	    .y(function(d) { return y8(d[1]); }) // set the y values for the line generator
-	
-	var clip4 = svg4.append("defs").append("svg4:clipPath")
-	    .attr("id", "clip4")
-	    .append("svg:rect")
-	    .attr("width", width7)
-	    .attr("height", height7)
-	    .attr("x", 0)
-	    .attr("y", 0); 
-
-	var Line_chart4 = svg4.append("g")
-	    .attr("class", "focus4")
-	    .attr("transform", "translate(" + margin7.left + "," + margin7.top + ")")
-	    .attr("clip-path", "url(#clip4)");
-	
-	var focus4 = svg4.append("g")
-	    .attr("class", "focus4")
-	    .attr("transform", "translate(" + margin7.left + "," + margin7.top + ")");
-	
-	var context4 = svg4.append("g")
-	    .attr("class", "context4")
-	    .attr("transform", "translate(" + margin8.left + "," + margin8.top + ")");
-	/* 
-	// 범례추가
-	svg4.append("circle").attr("cx",860).attr("cy", 10).attr("r", 6).style("fill", "gray")
-	svg4.append("text").attr("x", 870).attr("y", 10).text("power").style("font-size", "15px").attr("alignment-baseline","middle")
-	 */
-	d3.json(dataset4 , function (json) {
-		
-		x7.domain([moment.unix(dataset4[0][0]).toDate(), moment.unix(dataset4[dataset4.length-1][0]).toDate()]);
-		y7.domain([Number(min4)-1, Number(max4)+1]);
-		x8.domain(x7.domain());
-		y8.domain(y7.domain());
-
-		focus4.append("g")
-			.attr("class", "axis axis--x")
-	        .attr("transform", "translate(0," + height7 + ")")
-	        .call(xAxis7);
-	
-	    focus4.append("g")
-	        .attr("class", "axis axis--y")
-	        .call(yAxis7);
-	
-	    Line_chart4.append("path")
-	        .datum(dataset4)
-	        .attr("class", "line7")
-	        .attr("d", line7);
-	    
-	    context4.append("path")
-	        .datum(dataset4)
-	        .attr("class", "line8")
-	        .attr("d", line8);
-	    
-	    context4.append("g")
-	    	.attr("class", "axis axis--x")
-	      	.attr("transform", "translate(0," + height8 + ")")
-	      	.call(xAxis8);
-	    
-	    context4.append("g")
-	    	.attr("class", "brush")
-	      	.call(brush4)
-	      	.call(brush4.move, x7.range());
-	   
-	    svg4.append("rect")
-	    	.attr("class", "zoom")
-	      	.attr("width", width7)
-	      	.attr("height", height7)
-	     	.attr("transform", "translate(" + margin7.left + "," + margin7.top + ")")
-	      	.call(zoom4);
-	
-	    var mouseG4 = svg4.append("g")
-			.attr("class", "mouse-over-effects")
-			.attr("transform", "translate(" + margin7.left + "," + margin7.top + ")");
-
-		mouseG4.append("path") // this is the black vertical line to follow mouse
-			.attr("class", "mouse-line4")
-		  	.style("stroke", "black")
-		  	.style("stroke-width", "1px")
-		  	.style("opacity", "0");
-		
-		var lines4 = document.getElementsByClassName('line7');
-		
-		var mousePerLine4 = mouseG4.selectAll('.mouse-per-line4')
-			.data(dataset4)
-			.enter()
-		  	.append("g")
-		  	.attr("class", "mouse-per-line4");
-		
-		mousePerLine4.append("circle")
-			.attr("r", 5)
-			.style("stroke", "gray")
-		  	.style("fill", "none")
-		  	.style("stroke-width", "1px")
-		  	.style("opacity", "0");
-		
-		mousePerLine4.append("text")
-			.attr("transform", "translate(10,-20)");
-		
-		mousePerLine4.append("text")
-			.attr("transform", "translate(10,-5)")
-			.attr("class", "text8");
-		
-		mouseG4.append('svg:rect') // append a rect to catch mouse movements on canvas
-			.attr('width', width7) // can't catch mouse events on a g element
-			.attr('height', height7)
-			.attr('fill', 'none')
-			.attr('pointer-events', 'all')
-			.on('mouseout', function() { // on mouse out hide line, circles and text
-			d3.select(".mouse-line4")
-				.style("opacity", "0");
-			d3.select(".mouse-per-line4 circle")
-				.style("opacity", "0");
-			d3.select(".mouse-per-line4 text")
-				.style("opacity", "0");
-			d3.select(".text8")
-		  		.style("opacity", "0");
-		  })
-		  .on('mouseover', function() { // on mouse in show line, circles and text
-			d3.select(".mouse-line4")
-				.style("opacity", "1");
-			d3.select(".mouse-per-line4 circle")
-				.style("opacity", "1");
-			d3.select(".mouse-per-line4 text")
-				.style("opacity", "1");
-			d3.select(".text8")
-				.style("opacity", "1");
-		  })
-		  .on('mousemove', function() { // mouse moving over canvas
-			var mouse = d3.mouse(this);
-			d3.select(".mouse-line4")
-	          .attr("d", function() {
-	              var d = "M" + mouse[0] + "," + height7;
-	              d += " " + mouse[0] + "," + 0;
-	              return d;
-	        });
-			
-			d3.selectAll(".mouse-per-line4")
-				.attr("transform", function(d, i) {
-					var xDate = x.invert(mouse[0]),
-						bisect = d3.bisector(function(d) { return d.date; }).right;
-						idx = bisect(d.values, xDate);
-				
-					var beginning = 0,
-						end = lines4[i].getTotalLength(),
-		                target = null;
-				
-					while (true){
-						target = Math.floor((beginning + end) / 2);
-						pos = lines4[i].getPointAtLength(target);
+						d3.select(this).select('text')
+							.html(getTime(x7.invert(pos.x))+", ")
+							.attr("class", "tooltip-date");
 						
-						if ((target === end || target === beginning) && pos.x !== mouse[0]) {
-		                      break;
-		                }
-						if (pos.x > mouse[0])      end = target;
-						else if (pos.x < mouse[0]) beginning = target;
-						else break; //position found
-		           	}
-					
-					d3.select(this).select('text')
-						.html(getTime(x7.invert(pos.x))+", ")
-						.attr("class", "tooltip-date");
-					
-					d3.select(this).select('.text8')
-						.html(y7.invert(pos.y).toFixed(2))
-						.attr("class", "text8");
-											 
-		           return "translate(" + mouse[0] + "," + pos.y +")";
-				});
-	   });
-	});    
-	
-	function brushed4() {
-		if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
-		var s = d3.event.selection || x8.range();
-	
-		var zoomstart = s.map(x8.invert, x8)[0].getTime()/1000;
-		var zoomend = s.map(x8.invert, x8)[1].getTime()/1000;
+						d3.select(this).select('.text8')
+							.html(Math.round(y7.invert(pos.y)))
+							.attr("class", "text8");
+												 
+			           return "translate(" + mouse[0] + "," + pos.y +")";
+					});
+		   });
+		});    
 		
-		var str = "<%=type%>";
-		var lastChar = str.substr(str.length - 1); 
+		function brushed4() {
+			if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+			var s = d3.event.selection || x8.range();
+		
+			var zoomstart = s.map(x8.invert, x8)[0].getTime()/1000;
+			var zoomend = s.map(x8.invert, x8)[1].getTime()/1000;
 			
-		var i = lastChar-1;
-			
-		$.ajax({
-		    url:"<%=cp%>/get/gpu_power",
-		    type:"POST",
-			dataType:"json",
-			async:false,
-		    data:{"start":zoomstart, "end": zoomend, "step":15},
-		    success:function(data){
-		    	dataset4 = data.data.result[i].values;	
-			    
-		    	var arr = new Array();
-	
-			    for(var j = 0 ; j < dataset4.length ; j++){
-		            arr.push(data.data.result[i].values[j][1]);
-		        }
-			    
-			    max4 = Math.max.apply(null, arr);
-		        min4 = Math.min.apply(null, arr);
-		        avg4 = average(arr);
-			        
-		     	$('#max4').text(Math.round(max4)+" W");
-	        	$('#min4').text(Math.round(min4)+" W");
-	        	$('#avg4').text(Math.round(avg4)+" W");
-			},
-			error: function(err){
-				console.log(err);	
-			}
-		});
-			
-		x7.domain(s.map(x8.invert, x8));
-		Line_chart4.select(".line7").attr("d", line7);
-		focus4.select(".axis--x").call(xAxis7);
-		svg4.select(".zoom4").call(zoom4.transform, d3.zoomIdentity
-				.scale(width7 / (s[1] - s[0]))
-				.translate(-s[0], 0));
-	}
-	
-	function zoomed4() {
-		if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
-		var t = d3.event.transform;
-		x7.domain(t.rescaleX(x8).domain());
-		Line_chart4.select(".line7").attr("d", line7);
-		focus4.select(".axis--x").call(xAxis7);
-		context4.select(".brush4").call(brush4.move, x7.range().map(t.invertX, t));
+			var str = "<%=type%>";
+			var lastChar = str.substr(str.length - 1); 
+				
+			var i = lastChar-1;
+				
+			$.ajax({
+			    url:"<%=cp%>/get/gpu_power",
+			    type:"POST",
+				dataType:"json",
+				async:false,
+			    data:{"start":zoomstart, "end": zoomend, "step":15},
+			    success:function(data){
+			    	dataset4 = data.data.result[i].values;	
+				    
+			    	var arr = new Array();
+		
+				    for(var j = 0 ; j < dataset4.length ; j++){
+			            arr.push(data.data.result[i].values[j][1]);
+			        }
+				    
+				    max4 = Math.max.apply(null, arr);
+			        min4 = Math.min.apply(null, arr);
+			        avg4 = average(arr);
+				        
+			     	$('#max4').text(Math.round(max4)+" W");
+		        	$('#min4').text(Math.round(min4)+" W");
+		        	$('#avg4').text(Math.round(avg4)+" W");
+				},
+				error: function(err){
+					console.log(err);	
+				}
+			});
+				
+			x7.domain(s.map(x8.invert, x8));
+			Line_chart4.select(".line7").attr("d", line7);
+			focus4.select(".axis--x").call(xAxis7);
+			svg4.select(".zoom4").call(zoom4.transform, d3.zoomIdentity
+					.scale(width7 / (s[1] - s[0]))
+					.translate(-s[0], 0));
+		}
+		
+		function zoomed4() {
+			if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
+			var t = d3.event.transform;
+			x7.domain(t.rescaleX(x8).domain());
+			Line_chart4.select(".line7").attr("d", line7);
+			focus4.select(".axis--x").call(xAxis7);
+			context4.select(".brush4").call(brush4.move, x7.range().map(t.invertX, t));
+		}
 	}
 }
 
